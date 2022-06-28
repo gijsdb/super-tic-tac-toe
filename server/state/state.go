@@ -24,6 +24,7 @@ type GameBoard struct {
 type Square struct {
 	Circles    []Circle `json:"circles"`
 	CapturedBy int      `json:"captured_by"` // 0 = player 1, 1 = player 2
+	index      int
 }
 
 // The circles in each square
@@ -50,6 +51,7 @@ func initGameBoard() GameBoard {
 		square = Square{
 			Circles:    initCircles(),
 			CapturedBy: Unselected,
+			index:      i,
 		}
 		squares = append(squares, square)
 	}
@@ -71,7 +73,7 @@ func initCircles() []Circle {
 	return circles
 }
 
-// Check for three in a row for square
+// Check for three in a row for circles in a square
 func (s *Square) CheckCirclesCondition() error {
 
 	var (
@@ -104,9 +106,9 @@ func (s *Square) CheckCirclesCondition() error {
 
 	switch {
 	case x && !o:
-		s.CapturedBy = 1
+		s.CapturedBy = 0
 	case o && !x:
-		s.CapturedBy = 1
+		s.CapturedBy = 2
 	case !freeCellsLeft:
 		return nil
 	default:
@@ -116,11 +118,55 @@ func (s *Square) CheckCirclesCondition() error {
 	return nil
 }
 
-// Check for three in a row for the whole board
+// Check for three in a row for squares
+func (gb *GameBoard) CheckSquareCondition() string {
+
+	var (
+		x = (gb.Squares[0].CapturedBy == 0 && gb.Squares[1].CapturedBy == 0 && gb.Squares[2].CapturedBy == 0) || // Check all rows.
+			(gb.Squares[3].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[5].CapturedBy == 0) ||
+			(gb.Squares[6].CapturedBy == 0 && gb.Squares[7].CapturedBy == 0 && gb.Squares[8].CapturedBy == 0) ||
+
+			(gb.Squares[0].CapturedBy == 0 && gb.Squares[3].CapturedBy == 0 && gb.Squares[6].CapturedBy == 0) || // Check all columns.
+			(gb.Squares[1].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[7].CapturedBy == 0) ||
+			(gb.Squares[2].CapturedBy == 0 && gb.Squares[5].CapturedBy == 0 && gb.Squares[8].CapturedBy == 0) ||
+
+			(gb.Squares[0].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[8].CapturedBy == 0) || // Check all diagonals.
+			(gb.Squares[2].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[6].CapturedBy == 0)
+
+		o = (gb.Squares[0].CapturedBy == 1 && gb.Squares[1].CapturedBy == 1 && gb.Squares[2].CapturedBy == 1) || // Check all r1ws.
+			(gb.Squares[3].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[5].CapturedBy == 1) ||
+			(gb.Squares[6].CapturedBy == 1 && gb.Squares[7].CapturedBy == 1 && gb.Squares[8].CapturedBy == 1) ||
+
+			(gb.Squares[0].CapturedBy == 1 && gb.Squares[3].CapturedBy == 1 && gb.Squares[6].CapturedBy == 1) || // Check all c1lumns.
+			(gb.Squares[1].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[7].CapturedBy == 1) ||
+			(gb.Squares[2].CapturedBy == 1 && gb.Squares[5].CapturedBy == 1 && gb.Squares[8].CapturedBy == 1) ||
+
+			(gb.Squares[0].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[8].CapturedBy == 1) || // Check all diag1nals.
+			(gb.Squares[2].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[6].CapturedBy == 1)
+
+		freeCellsLeft = gb.Squares[0].CapturedBy == 2 || gb.Squares[1].CapturedBy == 2 || gb.Squares[2].CapturedBy == 2 ||
+			gb.Squares[3].CapturedBy == 2 || gb.Squares[4].CapturedBy == 2 || gb.Squares[5].CapturedBy == 2 ||
+			gb.Squares[6].CapturedBy == 2 || gb.Squares[7].CapturedBy == 2 || gb.Squares[8].CapturedBy == 2
+	)
+
+	switch {
+	case x && !o:
+		return "player1"
+	case o && !x:
+		return "player2"
+	case !freeCellsLeft:
+		return "CONTINUE"
+	default:
+		return "default"
+	}
+
+}
 
 func (gb *GameBoard) Update(player, square, circle int) error {
 	gb.Squares[square].Circles[circle].SelectedBy = player
-	row := gb.Squares[square].CheckCirclesCondition()
-	log15.Debug("ROW", "row", row)
+	circleWin := gb.Squares[square].CheckCirclesCondition()
+	squareWin := gb.CheckSquareCondition()
+	log15.Debug("circle", "circle", circleWin)
+	log15.Debug("square", "square", squareWin)
 	return nil
 }

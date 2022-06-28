@@ -1,7 +1,11 @@
 <template>
   <div
-    :class="{ 'border-red-500 border-4': square.captured_by == 1 }"
-    class="border-red-100 border-2 m-2 grid grid-cols-3 items-center"
+    :class="{
+      'border-red-500 border-4': square.captured_by == 0,
+      'border-blue-500 border-4': square.captured_by == 1,
+      'border-white border-4': square.captured_by == 2,
+    }"
+    class="m-2 grid grid-cols-3 items-center"
   >
     <div
       :key="idx"
@@ -13,8 +17,12 @@
       @click="updateboard(idx)"
     >
       <div
-        class="w-8 h-8 bg-black rounded-full"
-        :class="circle.selected_by === 1 ? 'bg-red-500' : 'bg-black'"
+        class="w-8 h-8 rounded-full"
+        :class="{
+          'bg-red-500': circle.selected_by == 0,
+          'bg-blue-500': circle.selected_by == 1,
+          'bg-black': circle.selected_by == 2,
+        }"
       ></div>
       <span v-if="idx + 3 != 7" class="text-sm text-white ml-1">{{
         idx + 3
@@ -38,7 +46,7 @@ const props = defineProps({
 });
 
 const updateboard = (circleIdx) => {
-  store.updateState(1, props.squareIdx, circleIdx);
+  store.updateState(0, props.squareIdx, circleIdx);
   emit("updateboard");
 };
 </script>
