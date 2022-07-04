@@ -1,20 +1,13 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
-	"github.com/gijsdb/super-tic-tac-toe/router"
-	"github.com/gijsdb/super-tic-tac-toe/state"
-
-	"github.com/inconshreveable/log15"
+	"github.com/gijsdb/super-tic-tac-toe/internal/api"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
 )
 
 func main() {
 
-	state := state.InitGame()
+	state := game.InitGame()
 
-	r := router.New(state)
-	log15.Debug("Running server on localhost:2020")
-	log.Fatal(http.ListenAndServe("localhost:2020", r))
+	api.Run(state)
 }

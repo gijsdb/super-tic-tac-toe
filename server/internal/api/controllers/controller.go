@@ -8,8 +8,8 @@ import (
 	"runtime/debug"
 	"strconv"
 
-	h "github.com/gijsdb/super-tic-tac-toe/helpers"
-	"github.com/gijsdb/super-tic-tac-toe/state"
+	h "github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
 	"github.com/inconshreveable/log15"
 )
 
@@ -38,7 +38,7 @@ func errorResponse(err error, msg string, w http.ResponseWriter) {
 }
 
 // Update the game board with the selected circle for the player
-func UpdateGameBoard(w http.ResponseWriter, r *http.Request, state state.State) {
+func UpdateGameBoard(w http.ResponseWriter, r *http.Request, state game.State) {
 	player := r.URL.Query().Get("player")
 	square := r.URL.Query().Get("square")
 	circle := r.URL.Query().Get("circle")
@@ -67,13 +67,24 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, state state.State) 
 }
 
 // Return the state of the game board at the end of each turn
-func GetGameBoard(w http.ResponseWriter, r *http.Request, state state.State) {
+func GetGameBoard(w http.ResponseWriter, r *http.Request, state game.State) {
+	id := r.Context().Value("reqId")
+	log15.Debug("Request received on /: ", "id", id)
 
 	jsonState, err := json.Marshal(state)
-
 	if err != nil {
 		errorResponse(err, "Error marshalling state", w)
 	}
+	// time.Sleep(6 * time.Second)
+
+	// go func() {
+	// 	select {
+	// 	case <-r.Context().Done():
+	// 		fmt.Println(r.Context().Err()) // prints "context deadline exceeded"
+	// 		errorResponse(fmt.Errorf("too slow"), "too slow", w)
+	// 		return
+	// 	}
+	// }()
 
 	genericResponse(w, jsonState, nil)
 }

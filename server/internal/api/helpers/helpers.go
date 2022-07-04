@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gijsdb/super-tic-tac-toe/models"
+	"github.com/gijsdb/super-tic-tac-toe/internal/api/models"
 )
 
 func GenerateResponseError(message string, rerr error, debugStack string) (res []byte, error interface{}) {

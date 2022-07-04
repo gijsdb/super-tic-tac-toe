@@ -1,7 +1,8 @@
 
 <template>
-  <div class="w-screen h-screen bg-primary flex items-center justify-center">
-    <Board />
+  <div class="w-screen h-screen">
+    <!-- <Board /> -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -9,5 +10,6 @@
 </style>
 
 <script setup>
-import Board from "./components/Board.vue";
+import { RouterView } from "vue-router";
+import Board from "./views/Board.vue";
 </script>

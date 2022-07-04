@@ -3,18 +3,18 @@ package router
 import (
 	"net/http"
 
-	"github.com/gijsdb/super-tic-tac-toe/controllers"
-	"github.com/gijsdb/super-tic-tac-toe/middlewares"
-	"github.com/gijsdb/super-tic-tac-toe/state"
+	"github.com/gijsdb/super-tic-tac-toe/internal/api/controllers"
+	"github.com/gijsdb/super-tic-tac-toe/internal/api/middlewares"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
 
 	"github.com/gorilla/mux"
 )
 
-func New(state state.State) *mux.Router {
+func New(state game.State) *mux.Router {
 	r := mux.NewRouter()
 
 	r.Use(middlewares.CORS)
-
+	// r.Use(middlewares.PrepContext)
 	api := r.PathPrefix("/api/v1").Subrouter()
 
 	api.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

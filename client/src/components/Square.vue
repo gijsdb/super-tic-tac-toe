@@ -10,9 +10,11 @@
     <div
       :key="idx"
       v-for="(circle, idx) in square.circles"
-      class="flex mx-auto items-center"
+      class="flex mx-auto items-center p-1.5 rounded-xl"
       :class="{
-        'border-4 p-1 rounded-sm border-white font-bold': idx + 3 == 7,
+        'border-red-500 border-4': idx + 3 == 7 && square.captured_by == 0,
+        'border-blue-500 border-4': idx + 3 == 7 && square.captured_by == 1,
+        'border-white border-4': idx + 3 == 7 && square.captured_by == 2,
       }"
       @click="updateboard(idx)"
     >

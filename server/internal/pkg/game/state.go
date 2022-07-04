@@ -1,4 +1,4 @@
-package state
+package game
 
 import "github.com/inconshreveable/log15"
 
