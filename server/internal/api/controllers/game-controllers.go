@@ -38,7 +38,7 @@ func errorResponse(err error, msg string, w http.ResponseWriter) {
 }
 
 // Update the game board with the selected circle for the player
-func UpdateGameBoard(w http.ResponseWriter, r *http.Request, state game.State) {
+func UpdateGameBoard(w http.ResponseWriter, r *http.Request, manager *game.Manager) {
 	player := r.URL.Query().Get("player")
 	square := r.URL.Query().Get("square")
 	circle := r.URL.Query().Get("circle")
@@ -61,17 +61,39 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, state game.State) {
 		errorResponse(err, "Error converting square to int", w)
 	}
 
-	state.GameBoard.Update(playerInt, squareInt, circleInt)
+	gb, err := manager.Games[0].State.JsonToGameboard(manager.Games[0].State.GameBoard)
+	if err != nil {
+		errorResponse(err, "Error getting gameboard from JSON", w)
+	}
+	gb.Update(playerInt, squareInt, circleInt)
 
-	GetGameBoard(w, r, state)
+	GetGameBoard(w, r, manager)
 }
 
 // Return the state of the game board at the end of each turn
-func GetGameBoard(w http.ResponseWriter, r *http.Request, state game.State) {
-	id := r.Context().Value("reqId")
-	log15.Debug("Request received on /: ", "id", id)
 
-	jsonState, err := json.Marshal(state)
+// type State struct {
+// 	GameBoard  game.GameBoard `json:"game_board"`
+// 	GameID     int            `json:"game_id"`
+// 	PlayerTurn int            `json:"player_turn"`
+// 	GameOver   bool           `json:"game_over"`
+// 	Winner     int            `json:"winner"`
+// }
+
+func GetGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+	// id := r.Context().Value("reqId")
+	// log15.Debug("Request received on /: ", "id", id)
+	id := r.URL.Query().Get("id")
+	gameId, err := strconv.Atoi(id)
+	if err != nil {
+		errorResponse(err, "Error converting string to int", w)
+	}
+	game, err := m.GetGame(gameId)
+
+	if err != nil {
+		errorResponse(err, "Error getting game", w)
+	}
+	jsonGame, err := json.Marshal(game)
 	if err != nil {
 		errorResponse(err, "Error marshalling state", w)
 	}
@@ -86,5 +108,5 @@ func GetGameBoard(w http.ResponseWriter, r *http.Request, state game.State) {
 	// 	}
 	// }()
 
-	genericResponse(w, jsonState, nil)
+	genericResponse(w, jsonGame, nil)
 }

@@ -10,19 +10,27 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func New(state game.State) *mux.Router {
+func New(manager *game.Manager) *mux.Router {
 	r := mux.NewRouter()
 
 	r.Use(middlewares.CORS)
 	// r.Use(middlewares.PrepContext)
 	api := r.PathPrefix("/api/v1").Subrouter()
 
-	api.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		controllers.GetGameBoard(w, r, state)
+	api.HandleFunc("/games", func(w http.ResponseWriter, r *http.Request) {
+		controllers.ListGames(w, r, manager)
+	}).Methods("GET")
+
+	api.HandleFunc("/creategame", func(w http.ResponseWriter, r *http.Request) {
+		controllers.CreateGame(w, r, manager)
+	}).Methods("GET")
+
+	api.HandleFunc("/game", func(w http.ResponseWriter, r *http.Request) {
+		controllers.GetGameBoard(w, r, manager)
 	}).Methods("GET")
 
 	api.HandleFunc("/updateboard", func(w http.ResponseWriter, r *http.Request) {
-		controllers.UpdateGameBoard(w, r, state)
+		controllers.UpdateGameBoard(w, r, manager)
 	}).Methods("GET")
 
 	return r

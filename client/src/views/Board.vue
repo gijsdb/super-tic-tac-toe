@@ -19,22 +19,26 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useStore } from "../stores/game.js";
+import { useRouter } from "vue-router";
+
 import Square from "../components/Square.vue";
 import Dice from "../components/Dice.vue";
 
+const router = useRouter();
+console.log("ROIUTER", router.currentRoute.value.params.id);
 let storeFetched = ref(false);
 
 const store = useStore();
 
 const updateboard = async () => {
   storeFetched.value = false;
-  await store.fetchState();
+  await store.fetchState(router.currentRoute.value.params.id);
   storeFetched.value = true;
 };
 
 onMounted(async () => {
   storeFetched.value = false;
-  await store.fetchState();
+  await store.fetchState(router.currentRoute.value.params.id);
   storeFetched.value = true;
 });
 </script>

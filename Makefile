@@ -1,5 +1,5 @@
 runserver:
-	cd ./server && go run .
+	cd ./server/cmd && go run .
 
 runui: 
 	cd ./client && npm run dev

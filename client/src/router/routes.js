@@ -3,5 +3,6 @@ import Board from "../views/Board.vue";
 
 export const routes = [
     { path: "/", component: Home },
-    { path: "/game", component: Board }
+    { path: "/game/:id", component: Board }
+
 ];

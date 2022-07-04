@@ -10,13 +10,25 @@
         <ul>
           <li>
             <button
+              @click="joinGame(4)"
               class="bg-green-500 p-4 rounded-md text-white font-bold m-4"
             >
               Join Game
             </button>
           </li>
           <li>
-            <button class="bg-green-500 p-4 rounded-md text-white font-bold">
+            <button
+              @click="listGames()"
+              class="bg-green-500 p-4 rounded-md text-white font-bold m-4"
+            >
+              List Games
+            </button>
+          </li>
+          <li>
+            <button
+              @click="createGame()"
+              class="bg-green-500 p-4 rounded-md text-white font-bold"
+            >
               Create Game
             </button>
           </li>
@@ -25,3 +37,34 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { useRouter } from "vue-router";
+import APIClient from "../APIClient";
+const router = useRouter();
+const listGames = async () => {
+  try {
+    const res = await APIClient.ListGames();
+    console.log("LISTED GAMES: ", res);
+  } catch (e) {
+    console.log("Error listing games", e);
+  }
+};
+
+const createGame = async () => {
+  try {
+    const res = await APIClient.CreateGame();
+    console.log("CREATED GAME: ", res);
+  } catch (e) {
+    console.log("Error creating game", e);
+  }
+};
+
+const joinGame = async (id) => {
+  try {
+    router.push({ path: "/game/" + id });
+  } catch (e) {
+    console.log("Error creating game", e);
+  }
+};
+</script>

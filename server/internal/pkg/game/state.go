@@ -8,16 +8,12 @@ const (
 	Unselected = 2
 )
 
-type State struct {
-	GameBoard  GameBoard `json:"game_board"`
-	PlayerTurn int       `json:"player_turn"`
-	GameOver   bool      `json:"game_over"`
-	Winner     int       `json:"winner"`
-}
-
 // The whole board
 type GameBoard struct {
-	Squares []Square `json:"squares"`
+	Squares    []Square `json:"squares"`
+	PlayerTurn int      `json:"player_turn"`
+	GameOver   bool     `json:"game_over"`
+	Winner     int      `json:"winner"`
 }
 
 // The 9 squares on the board
@@ -33,17 +29,17 @@ type Circle struct {
 	Index      int
 }
 
-func InitGame() State {
-	state := State{
-		GameBoard:  initGameBoard(),
-		PlayerTurn: 0,
-		GameOver:   false,
-	}
+// func InitGame() State {
+// 	state := State{
+// 		GameBoard:  initGameBoard(),
+// 		PlayerTurn: 0,
+// 		GameOver:   false,
+// 	}
 
-	return state
-}
+// 	return state
+// }
 
-func initGameBoard() GameBoard {
+func CreateGameBoard() GameBoard {
 	var board GameBoard
 	var squares []Square
 	for i := 0; i < 9; i++ {

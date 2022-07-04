@@ -14,9 +14,10 @@ export const useStore = defineStore('game', {
     }
   },
   actions: {
-    async fetchState() {
+    async fetchState(id) {
       try {
-        const res = await APIClient.GetGameBoard()
+        console.log("ID IN STATE", id)
+        const res = await APIClient.GetGameBoard(id)
         this.gameboard = res.game_board
         this.gameover = res.game_over
         this.playerTurn = res.player_turn
@@ -24,7 +25,7 @@ export const useStore = defineStore('game', {
       } catch (e) {
         console.log("Error fetching state", e)
       }
-      
+
     },
     async updateState(player, square, circle) {
       try {
@@ -33,7 +34,7 @@ export const useStore = defineStore('game', {
         this.gameover = res.game_over
         this.playerTurn = res.player_turn
         this.winner = res.winner
-      } catch(e) {
+      } catch (e) {
         console.log("Error updating state", e)
       }
     }
