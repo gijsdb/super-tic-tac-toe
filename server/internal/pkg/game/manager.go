@@ -1,0 +1,80 @@
+package game
+
+import (
+	"encoding/json"
+
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/db"
+	"github.com/inconshreveable/log15"
+)
+
+func NewManager() *Manager {
+	return &Manager{
+		DB:    db.Init(),
+		Games: map[int]Game{},
+	}
+}
+
+func (m *Manager) CreateNewGame() (int, error) {
+	game := Game{
+		Players: 1,
+	}
+	state, err := game.createNewState()
+	if err != nil {
+		log15.Error("Error creating new state CreateNewGame()::game.go", "err", err)
+	}
+	game.State = &state
+	result := m.DB.Create(&game)
+	if result.Error != nil {
+		log15.Debug("Error saving new game CreateNewGame()::game.go", "err", result.Error)
+		return -1, err
+	}
+
+	m.Games[game.ID] = game
+	log15.Debug("game manager games after DB call CreateNewGame()", "game", m.Games[game.ID])
+	return game.ID, nil
+}
+
+func (m *Manager) GetGame(id int) (Game, error) {
+	return m.Games[id], nil
+}
+
+func (m *Manager) GetGames() error {
+	var games []Game
+	result := m.DB.Find(&games)
+	if result.Error != nil {
+		log15.Error("Error retrieving database records game::GetGames()")
+	}
+
+	for _, game := range games {
+		m.Games[game.ID] = game
+	}
+
+	return nil
+}
+
+func (m *Manager) JSONGames() ([]byte, error) {
+	err := m.GetGames()
+	if err != nil {
+		log15.Error("Error getting games list", "err", err)
+		return nil, err
+	}
+
+	if err != nil {
+		return nil, err
+	}
+	var games []Game
+	for _, game := range m.Games {
+		games = append(games, game)
+	}
+	bb, err := json.Marshal(games)
+	if err != nil {
+		log15.Error("Error marshalling games list", "err", err)
+		return nil, err
+	}
+	return bb, nil
+}
+
+func (m *Manager) ClearDB() {
+	m.DB.Exec("DELETE FROM games")
+	m.DB.Exec("DELETE FROM states")
+}

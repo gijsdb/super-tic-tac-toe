@@ -6,7 +6,7 @@
       class="bg-secondary p-4 w-[50vw] h-[50vw] grid grid-cols-3 rounded-lg"
     >
       <Square
-        v-for="(square, idx) in store.gameboard.squares"
+        v-for="(square, idx) in store.State.game_board.squares"
         :key="idx"
         :square="square"
         :squareIdx="idx"
@@ -25,7 +25,6 @@ import Square from "../components/Square.vue";
 import Dice from "../components/Dice.vue";
 
 const router = useRouter();
-console.log("ROIUTER", router.currentRoute.value.params.id);
 let storeFetched = ref(false);
 
 const store = useStore();

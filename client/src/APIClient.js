@@ -27,8 +27,8 @@ const APIClient = {
     return this.perform(GET, `/game?id=` + id);
   },
 
-  UpdateGameBoard(player, square, circle) {
-    return this.perform(GET, `/updateboard?player=` + player + `&square=` + square + `&circle=` + circle);
+  UpdateGameBoard(player, square, circle, gameId) {
+    return this.perform(GET, `/updateboard?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
   },
 
 

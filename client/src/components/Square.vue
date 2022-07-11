@@ -48,7 +48,7 @@ const props = defineProps({
 });
 
 const updateboard = (circleIdx) => {
-  store.updateState(0, props.squareIdx, circleIdx);
+  store.updateState(0, props.squareIdx, circleIdx, store.ID);
   emit("updateboard");
 };
 </script>

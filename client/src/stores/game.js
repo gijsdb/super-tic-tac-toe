@@ -7,10 +7,9 @@ export const useStore = defineStore('game', {
   state: async () => {
     return {
       // all these properties will have their type inferred automatically
-      gameboard: {},
-      gameover: false,
-      playerTurn: -1,
-      winner: -1
+      ID: '',
+      Players: 0,
+      State: {},
     }
   },
   actions: {
@@ -18,22 +17,20 @@ export const useStore = defineStore('game', {
       try {
         console.log("ID IN STATE", id)
         const res = await APIClient.GetGameBoard(id)
-        this.gameboard = res.game_board
-        this.gameover = res.game_over
-        this.playerTurn = res.player_turn
-        this.winner = res.winner
+        this.ID = res.id
+        this.Players = res.players
+        this.State = res.state
+        console.log("RESPONSE", res)
       } catch (e) {
         console.log("Error fetching state", e)
       }
-
     },
-    async updateState(player, square, circle) {
+    async updateState(player, square, circle, gameId) {
       try {
-        const res = APIClient.UpdateGameBoard(player, square, circle)
-        this.gameboard = res.game_board
-        this.gameover = res.game_over
-        this.playerTurn = res.player_turn
-        this.winner = res.winner
+        const res = APIClient.UpdateGameBoard(player, square, circle, gameId)
+        this.ID = res.id
+        this.Players = res.players
+        this.State = res.state
       } catch (e) {
         console.log("Error updating state", e)
       }

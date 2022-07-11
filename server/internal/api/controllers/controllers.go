@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
@@ -11,8 +12,11 @@ func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	if err != nil {
 		errorResponse(err, "Error creating game in controllers.go::CreateGame", w)
 	}
-
-	genericResponse(w, []byte{byte(id)}, nil)
+	bb, err := json.Marshal(id)
+	if err != nil {
+		errorResponse(err, "Error marshalling to JSON game in controllers.go::CreateGame", w)
+	}
+	genericResponse(w, bb, nil)
 }
 
 func ListGames(w http.ResponseWriter, r *http.Request, m *game.Manager) {
