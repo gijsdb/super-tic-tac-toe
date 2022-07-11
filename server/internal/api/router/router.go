@@ -29,6 +29,10 @@ func New(manager *game.Manager) *mux.Router {
 		controllers.GetGameBoard(w, r, manager)
 	}).Methods("GET")
 
+	api.HandleFunc("/joingame", func(w http.ResponseWriter, r *http.Request) {
+		controllers.JoinGame(w, r, manager)
+	}).Methods("GET")
+
 	api.HandleFunc("/updateboard", func(w http.ResponseWriter, r *http.Request) {
 		controllers.UpdateGameBoard(w, r, manager)
 	}).Methods("GET")

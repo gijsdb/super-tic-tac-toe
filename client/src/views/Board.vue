@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 import { useStore } from "../stores/game.js";
 import { useRouter } from "vue-router";
 
@@ -40,4 +40,8 @@ onMounted(async () => {
   await store.fetchState(router.currentRoute.value.params.id);
   storeFetched.value = true;
 });
+
+// onBeforeUnmount(async () => {
+//   // CALL API TO LEAVE GAME
+// });
 </script>

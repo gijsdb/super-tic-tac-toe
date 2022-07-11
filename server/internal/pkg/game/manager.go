@@ -14,6 +14,7 @@ func NewManager() *Manager {
 	}
 }
 
+// Creates a new game in the manager and database
 func (m *Manager) CreateNewGame() (int, error) {
 	game := Game{
 		Players: 1,
@@ -34,10 +35,14 @@ func (m *Manager) CreateNewGame() (int, error) {
 	return game.ID, nil
 }
 
+// GetGame returns a single game from the manager by ID
 func (m *Manager) GetGame(id int) (Game, error) {
+	log15.Debug("game manager games GetGame()", "game", m.Games[id])
+
 	return m.Games[id], nil
 }
 
+// GetGames is used by the List games UI to show all games
 func (m *Manager) GetGames() error {
 	var games []Game
 	result := m.DB.Find(&games)
@@ -52,6 +57,7 @@ func (m *Manager) GetGames() error {
 	return nil
 }
 
+// JSONGames returns a JSON representation of the manager's games
 func (m *Manager) JSONGames() ([]byte, error) {
 	err := m.GetGames()
 	if err != nil {
@@ -74,6 +80,7 @@ func (m *Manager) JSONGames() ([]byte, error) {
 	return bb, nil
 }
 
+// ClearDB clears the database
 func (m *Manager) ClearDB() {
 	m.DB.Exec("DELETE FROM games")
 	m.DB.Exec("DELETE FROM states")

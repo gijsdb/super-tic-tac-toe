@@ -31,6 +31,9 @@ const APIClient = {
     return this.perform(GET, `/updateboard?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
   },
 
+  JoinGame(id) {
+    return this.perform(GET, `/joingame?id=` + id);
+  },
 
   async perform(method, resource, data) {
     return client({
