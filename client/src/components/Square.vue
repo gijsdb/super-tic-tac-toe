@@ -37,10 +37,13 @@
 </template>
 
 <script setup>
-import { useStore } from "../stores/game.js";
+import { useGameStore } from "../stores/game.js";
+import APIClient from "../APIClient.js";
+import { useRouter } from "vue-router";
 
-const store = useStore();
+const store = useGameStore();
 const emit = defineEmits(["updateboard"]);
+const router = useRouter();
 
 const props = defineProps({
   square: Object,
@@ -48,7 +51,16 @@ const props = defineProps({
 });
 
 const updateboard = (circleIdx) => {
-  store.updateState(0, props.squareIdx, circleIdx, store.ID);
+  try {
+    const res = APIClient.UpdateGameBoard(
+      0,
+      props.squareIdx,
+      circleIdx,
+      router.currentRoute.value.params.id
+    );
+  } catch (e) {
+    console.log("Error making request updateGameBoard");
+  }
   emit("updateboard");
 };
 </script>

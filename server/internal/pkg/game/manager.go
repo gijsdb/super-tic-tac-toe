@@ -17,6 +17,7 @@ func NewManager() *Manager {
 // Creates a new game in the manager and database
 func (m *Manager) CreateNewGame() (int, error) {
 	game := Game{
+		ID:      len(m.Games) + 1,
 		Players: 1,
 	}
 	state, err := game.createNewState()
