@@ -39,19 +39,13 @@ func errorResponse(err error, msg string, w http.ResponseWriter) {
 
 func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	gameId := r.URL.Query().Get("id")
+	player := r.URL.Query().Get("player")
 	idInt, err := strconv.Atoi(gameId)
 	if err != nil {
 		errorResponse(err, "Error converting gameid to int", w)
 	}
 
-	game, err := m.GetGame(idInt)
-	if err != nil {
-		errorResponse(err, "Error getting game in game-controllers.go::JoinGame()", w)
-	}
-	err = game.JoinGame()
-	if err != nil {
-		errorResponse(err, "Game is full", w)
-	}
+	m.JoinGame(idInt, player)
 }
 
 // Update the game board with the selected circle for the player

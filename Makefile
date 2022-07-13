@@ -8,3 +8,8 @@ runserver: buildserver
 runui: 
 	cd ./client && npm run dev
 
+
+runuinetwork: 
+	cd ./client && npm run devnetwork
+
+

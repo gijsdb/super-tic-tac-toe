@@ -14,6 +14,7 @@
       >
         <div class="w-6/12 flex justify-center items-center">
           <h1 class="text-4xl font-white">SUPER TIC TAC TOE</h1>
+          {{ store.Player.id }}
         </div>
         <div class="w-6/12 flex justify-center text-center">
           <ul>
@@ -41,11 +42,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import GamesList from "../components/GamesList.vue";
 import APIClient from "../APIClient";
+import { useGameStore } from "../stores/game.js";
+
 const router = useRouter();
+const store = useGameStore();
 
 let showGames = ref(false);
 let games = ref([]);
@@ -63,11 +67,17 @@ const listGames = async () => {
 
 const createGame = async () => {
   try {
-    const res = await APIClient.CreateGame();
+    const res = await APIClient.CreateGame(store.Player.id);
+    const res2 = await APIClient.JoinGame(res, store.Player.id);
     router.push("/game/" + res);
-    console.log("CREATED GAME: ", res);
+    console.log("CREATED GAME: ", res, res2);
   } catch (e) {
     console.log("Error creating game", e);
   }
 };
+
+onMounted(() => {
+  store.identifyPlayer();
+  console.log(store.Player);
+});
 </script>

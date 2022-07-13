@@ -1,31 +1,42 @@
 import { defineStore } from 'pinia'
 import APIClient from '../APIClient'
 
-// useStore could be anything like useUser, useCart
-// the first argument is a unique id of the store across your application
 export const useGameStore = defineStore('game', {
   state: () => {
     return {
       // all these properties will have their type inferred automatically
-      Players: [{ id: 0, gameId: 0 }],
-
+      Player: {
+        id: 0,
+        name: 'Player',
+        turn: false,
+        score: 0
+      }
     }
   },
   actions: {
-    newPlayer(gameId) {
-      this.Players.push({ id: this.Players.length, gameId: gameId })
-      console.log("PLAYERS", this.Players)
+    async identifyPlayer() {
+      await fetch('https://api.ipify.org?format=json')
+        .then(x => x.json())
+        .then(({ ip }) => {
+
+          this.Player.id = ip;
+        });
+      let device = ""
+      const ua = navigator.userAgent;
+      if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+        device = "tablet";
+      }
+      if (
+        /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+          ua
+        )
+      ) {
+        device = "mobile";
+      } else {
+        device = "desktop";
+      }
+      this.Player.id = this.Player.id + device
     },
-    async updateState(player, square, circle, gameId) {
-      // try {
-      //   const res = APIClient.UpdateGameBoard(player, square, circle, gameId)
-      //   this.ID = res.id
-      //   this.Players = res.players
-      //   this.State = res.state
-      // } catch (e) {
-      //   console.log("Error updating state", e)
-      // }
-    }
   }
 })
 

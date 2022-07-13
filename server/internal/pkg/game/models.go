@@ -7,14 +7,15 @@ import (
 // Manager is an overarching struct for accessing DB and Games.
 type Manager struct {
 	DB    *gorm.DB
-	Games map[int]Game // List of games currently created (happening)
+	Games map[int]*Game // List of games currently created (happening)
 }
 
 // A game is shown on the UI and is "joinable"
 type Game struct {
 	gorm.Model
-	ID      int `gorm:"primaryKey;autoIncrement:true" json:"id"`
-	Players int `json:"players"`
+	ID        int            `gorm:"primaryKey;autoIncrement:true" json:"id"`
+	PlayerCnt int            `json:"full"`
+	Players   map[int]string `json:"players"`
 	// Private bool
 	State *State `json:"state" gorm:"foreign_key:StateID"`
 }

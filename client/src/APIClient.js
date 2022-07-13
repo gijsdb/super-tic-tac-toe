@@ -15,8 +15,8 @@ client.defaults.timeout = 15000;
 
 const APIClient = {
 
-  CreateGame() {
-    return this.perform(GET, `/creategame`);
+  CreateGame(playerId) {
+    return this.perform(GET, `/creategame?player=${playerId}`);
   },
 
   ListGames() {
@@ -31,8 +31,8 @@ const APIClient = {
     return this.perform(GET, `/updateboard?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
   },
 
-  JoinGame(id) {
-    return this.perform(GET, `/joingame?id=` + id);
+  JoinGame(id, player) {
+    return this.perform(GET, `/joingame?id=` + id + `&player=` + player);
   },
 
   async perform(method, resource, data) {
