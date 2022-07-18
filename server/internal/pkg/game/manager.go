@@ -16,7 +16,7 @@ func NewManager() *Manager {
 }
 
 // Creates a new game in the manager and database
-func (m *Manager) CreateNewGame(player string) (int, error) {
+func (m *Manager) CreateGame(player string) (int, error) {
 	var players = map[int]string{}
 	players[0] = player
 	game := Game{
@@ -92,6 +92,12 @@ func (m *Manager) ListGames() ([]byte, error) {
 		return nil, err
 	}
 	return bb, nil
+}
+
+// CreateClient should return a unique identifier for the client to store in state
+func (m *Manager) CreateClient() int {
+
+	return 1
 }
 
 // ClearDB clears the database, run on start up for testing

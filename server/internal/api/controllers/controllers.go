@@ -10,7 +10,7 @@ import (
 func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	player := r.URL.Query().Get("player")
 
-	id, err := m.CreateNewGame(player)
+	id, err := m.CreateGame(player)
 	if err != nil {
 		errorResponse(err, "Error creating game in controllers.go::CreateGame", w)
 	}
@@ -28,4 +28,13 @@ func ListGames(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	}
 
 	genericResponse(w, games, nil)
+}
+
+func CreateClient(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+	id := m.CreateClient()
+	bb, err := json.Marshal(id)
+	if err != nil {
+		errorResponse(err, "Error marshalling to JSON game in controllers.go::CreateClient", w)
+	}
+	genericResponse(w, bb, nil)
 }
