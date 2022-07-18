@@ -14,28 +14,16 @@ export const useGameStore = defineStore('game', {
     }
   },
   actions: {
-    async identifyPlayer() {
-      await fetch('https://api.ipify.org?format=json')
-        .then(x => x.json())
-        .then(({ ip }) => {
+    async registerClient() {
+      let currentId = localStorage.getItem('playerId')
+      if (currentId === null) {
+        console.log("NEW PLAYER")
+        const id = await APIClient.CreatePlayer()
+        this.Player.id = id
+        localStorage.setItem('playerId', id)
+      }
 
-          this.Player.id = ip;
-        });
-      let device = ""
-      const ua = navigator.userAgent;
-      if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-        device = "tablet";
-      }
-      if (
-        /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-          ua
-        )
-      ) {
-        device = "mobile";
-      } else {
-        device = "desktop";
-      }
-      this.Player.id = this.Player.id + device
+      console.log("currentId: ", currentId)
     },
   }
 })

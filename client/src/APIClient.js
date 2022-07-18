@@ -19,6 +19,10 @@ const APIClient = {
     return this.perform(GET, `/creategame?player=${playerId}`);
   },
 
+  CreatePlayer() {
+    return this.perform(GET, `/createplayer`);
+  },
+
   ListGames() {
     return this.perform(GET, `/games`);
   },

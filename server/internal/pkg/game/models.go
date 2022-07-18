@@ -6,8 +6,10 @@ import (
 
 // Manager is an overarching struct for accessing DB and Games.
 type Manager struct {
-	DB    *gorm.DB
-	Games map[int]*Game // List of games currently created (happening)
+	DB      *gorm.DB
+	Games   map[int]*Game // List of games currently created (happening)
+	Players int           // List of clients AKA players connected
+	// Lock    sync.Mutex // May need this for players
 }
 
 // A game is shown on the UI and is "joinable"

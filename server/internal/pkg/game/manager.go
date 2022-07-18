@@ -10,8 +10,9 @@ import (
 
 func NewManager() *Manager {
 	return &Manager{
-		DB:    db.Init(),
-		Games: map[int]*Game{},
+		DB:      db.Init(),
+		Games:   map[int]*Game{},
+		Players: 0,
 	}
 }
 
@@ -94,10 +95,11 @@ func (m *Manager) ListGames() ([]byte, error) {
 	return bb, nil
 }
 
-// CreateClient should return a unique identifier for the client to store in state
-func (m *Manager) CreateClient() int {
-
-	return 1
+// CreatePlayer should return a unique identifier for the client to store in state
+func (m *Manager) CreatePlayer() int {
+	log15.Debug("Creating new client", "clients", m.Players+1)
+	m.Players++
+	return m.Players
 }
 
 // ClearDB clears the database, run on start up for testing

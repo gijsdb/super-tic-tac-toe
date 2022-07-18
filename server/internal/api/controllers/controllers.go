@@ -30,8 +30,8 @@ func ListGames(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, games, nil)
 }
 
-func CreateClient(w http.ResponseWriter, r *http.Request, m *game.Manager) {
-	id := m.CreateClient()
+func CreatePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+	id := m.CreatePlayer()
 	bb, err := json.Marshal(id)
 	if err != nil {
 		errorResponse(err, "Error marshalling to JSON game in controllers.go::CreateClient", w)

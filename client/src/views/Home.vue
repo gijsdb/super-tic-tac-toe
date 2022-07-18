@@ -14,7 +14,6 @@
       >
         <div class="w-6/12 flex justify-center items-center">
           <h1 class="text-4xl font-white">SUPER TIC TAC TOE</h1>
-          {{ store.Player.id }}
         </div>
         <div class="w-6/12 flex justify-center text-center">
           <ul>
@@ -77,7 +76,6 @@ const createGame = async () => {
 };
 
 onMounted(() => {
-  store.identifyPlayer();
-  console.log(store.Player);
+  store.registerClient();
 });
 </script>
