@@ -41,5 +41,9 @@ func New(manager *game.Manager) *mux.Router {
 		controllers.CreatePlayer(w, r, manager)
 	}).Methods("GET")
 
+	api.HandleFunc("/removeplayer", func(w http.ResponseWriter, r *http.Request) {
+		controllers.RemovePlayer(w, r, manager)
+	}).Methods("GET")
+
 	return r
 }

@@ -15,15 +15,22 @@ export const useGameStore = defineStore('game', {
   },
   actions: {
     async registerClient() {
-      let currentId = localStorage.getItem('playerId')
-      if (currentId === null) {
-        console.log("NEW PLAYER")
-        const id = await APIClient.CreatePlayer()
-        this.Player.id = id
-        localStorage.setItem('playerId', id)
-      }
+      var cookieArr = document.cookie.split(";");
+      for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+        if (cookiePair[0].trim() === "client_id") {
+          this.Player.id = cookiePair[1]
+          await APIClient.CreatePlayer(cookiePair[1])
 
-      console.log("currentId: ", currentId)
+          return
+        }
+      }
+      console.log("NEW PLAYER")
+      const id = await APIClient.CreatePlayer(0)
+
+      document.cookie = "client_id=" + id + ";SameSite=none;Secure=false";
+
+      this.Player.id = id
     },
   }
 })

@@ -78,4 +78,8 @@ const createGame = async () => {
 onMounted(() => {
   store.registerClient();
 });
+
+window.onbeforeunload = async () => {
+  await APIClient.RemovePlayer(store.Player.id);
+};
 </script>

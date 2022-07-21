@@ -8,7 +8,7 @@ import (
 type Manager struct {
 	DB      *gorm.DB
 	Games   map[int]*Game // List of games currently created (happening)
-	Players int           // List of clients AKA players connected
+	Players map[int]bool  // List of clients AKA players connected. int is id, bool is active
 	// Lock    sync.Mutex // May need this for players
 }
 

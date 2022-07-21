@@ -12,7 +12,7 @@ func NewManager() *Manager {
 	return &Manager{
 		DB:      db.Init(),
 		Games:   map[int]*Game{},
-		Players: 0,
+		Players: make(map[int]bool),
 	}
 }
 
@@ -96,10 +96,21 @@ func (m *Manager) ListGames() ([]byte, error) {
 }
 
 // CreatePlayer should return a unique identifier for the client to store in state
-func (m *Manager) CreatePlayer() int {
-	log15.Debug("Creating new client", "clients", m.Players+1)
-	m.Players++
-	return m.Players
+func (m *Manager) CreatePlayer(id int) int {
+	if id == 0 {
+		id = len(m.Players) + 1
+		m.Players[id] = true
+		return id
+	} else {
+		m.Players[id] = true
+		return id
+	}
+}
+
+func (m *Manager) RemovePlayer(id int) {
+	m.Players[id] = false
+
+	return
 }
 
 // ClearDB clears the database, run on start up for testing

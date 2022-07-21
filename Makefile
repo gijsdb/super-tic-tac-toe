@@ -1,5 +1,5 @@
 buildserver:
-	cd ./server/cmd/server/ && go build --tags json1
+	cd ./server/cmd/server/ && go build
 
 runserver: buildserver
 	sudo ./server/cmd/server/server
