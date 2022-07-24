@@ -44,8 +44,17 @@ func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	if err != nil {
 		errorResponse(err, "Error converting gameid to int", w)
 	}
+	playerIdInt, err := strconv.Atoi(player)
+	if err != nil {
+		errorResponse(err, "Error converting gameid to int", w)
+	}
 
-	m.JoinGame(idInt, player)
+	err = m.JoinGame(idInt, playerIdInt)
+	if err != nil {
+		errorResponse(err, "game full", w)
+	}
+	bb, err := json.Marshal("true")
+	genericResponse(w, bb, nil)
 }
 
 // Update the game board with the selected circle for the player
@@ -81,7 +90,7 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 		errorResponse(err, "Error getting gameboard from JSON", w)
 	}
 
-	m.Games[idInt].State.GameBoard.Update(playerInt, squareInt, circleInt)
+	m.Games[idInt].GameBoard.Update(playerInt, squareInt, circleInt)
 
 	if err != nil {
 		errorResponse(err, "Error getting game", w)

@@ -10,8 +10,11 @@ import (
 
 func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	player := r.URL.Query().Get("player")
-
-	id, err := m.CreateGame(player)
+	idInt, err := strconv.Atoi(player)
+	if err != nil {
+		errorResponse(err, "Error converting gameid to int", w)
+	}
+	id, err := m.CreateGame(idInt)
 	if err != nil {
 		errorResponse(err, "Error creating game in controllers.go::CreateGame", w)
 	}

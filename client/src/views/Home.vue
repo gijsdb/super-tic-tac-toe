@@ -1,6 +1,10 @@
 <template>
   <div>
-    <GamesList v-if="showGames" :games="games" />
+    <GamesList
+      v-if="showGames"
+      :games="games"
+      @closeGamesList="showGames = false"
+    />
     <div class="w-screen h-screen bg-primary flex items-center justify-center">
       <div
         class="
@@ -67,9 +71,9 @@ const listGames = async () => {
 const createGame = async () => {
   try {
     const res = await APIClient.CreateGame(store.Player.id);
-    const res2 = await APIClient.JoinGame(res, store.Player.id);
+    // const res2 = await APIClient.JoinGame(res, store.Player.id);
     router.push("/game/" + res);
-    console.log("CREATED GAME: ", res, res2);
+    console.log("CREATED GAME: ", res);
   } catch (e) {
     console.log("Error creating game", e);
   }

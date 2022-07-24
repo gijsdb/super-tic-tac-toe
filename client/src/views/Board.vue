@@ -3,7 +3,7 @@
     <div class="bg-red-600">
       <span>Players : {{ game.players }}</span>
       <ul>
-        <li :key="idx" v-for="(field, idx) in game.state">
+        <li :key="idx" v-for="(field, idx) in game">
           <span v-show="idx !== 'game_board'">{{ idx }}:{{ field }}</span>
         </li>
       </ul>
@@ -14,7 +14,7 @@
       class="bg-secondary p-4 w-[50vw] h-[50vw] grid grid-cols-3 rounded-lg"
     >
       <Square
-        v-for="(square, idx) in game.state.game_board.squares"
+        v-for="(square, idx) in game.game_board.squares"
         :key="idx"
         :square="square"
         :squareIdx="idx"
