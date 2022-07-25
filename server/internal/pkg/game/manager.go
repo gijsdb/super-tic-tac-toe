@@ -78,8 +78,12 @@ func (m *Manager) JoinGame(gameId int, player int) error {
 
 // GetGame returns a single game from the manager by ID
 func (m *Manager) GetGame(idx int) (Game, error) {
-	// log15.Debug("GAMES ARE", "games", *m.Games[0])
-	return *m.Games[idx], nil
+	if idx >= 0 && idx < len(m.Games) {
+		return *m.Games[idx], nil
+
+	} else {
+		return Game{}, fmt.Errorf("no games")
+	}
 }
 
 // GetGames is used by the List games UI to show all games

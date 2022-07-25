@@ -40,6 +40,7 @@ export const useGameStore = defineStore('game', {
           return -1
         }
         this.Player.inGame = res
+        this.Player.turn = true
         return res
       } catch {
         console.log("Erroring creating game in store", e)
@@ -51,6 +52,7 @@ export const useGameStore = defineStore('game', {
         let res = await APIClient.JoinGame(gameId, this.Player.id)
         if (res == "true") {
           this.Player.inGame = gameId
+          this.Player.turn = false
           return true
         } else {
           return false

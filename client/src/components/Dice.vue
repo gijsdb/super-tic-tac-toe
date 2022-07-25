@@ -1,9 +1,18 @@
 <template>
-  <div class="bg-secondary mr-8 p-2 rounded-md">
+  <div
+    class="bg-black bg-opacity-60 border-white border-4 p-8 mx-8 rounded-2xl"
+  >
     <button
-      v-if="!rolled"
+      :disabled="rolled"
       @click="rollDice"
-      class="bg-green-500 rounded-md p-2 border-2 border-white"
+      class="
+        bg-green-500
+        rounded-md
+        p-4
+        text-white
+        font-bold
+        disabled:bg-gray-500
+      "
     >
       Roll dice
     </button>
@@ -12,9 +21,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 let rolled = ref(false);
+
+const props = defineProps({
+  clear: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const rollDice = () => {
   rolled.value = true;
@@ -28,8 +44,28 @@ const getRandomValue = () => {
 
 const createDice = () => {
   const roll = document.createElement("li");
+  roll.className = "roll";
   roll.innerHTML = `&#x268${getRandomValue()};`;
   roll.innerHTML = `&#x268${getRandomValue()};`;
   document.getElementById("rolls").appendChild(roll);
 };
+
+const clearDice = () => {
+  const dice = document.getElementsByClassName("roll");
+  dice[0].remove();
+  dice[0].remove();
+};
+
+watch(
+  () => props.clear,
+  () => {
+    if (props.clear) {
+      rolled.value = true;
+      clearDice();
+    } else {
+      rolled.value = false;
+    }
+  },
+  { immediate: true }
+);
 </script>

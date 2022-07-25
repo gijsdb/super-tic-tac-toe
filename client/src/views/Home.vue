@@ -5,39 +5,44 @@
       :games="games"
       @closeGamesList="showGames = false"
     />
-    <div class="w-screen h-screen bg-primary flex items-center justify-center">
+    <div class="w-screen h-screen bg-gradient flex items-center justify-center">
       <div
         class="
-          bg-secondary
-          w-6/12
+          bg-black
+          w-4/12
           py-48
-          rounded-md
-          border-red-500 border-4
+          rounded-2xl
+          shadow-2xl
+          bg-opacity-70
+          border-white border-4
+          text-white
           flex
         "
       >
-        <div class="w-6/12 flex justify-center items-center">
-          <h1 class="text-4xl font-white">SUPER TIC TAC TOE</h1>
-        </div>
-        <div class="w-6/12 flex justify-center text-center">
-          <ul>
-            <li>
-              <button
-                @click="listGames()"
-                class="bg-green-500 p-4 rounded-md text-white font-bold m-4"
-              >
-                List Games
-              </button>
-            </li>
-            <li>
-              <button
-                @click="createGame()"
-                class="bg-green-500 p-4 rounded-md text-white font-bold"
-              >
-                Create Game
-              </button>
-            </li>
-          </ul>
+        <div
+          class="w-full flex flex-col items-center justify-center text-center"
+        >
+          <h1 class="text-4xl font-white font-bold">SUPER TIC TAC TOE</h1>
+          <div>
+            <ul>
+              <li>
+                <button
+                  @click="listGames()"
+                  class="bg-[#1fddff] p-4 rounded-md text-white font-bold m-4"
+                >
+                  List Games
+                </button>
+              </li>
+              <li>
+                <button
+                  @click="createGame()"
+                  class="bg-[#1fddff] p-4 rounded-md text-white font-bold"
+                >
+                  Create Game
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
