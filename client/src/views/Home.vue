@@ -7,6 +7,7 @@
     />
     <div class="w-screen h-screen bg-gradient flex items-center justify-center">
       <div
+        v-if="!showGames"
         class="
           bg-black
           w-4/12

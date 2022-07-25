@@ -20,4 +20,5 @@ type Game struct {
 	GameOver   bool       `json:"game_over"`
 	Winner     int        `json:"winner"`
 	Players    string     `json:"players"`
+	Full       bool       `json:"full"`
 }

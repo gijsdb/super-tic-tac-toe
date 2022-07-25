@@ -66,6 +66,7 @@ func (m *Manager) JoinGame(gameId int, player int) error {
 				return fmt.Errorf("game is full")
 			}
 			game.Players = game.Players + fmt.Sprintf("%d,", player)
+			game.Full = true
 			result := m.DB.Save(&game)
 			if result.Error != nil {
 				log15.Debug("Error saving game after join JoinGame()::game.go", "err", result.Error)

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen absolute bg-black bg-opacity-50">
+  <div class="absolute flex items-center justify-center h-screen w-screen">
     <button
       @click="closeGamesList"
       class="
@@ -19,11 +19,24 @@
     >
       X
     </button>
-    <div class="bg-red-500">
+    <div
+      class="
+        bg-black bg-opacity-60
+        w-[50vw]
+        h-[50vh]
+        border-4 border-white
+        rounded-2xl
+        flex flex-col
+        text-white
+        items-center
+        justify-center
+      "
+    >
+      <h1 class="text-2xl font-bold">Games list</h1>
       <div :key="game.ID" v-for="game in games">
         <p>Game: {{ game.ID }}</p>
-
-        <button @click="JoinGame(game.ID)">Join</button>
+        <p>Full: {{ game.full }}</p>
+        <button v-if="!game.full" @click="JoinGame(game.ID)">Join</button>
       </div>
     </div>
   </div>
