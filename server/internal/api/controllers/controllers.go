@@ -3,18 +3,16 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
+	"github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
 	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
 )
 
 func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	player := r.URL.Query().Get("player")
-	idInt, err := strconv.Atoi(player)
-	if err != nil {
-		errorResponse(err, "Error converting gameid to int", w)
-	}
-	id, err := m.CreateGame(idInt)
+	playerId := helpers.StringToInt(player)
+
+	id, err := m.CreateGame(playerId)
 	if err != nil {
 		errorResponse(err, "Error creating game in controllers.go::CreateGame", w)
 	}
@@ -36,14 +34,11 @@ func ListGames(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 
 func CreatePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	player := r.URL.Query().Get("id")
-	idInt, err := strconv.Atoi(player)
-	if err != nil {
-		errorResponse(err, "Error converting gameid to int", w)
-	}
+	playerId := helpers.StringToInt(player)
 
-	id := m.CreatePlayer(idInt)
+	playerId = m.CreatePlayer(playerId)
 
-	bb, err := json.Marshal(id)
+	bb, err := json.Marshal(playerId)
 	if err != nil {
 		errorResponse(err, "Error marshalling to JSON game in controllers.go::CreateClient", w)
 	}
@@ -52,14 +47,9 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 
 func RemovePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	player := r.URL.Query().Get("id")
-	idInt, err := strconv.Atoi(player)
-	if err != nil {
-		errorResponse(err, "Error converting gameid to int", w)
-	}
+	playerId := helpers.StringToInt(player)
 
-	m.RemovePlayer(idInt)
-	if err != nil {
-		errorResponse(err, "Error removing player in controllers.go::RemovePlayer", w)
-	}
+	m.RemovePlayer(playerId)
+
 	genericResponse(w, nil, nil)
 }

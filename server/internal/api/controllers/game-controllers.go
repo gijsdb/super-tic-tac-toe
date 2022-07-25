@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
-	"strconv"
 
+	"github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
 	h "github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
 	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
 	"github.com/inconshreveable/log15"
@@ -38,18 +38,13 @@ func errorResponse(err error, msg string, w http.ResponseWriter) {
 }
 
 func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
-	gameId := r.URL.Query().Get("id")
-	player := r.URL.Query().Get("player")
-	idInt, err := strconv.Atoi(gameId)
-	if err != nil {
-		errorResponse(err, "Error converting gameid to int", w)
-	}
-	playerIdInt, err := strconv.Atoi(player)
-	if err != nil {
-		errorResponse(err, "Error converting gameid to int", w)
-	}
+	g := r.URL.Query().Get("id")
+	p := r.URL.Query().Get("player")
 
-	err = m.JoinGame(idInt, playerIdInt)
+	playerId := helpers.StringToInt(p)
+	gameId := helpers.StringToInt(g)
+
+	err := m.JoinGame(gameId, playerId)
 	if err != nil {
 		errorResponse(err, "game full", w)
 	}
@@ -59,43 +54,27 @@ func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 
 // Update the game board with the selected circle for the player
 func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
-	gameId := r.URL.Query().Get("gameid")
-	player := r.URL.Query().Get("player")
-	square := r.URL.Query().Get("square")
-	circle := r.URL.Query().Get("circle")
+	g := r.URL.Query().Get("gameid")
+	p := r.URL.Query().Get("player")
+	s := r.URL.Query().Get("square")
+	c := r.URL.Query().Get("circle")
 
-	if player == "" || square == "" || circle == "" {
+	if p == "" || s == "" || c == "" {
 		err := errors.New("missing parameters")
 		errorResponse(err, "Missing parameters in UpdateGameBoard", w)
 	}
 
-	idInt, err := strconv.Atoi(gameId)
-	if err != nil {
-		errorResponse(err, "Error converting square to int", w)
-	}
+	// -1 because m.Games is an index
+	gameIdx := helpers.StringToInt(g) - 1
+	playerId := helpers.StringToInt(p)
+	squareIdx := helpers.StringToInt(s)
+	circleIdx := helpers.StringToInt(c)
 
-	squareInt, err := strconv.Atoi(square)
+	err := m.Games[gameIdx].GameBoard.Update(playerId, squareIdx, circleIdx)
 	if err != nil {
-		errorResponse(err, "Error converting square to int", w)
+		errorResponse(err, "Error updating game", w)
 	}
-	playerInt, err := strconv.Atoi(player)
-	if err != nil {
-		errorResponse(err, "Error converting square to int", w)
-	}
-	circleInt, err := strconv.Atoi(circle)
-	if err != nil {
-		errorResponse(err, "Error converting square to int", w)
-	}
-	if err != nil {
-		errorResponse(err, "Error getting gameboard from JSON", w)
-	}
-
-	m.Games[idInt].GameBoard.Update(playerInt, squareInt, circleInt)
-
-	if err != nil {
-		errorResponse(err, "Error getting game", w)
-	}
-	jsonGame, err := json.Marshal(m.Games[idInt])
+	jsonGame, err := json.Marshal(m.Games[gameIdx])
 	if err != nil {
 		errorResponse(err, "Error marshalling state", w)
 	}
@@ -105,11 +84,8 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 
 func GetGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	id := r.URL.Query().Get("id")
-	gameId, err := strconv.Atoi(id)
-	if err != nil {
-		errorResponse(err, "Error converting string to int", w)
-	}
-	game, err := m.GetGame(gameId)
+	gameIdx := helpers.StringToInt(id) - 1
+	game, err := m.GetGame(gameIdx)
 	if err != nil {
 		errorResponse(err, "Error getting game", w)
 	}

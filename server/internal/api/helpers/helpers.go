@@ -3,8 +3,10 @@ package helpers
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/api/models"
+	"github.com/inconshreveable/log15"
 )
 
 func GenerateResponseError(message string, rerr error, debugStack string) (res []byte, error interface{}) {
@@ -19,4 +21,13 @@ func GenerateResponseError(message string, rerr error, debugStack string) (res [
 		return nil, err
 	}
 	return res, nil
+}
+
+func StringToInt(str string) int {
+	out, err := strconv.Atoi(str)
+	if err != nil {
+		log15.Crit("Error converting string to int in StringToInt()::helpers.go", "err", err)
+		return -1
+	}
+	return out
 }

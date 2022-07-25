@@ -43,6 +43,7 @@ func CreateGameBoard() GameBoard {
 }
 
 func (gb *GameBoard) Update(player, square, circle int) error {
+	// TODO add check here to see if its not selected by another player
 	gb.Squares[square].Circles[circle].SelectedBy = player
 	circleWin := gb.Squares[square].checkCirclesCondition()
 	squareWin := gb.checkSquareCondition()

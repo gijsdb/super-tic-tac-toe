@@ -1,7 +1,6 @@
 <template>
   <div class="bg-primary w-screen h-screen flex items-center justify-center">
     <div class="bg-red-600">
-      <span>Players : {{ game.players }}</span>
       <ul>
         <li :key="idx" v-for="(field, idx) in game">
           <span v-show="idx !== 'game_board'">{{ idx }}:{{ field }}</span>
