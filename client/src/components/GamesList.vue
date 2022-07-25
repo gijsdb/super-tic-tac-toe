@@ -48,19 +48,15 @@ const closeGamesList = () => {
   emit("closeGamesList");
 };
 
-const JoinGame = async (id) => {
+const JoinGame = async (gameId) => {
   try {
-    let res = await APIClient.JoinGame(id, store.Player.id);
-    if (res == "true") {
-      router.push("/game/" + id);
-    } else {
-      router.push("/");
+    let res = await store.joinGame(gameId);
+    if (res === true) {
+      router.push("/game/" + gameId);
     }
   } catch (e) {
     console.log("Error joining game", e);
     return;
   }
 };
-
-console.log("LIST: ", props.games);
 </script>

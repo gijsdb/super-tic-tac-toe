@@ -60,7 +60,6 @@ let games = ref([]);
 const listGames = async () => {
   try {
     const res = await APIClient.ListGames();
-    console.log("LISTED GAMES: ", res);
     games.value = res;
     showGames.value = true;
   } catch (e) {
@@ -70,10 +69,10 @@ const listGames = async () => {
 
 const createGame = async () => {
   try {
-    const res = await APIClient.CreateGame(store.Player.id);
-    // const res2 = await APIClient.JoinGame(res, store.Player.id);
-    router.push("/game/" + res);
-    console.log("CREATED GAME: ", res);
+    const res = await store.createGame();
+    if (res != -1) {
+      router.push("/game/" + res);
+    }
   } catch (e) {
     console.log("Error creating game", e);
   }

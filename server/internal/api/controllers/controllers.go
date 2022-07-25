@@ -9,8 +9,8 @@ import (
 )
 
 func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
-	player := r.URL.Query().Get("player")
-	playerId := helpers.StringToInt(player)
+	p := r.URL.Query().Get("player")
+	playerId := helpers.StringToInt(p)
 
 	id, err := m.CreateGame(playerId)
 	if err != nil {

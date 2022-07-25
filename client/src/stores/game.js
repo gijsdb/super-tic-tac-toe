@@ -8,8 +8,8 @@ export const useGameStore = defineStore('game', {
       Player: {
         id: 0,
         name: 'Player',
+        inGame: -1,
         turn: false,
-        score: 0
       }
     }
   },
@@ -32,6 +32,34 @@ export const useGameStore = defineStore('game', {
 
       this.Player.id = id
     },
+    async createGame() {
+      try {
+        const res = await APIClient.CreateGame(this.Player.id);
+        if (res === -1) {
+          console.log("Erroring creating game in store", e)
+          return -1
+        }
+        this.Player.inGame = res
+        return res
+      } catch {
+        console.log("Erroring creating game in store", e)
+        return -1
+      }
+    },
+    async joinGame(gameId) {
+      try {
+        let res = await APIClient.JoinGame(gameId, this.Player.id)
+        if (res == "true") {
+          this.Player.inGame = gameId
+          return true
+        } else {
+          return false
+        }
+      } catch (e) {
+        console.log("Erroring joining game in store", e)
+        return false
+      }
+    }
   }
 })
 
