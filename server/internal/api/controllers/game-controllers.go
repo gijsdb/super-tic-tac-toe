@@ -74,6 +74,8 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	if err != nil {
 		errorResponse(err, "Error updating game", w)
 	}
+	m.Games[gameIdx].Changeturn(playerId)
+
 	jsonGame, err := json.Marshal(m.Games[gameIdx])
 	if err != nil {
 		errorResponse(err, "Error marshalling state", w)

@@ -16,7 +16,7 @@ type Game struct {
 	gorm.Model
 	ID         int        `gorm:"primary_key"`
 	GameBoard  *GameBoard `json:"game_board" gorm:"-:all"` // JSON for gameboard
-	PlayerTurn int        `json:"player_turn"`
+	PlayerTurn string     `json:"player_turn"`
 	GameOver   bool       `json:"game_over"`
 	Winner     int        `json:"winner"`
 	Players    string     `json:"players"`

@@ -52,8 +52,10 @@ const createDice = () => {
 
 const clearDice = () => {
   const dice = document.getElementsByClassName("roll");
-  dice[0].remove();
-  dice[0].remove();
+  if (dice[0] != undefined) {
+    dice[0].remove();
+    dice[0].remove();
+  }
 };
 
 watch(

@@ -31,6 +31,7 @@ func initDB() *gorm.DB {
 func (m *Manager) CreateGame(player int) (int, error) {
 	game, err := m.createNewGame()
 	game.Players = fmt.Sprintf("%d,", player)
+	game.PlayerTurn = fmt.Sprintf("%d,", player)
 	if err != nil {
 		log15.Error("Error creating new state CreateNewGame()::game.go", "err", err)
 		return -1, err
@@ -48,7 +49,7 @@ func (m *Manager) CreateGame(player int) (int, error) {
 func (m *Manager) createNewGame() (Game, error) {
 	gb := CreateGameBoard()
 	game := Game{
-		PlayerTurn: 0,
+		PlayerTurn: "",
 		GameOver:   false,
 		Winner:     2,
 		GameBoard:  &gb,

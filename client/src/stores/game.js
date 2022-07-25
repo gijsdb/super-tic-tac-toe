@@ -61,6 +61,19 @@ export const useGameStore = defineStore('game', {
         console.log("Erroring joining game in store", e)
         return false
       }
+    },
+    async updateGameBoard(player, square, circle, game) {
+      try {
+        let res = await APIClient.UpdateGameBoard(
+          player,
+          square,
+          circle,
+          game
+        );
+        this.Player.turn = false
+      } catch (e) {
+        console.log("Erroring updating game in store", e)
+      }
     }
   }
 })

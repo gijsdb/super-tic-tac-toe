@@ -52,15 +52,15 @@ const props = defineProps({
 
 const updateboard = (circleIdx) => {
   try {
-    const res = APIClient.UpdateGameBoard(
+    store.updateGameBoard(
       0,
       props.squareIdx,
       circleIdx,
       router.currentRoute.value.params.id
     );
+    emit("updateboard");
   } catch (e) {
     console.log("Error making request updateGameBoard");
   }
-  emit("updateboard");
 };
 </script>
