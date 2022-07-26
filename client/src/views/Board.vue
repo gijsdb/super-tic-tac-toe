@@ -1,6 +1,22 @@
 <template>
   <div class="bg-gradient w-screen h-screen flex items-center justify-center">
-    <div class="flex flex-col space-y-10">
+    <div
+      v-show="!game.full"
+      class="
+        bg-black bg-opacity-50
+        p-12
+        rounded-2xl
+        shadow-2xl
+        text-white
+        font-bold
+        text-center
+      "
+    >
+      <p class="text-4xl py-4">Game {{ game.ID }} - Waiting for players...</p>
+      <Loader />
+    </div>
+
+    <div v-show="game.full" class="flex flex-col space-y-10">
       <div
         class="
           rounded-2xl
@@ -38,9 +54,9 @@
         </ul>
       </div>
     </div>
-    <Dice :clear="enableDice" />
+    <Dice v-show="game.full" :clear="enableDice" />
 
-    <div class="flex">
+    <div v-show="game.full" class="flex">
       <div
         v-if="storeFetched"
         class="
@@ -68,13 +84,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useGameStore } from "../stores/game.js";
 import { useRouter } from "vue-router";
 import APIClient from "../APIClient";
 
 import Square from "../components/Square.vue";
 import Dice from "../components/Dice.vue";
+import Loader from "../components/Loader.vue";
 
 const router = useRouter();
 const store = useGameStore();
@@ -82,6 +99,7 @@ const store = useGameStore();
 let storeFetched = ref(false);
 let game = ref({});
 let enableDice = ref(false);
+let waitForPlayerInterval = null;
 
 const updateboard = async () => {
   enableDice.value = true;
@@ -102,11 +120,21 @@ const fetchData = async () => {
   }
 };
 
+const waitingForPlayer = () => {};
+
 onMounted(async () => {
   fetchData();
+  waitForPlayerInterval = setInterval(() => {
+    if (game.value.full) {
+      clearInterval(waitForPlayerInterval);
+      return;
+    }
+    fetchData();
+  }, 1000);
 });
 
-// onBeforeUnmount(async () => {
-//   // CALL API TO LEAVE GAME
-// });
+onBeforeUnmount(async () => {
+  // TODO CALL API TO LEAVE GAME
+  clearInterval(waitForPlayerInterval);
+});
 </script>
