@@ -28,22 +28,22 @@ func initDB() *gorm.DB {
 }
 
 // Creates a new game in the manager and database
-func (m *Manager) CreateGame(player int) (int, error) {
+func (m *Manager) CreateGame(player int) (*Game, error) {
 	game, err := m.createNewGame()
 	game.Players = fmt.Sprintf("%d,", player)
 	game.PlayerTurn = fmt.Sprintf("%d,", player)
 	if err != nil {
 		log15.Error("Error creating new state CreateNewGame()::game.go", "err", err)
-		return -1, err
+		return nil, err
 	}
 	result := m.DB.Create(&game)
 	if result.Error != nil {
 		log15.Debug("Error saving new game CreateNewGame()::game.go", "err", result.Error)
-		return -1, err
+		return nil, err
 	}
 
 	m.Games = append(m.Games, &game)
-	return len(m.Games), nil
+	return &game, nil
 }
 
 func (m *Manager) createNewGame() (Game, error) {
@@ -51,31 +51,32 @@ func (m *Manager) createNewGame() (Game, error) {
 	game := Game{
 		PlayerTurn: "",
 		GameOver:   false,
-		Winner:     2,
+		Winner:     -1,
 		GameBoard:  &gb,
 	}
 
 	return game, nil
 }
 
-func (m *Manager) JoinGame(gameId int, player int) error {
+func (m *Manager) JoinGame(gameId int, player int) (*Game, error) {
 	for _, game := range m.Games {
 		if game.ID == gameId {
 			playerLength := strings.Split(game.Players, ",")
 			log15.Debug("Player length", "playerLength", playerLength)
 			if len(playerLength) >= 3 {
-				return fmt.Errorf("game is full")
+				return nil, fmt.Errorf("game is full")
 			}
 			game.Players = game.Players + fmt.Sprintf("%d,", player)
 			game.Full = true
 			result := m.DB.Save(&game)
 			if result.Error != nil {
 				log15.Debug("Error saving game after join JoinGame()::game.go", "err", result.Error)
-				return result.Error
+				return nil, result.Error
 			}
+			return game, nil
 		}
 	}
-	return nil
+	return nil, fmt.Errorf("game not found")
 }
 
 // GetGame returns a single game from the manager by ID

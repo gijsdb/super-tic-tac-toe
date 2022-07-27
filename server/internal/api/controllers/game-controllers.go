@@ -44,11 +44,11 @@ func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	playerId := helpers.StringToInt(p)
 	gameId := helpers.StringToInt(g)
 
-	err := m.JoinGame(gameId, playerId)
+	game, err := m.JoinGame(gameId, playerId)
 	if err != nil {
 		errorResponse(err, "game full", w)
 	}
-	bb, err := json.Marshal("true")
+	bb, err := json.Marshal(game)
 	genericResponse(w, bb, nil)
 }
 
@@ -84,7 +84,7 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, jsonGame, nil)
 }
 
-func GetGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func GetGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	id := r.URL.Query().Get("id")
 	gameIdx := helpers.StringToInt(id) - 1
 	game, err := m.GetGame(gameIdx)

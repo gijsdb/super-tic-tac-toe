@@ -2,9 +2,11 @@
   <div
     :class="{
       'border-red-500 border-4':
-        square.captured_by !== store.Player.id && square.captured_by !== -1,
+        square.captured_by !== playerStore.Player.id &&
+        square.captured_by !== -1,
       'border-blue-500 border-4':
-        square.captured_by == store.Player.id && square.captured_by !== -1,
+        square.captured_by == playerStore.Player.id &&
+        square.captured_by !== -1,
       'border-white border-4': square.captured_by == -1,
     }"
     class="m-2 grid grid-cols-3 items-center"
@@ -16,11 +18,11 @@
       :class="{
         'border-red-500 border-4':
           idx + 3 == 7 &&
-          square.captured_by !== store.Player.id &&
+          square.captured_by !== playerStore.Player.id &&
           square.captured_by !== -1,
         'border-blue-500 border-4':
           idx + 3 == 7 &&
-          square.captured_by == store.Player.id &&
+          square.captured_by == playerStore.Player.id &&
           square.captured_by !== -1,
         'border-white border-4': idx + 3 == 7 && square.captured_by == -1,
       }"
@@ -30,9 +32,11 @@
         class="w-8 h-8 rounded-full"
         :class="{
           'bg-red-500':
-            circle.selected_by !== store.Player.id && circle.selected_by !== -1,
+            circle.selected_by !== playerStore.Player.id &&
+            circle.selected_by !== -1,
           'bg-blue-500':
-            circle.selected_by == store.Player.id && circle.selected_by !== -1,
+            circle.selected_by == playerStore.Player.id &&
+            circle.selected_by !== -1,
           'bg-black': circle.selected_by == -1,
         }"
       ></div>
@@ -48,28 +52,32 @@
 
 <script setup>
 import { useGameStore } from "../stores/game.js";
-import APIClient from "../APIClient.js";
+import { storeToRefs } from "pinia";
+
 import { useRouter } from "vue-router";
 
 const store = useGameStore();
+let playerStore = storeToRefs(store);
+const { updateGameBoard } = store;
+
 const emit = defineEmits(["updateboard"]);
-const router = useRouter();
+// const router = useRouter();
 
 const props = defineProps({
   square: Object,
   squareIdx: Number,
 });
 
-const updateboard = (circleIdx) => {
-  if (store.Player.turn) {
+const updateboard = async (circleIdx) => {
+  if (playerStore.Player.value.turn) {
     try {
-      store.updateGameBoard(
-        store.Player.id,
+      await updateGameBoard(
+        playerStore.Player.value.id,
         props.squareIdx,
         circleIdx,
-        router.currentRoute.value.params.id
+        playerStore.Player.value.game.ID
       );
-      emit("updateboard");
+      // emit("updateboard");
     } catch (e) {
       console.log("Error making request updateGameBoard");
     }

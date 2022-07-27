@@ -12,11 +12,11 @@ func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	p := r.URL.Query().Get("player")
 	playerId := helpers.StringToInt(p)
 
-	id, err := m.CreateGame(playerId)
+	game, err := m.CreateGame(playerId)
 	if err != nil {
 		errorResponse(err, "Error creating game in controllers.go::CreateGame", w)
 	}
-	bb, err := json.Marshal(id)
+	bb, err := json.Marshal(game)
 	if err != nil {
 		errorResponse(err, "Error marshalling to JSON game in controllers.go::CreateGame", w)
 	}

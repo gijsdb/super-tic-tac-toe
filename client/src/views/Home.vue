@@ -36,7 +36,7 @@
               </li>
               <li>
                 <button
-                  @click="createGame()"
+                  @click="createGameHandler()"
                   class="bg-[#1fddff] p-4 rounded-md text-white font-bold"
                 >
                   Create Game
@@ -52,6 +52,8 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+
 import { useRouter } from "vue-router";
 import GamesList from "../components/GamesList.vue";
 import APIClient from "../APIClient";
@@ -59,6 +61,8 @@ import { useGameStore } from "../stores/game.js";
 
 const router = useRouter();
 const store = useGameStore();
+const { registerClient, createGame } = store;
+let playerStore = storeToRefs(store);
 
 let showGames = ref(false);
 let games = ref([]);
@@ -73,22 +77,18 @@ const listGames = async () => {
   }
 };
 
-const createGame = async () => {
-  try {
-    const res = await store.createGame();
-    if (res != -1) {
-      router.push("/game/" + res);
-    }
-  } catch (e) {
-    console.log("Error creating game", e);
+const createGameHandler = async () => {
+  let res = await createGame();
+  if (res) {
+    router.push("/game/" + playerStore.Player.value.game.ID);
   }
 };
 
 onMounted(() => {
-  store.registerClient();
+  registerClient();
 });
 
 window.onbeforeunload = async () => {
-  await APIClient.RemovePlayer(store.Player.id);
+  await APIClient.RemovePlayer(playerStore.Player.value.id);
 };
 </script>

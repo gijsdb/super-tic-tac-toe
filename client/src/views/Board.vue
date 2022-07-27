@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gradient w-screen h-screen flex items-center justify-center">
     <div
-      v-show="!game.full"
+      v-show="!playerStore.Player.value.game.full"
       class="
         bg-black bg-opacity-50
         p-12
@@ -12,11 +12,16 @@
         text-center
       "
     >
-      <p class="text-4xl py-4">Game {{ game.ID }} - Waiting for players...</p>
+      <p class="text-4xl py-4">
+        Game {{ playerStore.Player.value.game.ID }} - Waiting for players...
+      </p>
       <Loader />
     </div>
 
-    <div v-show="game.full" class="flex flex-col space-y-10">
+    <div
+      v-show="playerStore.Player.value.game.full"
+      class="flex flex-col space-y-10"
+    >
       <div
         class="
           rounded-2xl
@@ -27,38 +32,16 @@
           border-white border-4
         "
       >
-        <ul>
-          <li :key="idx" v-for="(field, idx) in game">
-            <span v-show="idx !== 'game_board'"
-              ><span class="font-bold">{{ idx }}: </span>{{ field }}</span
-            >
-          </li>
-        </ul>
-      </div>
-      <div
-        class="
-          rounded-2xl
-          shadow-2xl
-          p-2
-          text-white
-          bg-black bg-opacity-60
-          border-white border-4
-        "
-      >
-        <ul>
-          <li :key="idx" v-for="(field, idx) in store.Player">
-            <span v-show="idx !== 'game_board'"
-              ><span class="font-bold">{{ idx }}: </span>{{ field }}</span
-            >
-          </li>
-        </ul>
+        <p>Player ID: {{ playerStore.Player.value.id }}</p>
+        <p>Game ID: {{ playerStore.Player.value.game.ID }}</p>
+        <p>Your turn: {{ playerStore.Player.value.turn }}</p>
+        <p>Game Full: {{ playerStore.Player.value.game.full }}</p>
       </div>
     </div>
-    <Dice v-show="game.full" :clear="enableDice" />
+    <Dice v-show="playerStore.Player.value.game.full" :clear="enableDice" />
 
-    <div v-show="game.full" class="flex">
+    <div v-show="playerStore.Player.value.game.full" class="flex">
       <div
-        v-if="storeFetched"
         class="
           z-40
           bg-black bg-opacity-80
@@ -72,11 +55,11 @@
         "
       >
         <Square
-          v-for="(square, idx) in game.game_board.squares"
+          v-for="(square, idx) in playerStore.Player.value.game.game_board
+            .squares"
           :key="idx"
           :square="square"
           :squareIdx="idx"
-          @updateboard="updateboard"
         />
       </div>
     </div>
@@ -87,6 +70,7 @@
 import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useGameStore } from "../stores/game.js";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 import APIClient from "../APIClient";
 
 import Square from "../components/Square.vue";
@@ -96,52 +80,47 @@ import Loader from "../components/Loader.vue";
 const router = useRouter();
 const store = useGameStore();
 
-let storeFetched = ref(false);
-let game = ref({});
+const { refreshGame } = store;
+
+let playerStore = storeToRefs(store);
 let enableDice = ref(false);
 let waitForPlayerInterval = null;
-let waitForTurnInterval = null;
+// let waitForTurnInterval = null;
 
-const updateboard = async () => {
-  enableDice.value = true;
-  fetchData();
-};
+// const updateboard = async () => {
+//   enableDice.value = true;
+//   await refreshGame();
+// };
 
-const fetchData = async () => {
-  storeFetched.value = false;
-  try {
-    // Send player id to verify if player is in game
-    const res = await APIClient.GetGameBoard(
-      router.currentRoute.value.params.id
-    );
-    game.value = res;
-    storeFetched.value = true;
-    if (game.value.player_turn === store.Player.id) {
-      store.Player.turn = true;
-    }
-  } catch (e) {
-    router.push("/");
+// const fetchData = async () => {
+//   storeFetched.value = false;
+//   try {
+//     // Send player id to verify if player is in game
+//     const res = await APIClient.GetGameBoard(store.Player.game.ID);
+//     game.value = res;
+//     storeFetched.value = true;
+//     if (game.value.player_turn === store.Player.id) {
+//       store.Player.turn = true;
+//     }
+//   } catch (e) {
+//     router.push("/");
+//   }
+// };
+
+onMounted(() => {
+  // game.value = store.Player.game;
+  if (!playerStore.Player.value.game.full) {
+    waitForPlayerInterval = setInterval(async () => {
+      await refreshGame();
+    }, 1000);
+  } else {
+    clearInterval(waitForPlayerInterval);
   }
-};
-
-onMounted(async () => {
-  fetchData();
-  waitForPlayerInterval = setInterval(() => {
-    if (game.value.full) {
-      clearInterval(waitForPlayerInterval);
-      return;
-    }
-    fetchData();
-  }, 1000);
-
-  waitForTurnInterval = setInterval(() => {
-    fetchData();
-  }, 1500);
 });
 
 onBeforeUnmount(async () => {
-  // TODO CALL API TO LEAVE GAME
+  // // TODO CALL API TO LEAVE GAME
   clearInterval(waitForPlayerInterval);
-  clearInterval(waitForTurnInterval);
+  // clearInterval(waitForTurnInterval);
 });
 </script>

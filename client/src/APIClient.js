@@ -31,7 +31,7 @@ const APIClient = {
     return this.perform(GET, `/games`);
   },
 
-  GetGameBoard(id) {
+  GetGame(id) {
     return this.perform(GET, `/game?id=` + id);
   },
 
