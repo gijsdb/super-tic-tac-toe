@@ -5,7 +5,7 @@ import "github.com/inconshreveable/log15"
 const (
 	Player1    = 0
 	Player2    = 1
-	Unselected = 2
+	Unselected = -1
 )
 
 // Gameboard represents the game board

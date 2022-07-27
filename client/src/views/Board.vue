@@ -65,8 +65,8 @@
           border-white border-2
           shadow-2xl
           p-4
-          w-[50vw]
-          h-[50vw]
+          w-[40vw]
+          h-[40vw]
           rounded-lg
           grid grid-cols-3
         "
@@ -100,6 +100,7 @@ let storeFetched = ref(false);
 let game = ref({});
 let enableDice = ref(false);
 let waitForPlayerInterval = null;
+let waitForTurnInterval = null;
 
 const updateboard = async () => {
   enableDice.value = true;
@@ -115,12 +116,13 @@ const fetchData = async () => {
     );
     game.value = res;
     storeFetched.value = true;
+    if (game.value.player_turn === store.Player.id) {
+      store.Player.turn = true;
+    }
   } catch (e) {
     router.push("/");
   }
 };
-
-const waitingForPlayer = () => {};
 
 onMounted(async () => {
   fetchData();
@@ -131,10 +133,15 @@ onMounted(async () => {
     }
     fetchData();
   }, 1000);
+
+  waitForTurnInterval = setInterval(() => {
+    fetchData();
+  }, 1500);
 });
 
 onBeforeUnmount(async () => {
   // TODO CALL API TO LEAVE GAME
   clearInterval(waitForPlayerInterval);
+  clearInterval(waitForTurnInterval);
 });
 </script>
