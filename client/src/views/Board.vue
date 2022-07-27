@@ -58,7 +58,6 @@
           v-for="(square, idx) in playerStore.Player.value.game.game_board
             .squares"
           :key="idx"
-          :square="square"
           :squareIdx="idx"
         />
       </div>
@@ -85,30 +84,8 @@ const { refreshGame } = store;
 let playerStore = storeToRefs(store);
 let enableDice = ref(false);
 let waitForPlayerInterval = null;
-// let waitForTurnInterval = null;
-
-// const updateboard = async () => {
-//   enableDice.value = true;
-//   await refreshGame();
-// };
-
-// const fetchData = async () => {
-//   storeFetched.value = false;
-//   try {
-//     // Send player id to verify if player is in game
-//     const res = await APIClient.GetGameBoard(store.Player.game.ID);
-//     game.value = res;
-//     storeFetched.value = true;
-//     if (game.value.player_turn === store.Player.id) {
-//       store.Player.turn = true;
-//     }
-//   } catch (e) {
-//     router.push("/");
-//   }
-// };
 
 onMounted(() => {
-  // game.value = store.Player.game;
   if (!playerStore.Player.value.game.full) {
     waitForPlayerInterval = setInterval(async () => {
       await refreshGame();
@@ -116,6 +93,9 @@ onMounted(() => {
   } else {
     clearInterval(waitForPlayerInterval);
   }
+  setInterval(async () => {
+    await refreshGame();
+  }, 1000);
 });
 
 onBeforeUnmount(async () => {

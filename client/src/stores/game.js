@@ -36,7 +36,7 @@ export const useGameStore = defineStore('game', {
     async createGame() {
       try {
         const res = await APIClient.CreateGame(this.Player.id);
-        this.Player.inGame = res
+        this.Player.inGame = res.ID
         this.Player.turn = true
         this.Player.game = res
         return true
@@ -48,7 +48,7 @@ export const useGameStore = defineStore('game', {
     async joinGame(gameId) {
       try {
         let res = await APIClient.JoinGame(gameId, this.Player.id)
-        this.Player.inGame = gameId
+        this.Player.inGame = res.ID
         this.Player.turn = false
         this.Player.game = res
         return true
@@ -61,6 +61,13 @@ export const useGameStore = defineStore('game', {
       try {
         const res = await APIClient.GetGame(this.Player.game.ID);
         this.Player.game = res;
+        console.log("player turn", this.Player.game.player_turn, this.Player.id)
+        if (this.Player.game.player_turn == this.Player.id) {
+          console.log("TODO: PLAYER TURN HAS COMMA ")
+          this.Player.turn = true
+        } else {
+          this.Player.turn = false
+        }
       } catch (e) {
         console.log("Error refreshing game in store", e)
         return e
