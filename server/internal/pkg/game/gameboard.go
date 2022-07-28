@@ -2,14 +2,17 @@ package game
 
 import "github.com/inconshreveable/log15"
 
-const (
-	Player1    = 0
-	Player2    = 1
-	Unselected = -1
-)
+// var (
+// 	Player1    = -1
+// 	Player2    = -1
+// 	Unselected = -1
+// )
 
 // Gameboard represents the game board
 type GameBoard struct {
+	Player1 int      `json:"player_1"`
+	Player2 int      `json:"player_2"`
+	Winner  int      `json:"winner"`
 	Squares []Square `json:"squares"`
 }
 
@@ -26,14 +29,16 @@ type Circle struct {
 	Index      int
 }
 
-func CreateGameBoard() GameBoard {
+func CreateGameBoard(creatingPlayer int) GameBoard {
 	var board GameBoard
+	board.Player1 = creatingPlayer
+	board.Winner = -1
 	var squares []Square
 	for i := 0; i < 9; i++ {
 		var square Square
 		square = Square{
 			Circles:    initCircles(),
-			CapturedBy: Unselected,
+			CapturedBy: -1,
 			index:      i,
 		}
 		squares = append(squares, square)
@@ -45,9 +50,10 @@ func CreateGameBoard() GameBoard {
 func (gb *GameBoard) Update(player, square, circle int) error {
 	// TODO add check here to see if its not selected by another player
 	gb.Squares[square].Circles[circle].SelectedBy = player
-	circleWin := gb.Squares[square].checkCirclesCondition()
+	updatedSquare := gb.checkCirclesCondition(gb.Squares[square])
+	gb.Squares[square] = updatedSquare
 	squareWin := gb.checkSquareCondition()
-	log15.Debug("circle", "circle", circleWin)
+
 	log15.Debug("square", "square", squareWin)
 	return nil
 }
@@ -58,7 +64,7 @@ func initCircles() []Circle {
 	for i := 0; i < 9; i++ {
 		var circle Circle
 		circle.Index = i
-		circle.SelectedBy = Unselected
+		circle.SelectedBy = -1
 
 		circles = append(circles, circle)
 	}
@@ -67,90 +73,97 @@ func initCircles() []Circle {
 }
 
 // Check for three in a row for circles in a square
-func (s *Square) checkCirclesCondition() error {
+func (gb *GameBoard) checkCirclesCondition(s Square) Square {
 
 	var (
-		x = (s.Circles[0].SelectedBy == 0 && s.Circles[1].SelectedBy == 0 && s.Circles[2].SelectedBy == 0) || // Check all rows.
-			(s.Circles[3].SelectedBy == 0 && s.Circles[4].SelectedBy == 0 && s.Circles[5].SelectedBy == 0) ||
-			(s.Circles[6].SelectedBy == 0 && s.Circles[7].SelectedBy == 0 && s.Circles[8].SelectedBy == 0) ||
+		x = (s.Circles[0].SelectedBy == gb.Player1 && s.Circles[1].SelectedBy == gb.Player1 && s.Circles[2].SelectedBy == gb.Player1) || // Check all rows.
+			(s.Circles[3].SelectedBy == gb.Player1 && s.Circles[4].SelectedBy == gb.Player1 && s.Circles[5].SelectedBy == gb.Player1) ||
+			(s.Circles[6].SelectedBy == gb.Player1 && s.Circles[7].SelectedBy == gb.Player1 && s.Circles[8].SelectedBy == gb.Player1) ||
 
-			(s.Circles[0].SelectedBy == 0 && s.Circles[3].SelectedBy == 0 && s.Circles[6].SelectedBy == 0) || // Check all columns.
-			(s.Circles[1].SelectedBy == 0 && s.Circles[4].SelectedBy == 0 && s.Circles[7].SelectedBy == 0) ||
-			(s.Circles[2].SelectedBy == 0 && s.Circles[5].SelectedBy == 0 && s.Circles[8].SelectedBy == 0) ||
+			(s.Circles[0].SelectedBy == gb.Player1 && s.Circles[3].SelectedBy == gb.Player1 && s.Circles[6].SelectedBy == gb.Player1) || // Check all columns.
+			(s.Circles[1].SelectedBy == gb.Player1 && s.Circles[4].SelectedBy == gb.Player1 && s.Circles[7].SelectedBy == gb.Player1) ||
+			(s.Circles[2].SelectedBy == gb.Player1 && s.Circles[5].SelectedBy == gb.Player1 && s.Circles[8].SelectedBy == gb.Player1) ||
 
-			(s.Circles[0].SelectedBy == 0 && s.Circles[4].SelectedBy == 0 && s.Circles[8].SelectedBy == 0) || // Check all diagonals.
-			(s.Circles[2].SelectedBy == 0 && s.Circles[4].SelectedBy == 0 && s.Circles[6].SelectedBy == 0)
+			(s.Circles[0].SelectedBy == gb.Player1 && s.Circles[4].SelectedBy == gb.Player1 && s.Circles[8].SelectedBy == gb.Player1) || // Check all diagonals.
+			(s.Circles[2].SelectedBy == gb.Player1 && s.Circles[4].SelectedBy == gb.Player1 && s.Circles[6].SelectedBy == gb.Player1)
 
-		o = (s.Circles[0].SelectedBy == 1 && s.Circles[1].SelectedBy == 1 && s.Circles[2].SelectedBy == 1) || // Check all r1ws.
-			(s.Circles[3].SelectedBy == 1 && s.Circles[4].SelectedBy == 1 && s.Circles[5].SelectedBy == 1) ||
-			(s.Circles[6].SelectedBy == 1 && s.Circles[7].SelectedBy == 1 && s.Circles[8].SelectedBy == 1) ||
+		o = (s.Circles[0].SelectedBy == gb.Player2 && s.Circles[1].SelectedBy == gb.Player2 && s.Circles[2].SelectedBy == gb.Player2) || // Check all rows.
+			(s.Circles[3].SelectedBy == gb.Player2 && s.Circles[4].SelectedBy == gb.Player2 && s.Circles[5].SelectedBy == gb.Player2) ||
+			(s.Circles[6].SelectedBy == gb.Player2 && s.Circles[7].SelectedBy == gb.Player2 && s.Circles[8].SelectedBy == gb.Player2) ||
 
-			(s.Circles[0].SelectedBy == 1 && s.Circles[3].SelectedBy == 1 && s.Circles[6].SelectedBy == 1) || // Check all c1lumns.
-			(s.Circles[1].SelectedBy == 1 && s.Circles[4].SelectedBy == 1 && s.Circles[7].SelectedBy == 1) ||
-			(s.Circles[2].SelectedBy == 1 && s.Circles[5].SelectedBy == 1 && s.Circles[8].SelectedBy == 1) ||
+			(s.Circles[0].SelectedBy == gb.Player2 && s.Circles[3].SelectedBy == gb.Player2 && s.Circles[6].SelectedBy == gb.Player2) || // Check all collumns.
+			(s.Circles[1].SelectedBy == gb.Player2 && s.Circles[4].SelectedBy == gb.Player2 && s.Circles[7].SelectedBy == gb.Player2) ||
+			(s.Circles[2].SelectedBy == gb.Player2 && s.Circles[5].SelectedBy == gb.Player2 && s.Circles[8].SelectedBy == gb.Player2) ||
 
-			(s.Circles[0].SelectedBy == 1 && s.Circles[4].SelectedBy == 1 && s.Circles[8].SelectedBy == 1) || // Check all diag1nals.
-			(s.Circles[2].SelectedBy == 1 && s.Circles[4].SelectedBy == 1 && s.Circles[6].SelectedBy == 1)
+			(s.Circles[0].SelectedBy == gb.Player2 && s.Circles[4].SelectedBy == gb.Player2 && s.Circles[8].SelectedBy == gb.Player2) || // Check all diagonals.
+			(s.Circles[2].SelectedBy == gb.Player2 && s.Circles[4].SelectedBy == gb.Player2 && s.Circles[6].SelectedBy == gb.Player2)
 
-		freeCellsLeft = s.Circles[0].SelectedBy == 2 || s.Circles[1].SelectedBy == 2 || s.Circles[2].SelectedBy == 2 ||
-			s.Circles[3].SelectedBy == 2 || s.Circles[4].SelectedBy == 2 || s.Circles[5].SelectedBy == 2 ||
-			s.Circles[6].SelectedBy == 2 || s.Circles[7].SelectedBy == 2 || s.Circles[8].SelectedBy == 2
+		freeCellsLeft = s.Circles[0].SelectedBy == -1 || s.Circles[1].SelectedBy == -1 || s.Circles[2].SelectedBy == -1 ||
+			s.Circles[3].SelectedBy == -1 || s.Circles[4].SelectedBy == -1 || s.Circles[5].SelectedBy == -1 ||
+			s.Circles[6].SelectedBy == -1 || s.Circles[7].SelectedBy == -1 || s.Circles[8].SelectedBy == -1
 	)
-
 	switch {
 	case x && !o:
-		s.CapturedBy = 0
+		log15.Debug("Player 1 has captured a square")
+		s.CapturedBy = gb.Player1
+		return s
 	case o && !x:
-		s.CapturedBy = 2
+		log15.Debug("Player 2 has captured a square")
+		s.CapturedBy = gb.Player2
+		return s
 	case !freeCellsLeft:
-		return nil
+		log15.Debug("Freecells false in checkCircleCOndition")
+		s.CapturedBy = -1
+		return s
 	default:
-		return nil
-	}
+		log15.Debug("Defaulted in checkCircleCOndition")
 
-	return nil
+		return s
+	}
 }
 
 // Check for three in a row for squares
-func (gb *GameBoard) checkSquareCondition() string {
+func (gb *GameBoard) checkSquareCondition() int {
 
 	var (
-		x = (gb.Squares[0].CapturedBy == 0 && gb.Squares[1].CapturedBy == 0 && gb.Squares[2].CapturedBy == 0) || // Check all rows.
-			(gb.Squares[3].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[5].CapturedBy == 0) ||
-			(gb.Squares[6].CapturedBy == 0 && gb.Squares[7].CapturedBy == 0 && gb.Squares[8].CapturedBy == 0) ||
+		x = (gb.Squares[0].CapturedBy == gb.Player1 && gb.Squares[1].CapturedBy == gb.Player1 && gb.Squares[2].CapturedBy == gb.Player1) || // Check all rows.
+			(gb.Squares[3].CapturedBy == gb.Player1 && gb.Squares[4].CapturedBy == gb.Player1 && gb.Squares[5].CapturedBy == gb.Player1) ||
+			(gb.Squares[6].CapturedBy == gb.Player1 && gb.Squares[7].CapturedBy == gb.Player1 && gb.Squares[8].CapturedBy == gb.Player1) ||
 
-			(gb.Squares[0].CapturedBy == 0 && gb.Squares[3].CapturedBy == 0 && gb.Squares[6].CapturedBy == 0) || // Check all columns.
-			(gb.Squares[1].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[7].CapturedBy == 0) ||
-			(gb.Squares[2].CapturedBy == 0 && gb.Squares[5].CapturedBy == 0 && gb.Squares[8].CapturedBy == 0) ||
+			(gb.Squares[0].CapturedBy == gb.Player1 && gb.Squares[3].CapturedBy == gb.Player1 && gb.Squares[6].CapturedBy == gb.Player1) || // Check all columns.
+			(gb.Squares[1].CapturedBy == gb.Player1 && gb.Squares[4].CapturedBy == gb.Player1 && gb.Squares[7].CapturedBy == gb.Player1) ||
+			(gb.Squares[2].CapturedBy == gb.Player1 && gb.Squares[5].CapturedBy == gb.Player1 && gb.Squares[8].CapturedBy == gb.Player1) ||
 
-			(gb.Squares[0].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[8].CapturedBy == 0) || // Check all diagonals.
-			(gb.Squares[2].CapturedBy == 0 && gb.Squares[4].CapturedBy == 0 && gb.Squares[6].CapturedBy == 0)
+			(gb.Squares[0].CapturedBy == gb.Player1 && gb.Squares[4].CapturedBy == gb.Player1 && gb.Squares[8].CapturedBy == gb.Player1) || // Check all diagonals.
+			(gb.Squares[2].CapturedBy == gb.Player1 && gb.Squares[4].CapturedBy == gb.Player1 && gb.Squares[6].CapturedBy == gb.Player1)
 
-		o = (gb.Squares[0].CapturedBy == 1 && gb.Squares[1].CapturedBy == 1 && gb.Squares[2].CapturedBy == 1) || // Check all r1ws.
-			(gb.Squares[3].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[5].CapturedBy == 1) ||
-			(gb.Squares[6].CapturedBy == 1 && gb.Squares[7].CapturedBy == 1 && gb.Squares[8].CapturedBy == 1) ||
+		o = (gb.Squares[0].CapturedBy == gb.Player2 && gb.Squares[1].CapturedBy == gb.Player2 && gb.Squares[2].CapturedBy == gb.Player2) || // Check all rgb.Player2ws.
+			(gb.Squares[3].CapturedBy == gb.Player2 && gb.Squares[4].CapturedBy == gb.Player2 && gb.Squares[5].CapturedBy == gb.Player2) ||
+			(gb.Squares[6].CapturedBy == gb.Player2 && gb.Squares[7].CapturedBy == gb.Player2 && gb.Squares[8].CapturedBy == gb.Player2) ||
 
-			(gb.Squares[0].CapturedBy == 1 && gb.Squares[3].CapturedBy == 1 && gb.Squares[6].CapturedBy == 1) || // Check all c1lumns.
-			(gb.Squares[1].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[7].CapturedBy == 1) ||
-			(gb.Squares[2].CapturedBy == 1 && gb.Squares[5].CapturedBy == 1 && gb.Squares[8].CapturedBy == 1) ||
+			(gb.Squares[0].CapturedBy == gb.Player2 && gb.Squares[3].CapturedBy == gb.Player2 && gb.Squares[6].CapturedBy == gb.Player2) || // Check all cgb.Player2lumns.
+			(gb.Squares[1].CapturedBy == gb.Player2 && gb.Squares[4].CapturedBy == gb.Player2 && gb.Squares[7].CapturedBy == gb.Player2) ||
+			(gb.Squares[2].CapturedBy == gb.Player2 && gb.Squares[5].CapturedBy == gb.Player2 && gb.Squares[8].CapturedBy == gb.Player2) ||
 
-			(gb.Squares[0].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[8].CapturedBy == 1) || // Check all diag1nals.
-			(gb.Squares[2].CapturedBy == 1 && gb.Squares[4].CapturedBy == 1 && gb.Squares[6].CapturedBy == 1)
+			(gb.Squares[0].CapturedBy == gb.Player2 && gb.Squares[4].CapturedBy == gb.Player2 && gb.Squares[8].CapturedBy == gb.Player2) || // Check all diaggb.Player2nals.
+			(gb.Squares[2].CapturedBy == gb.Player2 && gb.Squares[4].CapturedBy == gb.Player2 && gb.Squares[6].CapturedBy == gb.Player2)
 
-		freeCellsLeft = gb.Squares[0].CapturedBy == 2 || gb.Squares[1].CapturedBy == 2 || gb.Squares[2].CapturedBy == 2 ||
-			gb.Squares[3].CapturedBy == 2 || gb.Squares[4].CapturedBy == 2 || gb.Squares[5].CapturedBy == 2 ||
-			gb.Squares[6].CapturedBy == 2 || gb.Squares[7].CapturedBy == 2 || gb.Squares[8].CapturedBy == 2
+		freeCellsLeft = gb.Squares[0].CapturedBy == -1 || gb.Squares[1].CapturedBy == -1 || gb.Squares[2].CapturedBy == -1 ||
+			gb.Squares[3].CapturedBy == -1 || gb.Squares[4].CapturedBy == -1 || gb.Squares[5].CapturedBy == -1 ||
+			gb.Squares[6].CapturedBy == -1 || gb.Squares[7].CapturedBy == -1 || gb.Squares[8].CapturedBy == -1
 	)
 
 	switch {
 	case x && !o:
-		return "player1"
+		gb.Winner = gb.Player1
+		return gb.Player1
 	case o && !x:
-		return "player2"
+		gb.Winner = gb.Player1
+		return gb.Player1
 	case !freeCellsLeft:
-		return "CONTINUE"
+		return -1
 	default:
-		return "default"
+		return -1
 	}
 
 }

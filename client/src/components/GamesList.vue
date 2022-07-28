@@ -2,35 +2,12 @@
   <div class="absolute flex items-center justify-center h-screen w-screen">
     <button
       @click="closeGamesList"
-      class="
-        absolute
-        bg-red-600
-        rounded-full
-        w-12
-        h-12
-        flex
-        justify-center
-        items-center
-        text-white
-        right-5
-        top-5
-        font-bold
-      "
+      class="absolute bg-red-600 rounded-full w-12 h-12 flex justify-center items-center text-white right-5 top-5 font-bold"
     >
       X
     </button>
     <div
-      class="
-        bg-black bg-opacity-60
-        w-[50vw]
-        h-[50vh]
-        border-4 border-white
-        rounded-2xl
-        flex flex-col
-        text-white
-        items-center
-        justify-center
-      "
+      class="bg-black bg-opacity-60 w-[50vw] h-[50vh] border-4 border-white rounded-2xl flex flex-col text-white items-center justify-center"
     >
       <h1 class="text-2xl font-bold">Games list</h1>
       <div :key="game.ID" v-for="game in games">
@@ -41,7 +18,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup>
 import APIClient from "../APIClient";

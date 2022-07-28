@@ -4,7 +4,6 @@ import APIClient from '../APIClient'
 export const useGameStore = defineStore('game', {
   state: () => {
     return {
-      // all these properties will have their type inferred automatically
       Player: {
         id: 0,
         name: 'Player',
@@ -61,9 +60,7 @@ export const useGameStore = defineStore('game', {
       try {
         const res = await APIClient.GetGame(this.Player.game.ID);
         this.Player.game = res;
-        console.log("player turn", this.Player.game.player_turn, this.Player.id)
-        if (this.Player.game.player_turn == this.Player.id) {
-          console.log("TODO: PLAYER TURN HAS COMMA ")
+        if (this.Player.game.player_turn.replace(/,/g, "") == this.Player.id) {
           this.Player.turn = true
         } else {
           this.Player.turn = false

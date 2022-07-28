@@ -27,11 +27,11 @@ func initDB() *gorm.DB {
 	return db
 }
 
-// Creates a new game in the manager and database
-func (m *Manager) CreateGame(player int) (*Game, error) {
-	game, err := m.createNewGame()
-	game.Players = fmt.Sprintf("%d,", player)
-	game.PlayerTurn = fmt.Sprintf("%d,", player)
+// Creates a new game in the manager and database, takes the player creating the game as param
+func (m *Manager) CreateGame(creatingPlayer int) (*Game, error) {
+	game, err := m.createNewGame(creatingPlayer)
+	game.Players = fmt.Sprintf("%d,", creatingPlayer)
+	game.PlayerTurn = fmt.Sprintf("%d,", creatingPlayer)
 	if err != nil {
 		log15.Error("Error creating new state CreateNewGame()::game.go", "err", err)
 		return nil, err
@@ -46,8 +46,8 @@ func (m *Manager) CreateGame(player int) (*Game, error) {
 	return &game, nil
 }
 
-func (m *Manager) createNewGame() (Game, error) {
-	gb := CreateGameBoard()
+func (m *Manager) createNewGame(creatingPlayer int) (Game, error) {
+	gb := CreateGameBoard(creatingPlayer)
 	game := Game{
 		PlayerTurn: "",
 		GameOver:   false,
@@ -58,7 +58,7 @@ func (m *Manager) createNewGame() (Game, error) {
 	return game, nil
 }
 
-func (m *Manager) JoinGame(gameId int, player int) (*Game, error) {
+func (m *Manager) JoinGame(gameId int, joiningPlayer int) (*Game, error) {
 	for _, game := range m.Games {
 		if game.ID == gameId {
 			playerLength := strings.Split(game.Players, ",")
@@ -66,7 +66,8 @@ func (m *Manager) JoinGame(gameId int, player int) (*Game, error) {
 			if len(playerLength) >= 3 {
 				return nil, fmt.Errorf("game is full")
 			}
-			game.Players = game.Players + fmt.Sprintf("%d,", player)
+			game.Players = game.Players + fmt.Sprintf("%d,", joiningPlayer)
+			game.GameBoard.Player2 = joiningPlayer
 			game.Full = true
 			result := m.DB.Save(&game)
 			if result.Error != nil {

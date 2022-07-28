@@ -71,6 +71,12 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	circleIdx := helpers.StringToInt(c)
 
 	err := m.Games[gameIdx].GameBoard.Update(playerId, squareIdx, circleIdx)
+
+	if m.Games[gameIdx].GameBoard.Winner != -1 {
+		m.Games[gameIdx].Winner = m.Games[gameIdx].GameBoard.Winner
+		m.Games[gameIdx].GameOver = true
+	}
+
 	if err != nil {
 		errorResponse(err, "Error updating game", w)
 	}

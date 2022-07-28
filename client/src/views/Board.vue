@@ -1,37 +1,12 @@
 <template>
   <div class="bg-gradient w-screen h-screen flex items-center justify-center">
-    <div
-      v-show="!playerStore.Player.value.game.full"
-      class="
-        bg-black bg-opacity-50
-        p-12
-        rounded-2xl
-        shadow-2xl
-        text-white
-        font-bold
-        text-center
-      "
-    >
-      <p class="text-4xl py-4">
-        Game {{ playerStore.Player.value.game.ID }} - Waiting for players...
-      </p>
+    <div v-show="!playerStore.Player.value.game.full" class="bg-black bg-opacity-50 p-12 rounded-2xl shadow-2xl text-white font-bold text-center">
+      <p class="text-4xl py-4">Game {{ playerStore.Player.value.game.ID }} - Waiting for players...</p>
       <Loader />
     </div>
 
-    <div
-      v-show="playerStore.Player.value.game.full"
-      class="flex flex-col space-y-10"
-    >
-      <div
-        class="
-          rounded-2xl
-          shadow-2xl
-          p-2
-          text-white
-          bg-black bg-opacity-60
-          border-white border-4
-        "
-      >
+    <div v-show="playerStore.Player.value.game.full" class="flex flex-col space-y-10">
+      <div class="rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 border-white border-4">
         <p>Player ID: {{ playerStore.Player.value.id }}</p>
         <p>Game ID: {{ playerStore.Player.value.game.ID }}</p>
         <p>Your turn: {{ playerStore.Player.value.turn }}</p>
@@ -41,25 +16,8 @@
     <Dice v-show="playerStore.Player.value.game.full" :clear="enableDice" />
 
     <div v-show="playerStore.Player.value.game.full" class="flex">
-      <div
-        class="
-          z-40
-          bg-black bg-opacity-80
-          border-white border-2
-          shadow-2xl
-          p-4
-          w-[40vw]
-          h-[40vw]
-          rounded-lg
-          grid grid-cols-3
-        "
-      >
-        <Square
-          v-for="(square, idx) in playerStore.Player.value.game.game_board
-            .squares"
-          :key="idx"
-          :squareIdx="idx"
-        />
+      <div class="z-40 bg-black bg-opacity-80 border-white border-2 shadow-2xl p-4 w-[40vw] h-[40vw] rounded-lg grid grid-cols-3">
+        <Square v-for="(square, idx) in playerStore.Player.value.game.game_board.squares" :key="idx" :squareIdx="idx" />
       </div>
     </div>
   </div>

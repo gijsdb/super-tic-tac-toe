@@ -1,6 +1,7 @@
 package game
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/inconshreveable/log15"
@@ -21,4 +22,18 @@ func (g *Game) Changeturn(currentPlayerTurn string) {
 	} else {
 		log15.Crit("Player not found in ChangeTurn()::game.go", "requesting player", currentPlayerTurn)
 	}
+}
+
+// GetPlayers Returns csv string as list of ints
+func (g *Game) GetPlayersAsListInt() []int {
+	var players []int
+
+	playersSplit := strings.Split(g.Players, ",")
+	for _, player := range playersSplit {
+		player = strings.Trim(player, " ")
+		playerInt, _ := strconv.Atoi(player)
+		players = append(players, playerInt)
+	}
+
+	return players
 }
