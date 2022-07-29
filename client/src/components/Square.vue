@@ -52,12 +52,13 @@
 <script setup>
 import { useGameStore } from "../stores/game.js";
 import { storeToRefs } from "pinia";
+import { CheckRules } from "../game/rules.js";
 
 const store = useGameStore();
 let playerStore = storeToRefs(store);
 const { updateGameBoard } = store;
 
-const emit = defineEmits(["updateboard"]);
+const emit = defineEmits(["ruleVerdict"]);
 
 const props = defineProps({
   squareIdx: Number,
@@ -66,7 +67,12 @@ const props = defineProps({
 const updateboard = async (circleIdx) => {
   if (playerStore.Player.value.turn) {
     try {
-      await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
+      let verdict = CheckRules(playerStore, props.squareIdx, circleIdx);
+      console.log("VEREDICT", verdict);
+      if (verdict.allowed) {
+        await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
+      }
+      emit("ruleVerdict", verdict);
     } catch (e) {
       console.log("Error making request updateGameBoard");
     }

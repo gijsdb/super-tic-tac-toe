@@ -19,18 +19,31 @@
     </div>
     <Dice v-show="playerStore.Player.value.game.full" :clear="enableDice" />
 
-    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over" class="flex">
+    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over" class="flex flex-col">
       <div
-        class="z-40 bg-black bg-opacity-80 border-white border-2 shadow-2xl p-4 w-[40vw] h-[40vw] rounded-lg grid grid-cols-3"
+        class="bg-black bg-opacity-80 px-8 rounded-lg rounded-b-none border-white border-2 border-b-0 text-center py-2 font-bold text-sm"
       >
-        <Square v-for="(square, idx) in playerStore.Player.value.game.game_board.squares" :key="idx" :squareIdx="idx" />
+        <p :class="{ 'text-red-600': !message.allowed, 'text-white': message.allowed }">
+          {{ message.reason }}
+        </p>
+      </div>
+
+      <div
+        class="z-40 bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl px-4 pb-4 w-[40vw] h-[40vw] rounded-lg rounded-t-none grid grid-cols-3"
+      >
+        <Square
+          v-for="(square, idx) in playerStore.Player.value.game.game_board.squares"
+          :key="idx"
+          :squareIdx="idx"
+          @ruleVerdict="updateMessage"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeUnmount } from "vue";
+import { onMounted, ref, onBeforeUnmount, reactive } from "vue";
 import { useGameStore } from "../stores/game.js";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -45,11 +58,46 @@ const router = useRouter();
 const store = useGameStore();
 
 const { refreshGame, leaveGame } = store;
-
 let playerStore = storeToRefs(store);
+
+let message = ref({ allowed: true, reason: "" });
+let feedbackLoop = null;
 let enableDice = ref(false);
 let waitForPlayerInterval = null;
 let refreshInterval = null;
+
+const checkMessage = () => {
+  if (playerStore.Player.value.game.game_over) {
+    message.value = {
+      allowed: true,
+      reason: "Game over",
+    };
+    clearInterval(feedbackLoop);
+  }
+  if (!playerStore.Player.value.turn) {
+    message.value = {
+      allowed: true,
+      reason: "Waiting for other player",
+    };
+  }
+  if (playerStore.Player.value.turn) {
+    message.value = {
+      allowed: true,
+      reason: "Your turn, roll the dice",
+    };
+  }
+};
+
+const updateMessage = async (verdict) => {
+  message.value = verdict;
+
+  if (feedbackLoop != null) {
+    clearInterval(feedbackLoop);
+  }
+  feedbackLoop = setInterval(() => {
+    checkMessage();
+  }, 2500);
+};
 
 onMounted(() => {
   if (!playerStore.Player.value.game.full) {
@@ -61,6 +109,9 @@ onMounted(() => {
   }
   refreshInterval = setInterval(async () => {
     await refreshGame();
+  }, 1000);
+  feedbackLoop = setInterval(() => {
+    checkMessage();
   }, 1000);
 });
 
