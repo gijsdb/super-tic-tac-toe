@@ -56,6 +56,17 @@ export const useGameStore = defineStore('game', {
         return false
       }
     },
+    async leaveGame(gameId, playerId) {
+      this.Player.inGame = false
+      this.Player.game = {}
+      try {
+        const res = await APIClient.LeaveGame(gameId, playerId)
+        console.log("RES FROM LEAVING", res)
+
+      } catch (e) {
+        console.log("Error leaving game", e)
+      }
+    },
     async refreshGame() {
       try {
         const res = await APIClient.GetGame(this.Player.game.ID);

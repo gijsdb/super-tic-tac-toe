@@ -44,7 +44,7 @@ import Loader from "../components/Loader.vue";
 const router = useRouter();
 const store = useGameStore();
 
-const { refreshGame } = store;
+const { refreshGame, leaveGame } = store;
 
 let playerStore = storeToRefs(store);
 let enableDice = ref(false);
@@ -69,4 +69,9 @@ onBeforeUnmount(async () => {
   clearInterval(waitForPlayerInterval);
   clearInterval(refreshInterval);
 });
+
+window.onbeforeunload = async () => {
+  console.log("LEAVING");
+  leaveGame(playerStore.Player.value.game.ID, playerStore.Player.value.id);
+};
 </script>

@@ -3,6 +3,7 @@ package game
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/inconshreveable/log15"
@@ -29,24 +30,22 @@ func initDB() *gorm.DB {
 
 // Creates a new game in the manager and database, takes the player creating the game as param
 func (m *Manager) CreateGame(creatingPlayer int) (*Game, error) {
-	game, err := m.createNewGame(creatingPlayer)
+	game := m.createNewGame(creatingPlayer)
 	game.Players = fmt.Sprintf("%d,", creatingPlayer)
 	game.PlayerTurn = fmt.Sprintf("%d,", creatingPlayer)
-	if err != nil {
-		log15.Error("Error creating new state CreateNewGame()::game.go", "err", err)
-		return nil, err
-	}
+
 	result := m.DB.Create(&game)
 	if result.Error != nil {
 		log15.Debug("Error saving new game CreateNewGame()::game.go", "err", result.Error)
-		return nil, err
+		return nil, result.Error
 	}
 
 	m.Games = append(m.Games, &game)
+	log15.Debug("Created new game for player", "player", creatingPlayer, "game", game)
 	return &game, nil
 }
 
-func (m *Manager) createNewGame(creatingPlayer int) (Game, error) {
+func (m *Manager) createNewGame(creatingPlayer int) Game {
 	gb := CreateGameBoard(creatingPlayer)
 	game := Game{
 		PlayerTurn: "",
@@ -54,15 +53,13 @@ func (m *Manager) createNewGame(creatingPlayer int) (Game, error) {
 		Winner:     -1,
 		GameBoard:  &gb,
 	}
-
-	return game, nil
+	return game
 }
 
 func (m *Manager) JoinGame(gameId int, joiningPlayer int) (*Game, error) {
 	for _, game := range m.Games {
 		if game.ID == gameId {
 			playerLength := strings.Split(game.Players, ",")
-			log15.Debug("Player length", "playerLength", playerLength)
 			if len(playerLength) >= 3 {
 				return nil, fmt.Errorf("game is full")
 			}
@@ -80,11 +77,38 @@ func (m *Manager) JoinGame(gameId int, joiningPlayer int) (*Game, error) {
 	return nil, fmt.Errorf("game not found")
 }
 
+func (m *Manager) LeaveGame(gameId int, leavingPlayer int) (*Game, error) {
+	for _, game := range m.Games {
+		if game.ID == gameId {
+			// Remove player from Players on game
+			playersSplit := strings.Split(game.Players, ",")
+			for i, player := range playersSplit {
+				playerInt, err := strconv.Atoi(player)
+				if err != nil {
+					log15.Crit("Error converting player to int while leaving game", "err", err)
+				}
+				if playerInt == leavingPlayer {
+					playersSplit = append(playersSplit[:i], playersSplit[i+1:]...)
+					game.Players = strings.Join(playersSplit, ",")
+					break
+				}
+			}
+			// If game is empty, delete it
+			if len(playersSplit) == 0 {
+				m.DB.Delete(&game)
+				m.Games = append(m.Games[:gameId], m.Games[gameId+1:]...)
+				return nil, fmt.Errorf("game is empty")
+			}
+			return game, nil
+		}
+	}
+	return nil, fmt.Errorf("game not found")
+}
+
 // GetGame returns a single game from the manager by ID
 func (m *Manager) GetGame(idx int) (Game, error) {
 	if idx >= 0 && idx < len(m.Games) {
 		return *m.Games[idx], nil
-
 	} else {
 		return Game{}, fmt.Errorf("no games")
 	}
@@ -121,17 +145,20 @@ func (m *Manager) CreatePlayer(id int) int {
 	if id == 0 {
 		id = len(m.Players) + 1
 		m.Players[id] = true
+		log15.Debug("Created new player", "player id", id, "players", m.Players)
 		return id
 	} else {
 		// returning player, set to active
 		m.Players[id] = true
+		log15.Debug("Returning player", "player id", id, "players", m.Players)
 		return id
 	}
 }
 
 // RemovePlayer sets the player to inactive
-func (m *Manager) RemovePlayer(id int) {
-	m.Players[id] = false
+func (m *Manager) SetPlayerInactive(playerId int) {
+	m.Players[playerId] = false
+	log15.Debug("Player set to inactive", "playerId", playerId, "all players", m.Players)
 	return
 }
 

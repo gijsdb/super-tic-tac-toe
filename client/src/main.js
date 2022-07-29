@@ -11,4 +11,8 @@ const router = createRouter({
     routes
 })
 
+// router.beforeEach((to, from) => {
+
+// })
+
 createApp(App).use(createPinia()).use(router).mount('#app')

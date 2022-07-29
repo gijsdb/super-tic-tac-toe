@@ -47,15 +47,13 @@ func CreateGameBoard(creatingPlayer int) GameBoard {
 	return board
 }
 
-func (gb *GameBoard) Update(player, square, circle int) error {
-	// TODO add check here to see if its not selected by another player
+func (gb *GameBoard) Update(player, square, circle int) {
 	gb.Squares[square].Circles[circle].SelectedBy = player
 	updatedSquare := gb.checkCirclesCondition(gb.Squares[square])
 	gb.Squares[square] = updatedSquare
-	squareWin := gb.checkSquareCondition()
+	gb.checkSquareCondition()
 
-	log15.Debug("square", "square", squareWin)
-	return nil
+	return
 }
 
 func initCircles() []Circle {
@@ -112,18 +110,15 @@ func (gb *GameBoard) checkCirclesCondition(s Square) Square {
 		s.CapturedBy = gb.Player2
 		return s
 	case !freeCellsLeft:
-		log15.Debug("Freecells false in checkCircleCOndition")
 		s.CapturedBy = -1
 		return s
 	default:
-		log15.Debug("Defaulted in checkCircleCOndition")
-
 		return s
 	}
 }
 
 // Check for three in a row for squares
-func (gb *GameBoard) checkSquareCondition() int {
+func (gb *GameBoard) checkSquareCondition() {
 
 	var (
 		x = (gb.Squares[0].CapturedBy == gb.Player1 && gb.Squares[1].CapturedBy == gb.Player1 && gb.Squares[2].CapturedBy == gb.Player1) || // Check all rows.
@@ -156,14 +151,13 @@ func (gb *GameBoard) checkSquareCondition() int {
 	switch {
 	case x && !o:
 		gb.Winner = gb.Player1
-		return gb.Player1
+		return
 	case o && !x:
 		gb.Winner = gb.Player1
-		return gb.Player1
+		return
 	case !freeCellsLeft:
-		return -1
+		return
 	default:
-		return -1
+		return
 	}
-
 }

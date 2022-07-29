@@ -43,6 +43,10 @@ const APIClient = {
     return this.perform(GET, `/joingame?id=` + id + `&player=` + player);
   },
 
+  LeaveGame(gameId, playerId) {
+    return this.perform(GET, `/leavegame?id=` + gameId + `&player=` + playerId);
+  },
+
   async perform(method, resource, data) {
     return client({
       method,

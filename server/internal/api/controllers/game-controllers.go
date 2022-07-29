@@ -45,8 +45,25 @@ func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	gameId := helpers.StringToInt(g)
 
 	game, err := m.JoinGame(gameId, playerId)
+	log15.Debug("Player joined game", "game", game, "player id", playerId, "error", err)
 	if err != nil {
 		errorResponse(err, "game full", w)
+	}
+	bb, err := json.Marshal(game)
+	genericResponse(w, bb, nil)
+}
+
+func LeaveGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+	g := r.URL.Query().Get("id")
+	p := r.URL.Query().Get("player")
+
+	playerId := helpers.StringToInt(p)
+	gameId := helpers.StringToInt(g)
+
+	game, err := m.LeaveGame(gameId, playerId)
+	log15.Debug("Player left game", "game", gameId, "player id", playerId, "error", err, "all games", m.Games)
+	if err != nil {
+		errorResponse(err, "error leaving game", w)
 	}
 	bb, err := json.Marshal(game)
 	genericResponse(w, bb, nil)
@@ -70,16 +87,13 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	squareIdx := helpers.StringToInt(s)
 	circleIdx := helpers.StringToInt(c)
 
-	err := m.Games[gameIdx].GameBoard.Update(playerId, squareIdx, circleIdx)
+	m.Games[gameIdx].GameBoard.Update(playerId, squareIdx, circleIdx)
 
 	if m.Games[gameIdx].GameBoard.Winner != -1 {
 		m.Games[gameIdx].Winner = m.Games[gameIdx].GameBoard.Winner
 		m.Games[gameIdx].GameOver = true
 	}
 
-	if err != nil {
-		errorResponse(err, "Error updating game", w)
-	}
 	m.Games[gameIdx].Changeturn(p)
 
 	jsonGame, err := json.Marshal(m.Games[gameIdx])

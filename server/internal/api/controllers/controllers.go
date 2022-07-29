@@ -37,7 +37,6 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	playerId := helpers.StringToInt(player)
 
 	playerId = m.CreatePlayer(playerId)
-
 	bb, err := json.Marshal(playerId)
 	if err != nil {
 		errorResponse(err, "Error marshalling to JSON game in controllers.go::CreateClient", w)
@@ -49,7 +48,7 @@ func RemovePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	player := r.URL.Query().Get("id")
 	playerId := helpers.StringToInt(player)
 
-	m.RemovePlayer(playerId)
+	m.SetPlayerInactive(playerId)
 
 	genericResponse(w, nil, nil)
 }
