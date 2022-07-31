@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeUnmount, reactive } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useGameStore } from "../stores/game.js";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -116,7 +116,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(async () => {
-  // // TODO CALL API TO LEAVE GAME
   clearInterval(waitForPlayerInterval);
   clearInterval(refreshInterval);
 });

@@ -68,7 +68,6 @@ const updateboard = async (circleIdx) => {
   if (playerStore.Player.value.turn) {
     try {
       let verdict = CheckRules(playerStore, props.squareIdx, circleIdx);
-      console.log("VEREDICT", verdict);
       if (verdict.allowed) {
         await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
       }

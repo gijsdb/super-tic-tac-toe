@@ -10,7 +10,11 @@ export const useGameStore = defineStore('game', {
         inGame: true,
         turn: false,
         game: {},
-      }
+      },
+      // TODO ADD ERRORS
+      Errors: {
+
+      },
     }
   },
   actions: {
@@ -31,6 +35,24 @@ export const useGameStore = defineStore('game', {
       document.cookie = "client_id=" + id + ";SameSite=none;Secure=false";
 
       this.Player.id = id
+    },
+    async checkClient() {
+      var cookieArr = document.cookie.split(";");
+      for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+        if (cookiePair[0].trim() === "client_id") {
+          console.log("Player found")
+
+          // Check cookie and store match
+          if (!cookiePair[1] === this.Player.id) {
+            return { allowed: false, reason: "Cookie does not match store" }
+          }
+          // Make sure player is active
+          await APIClient.CreatePlayer(cookiePair[1])
+
+          return { allowed: true, reason: "player active, cookie matches store" }
+        }
+      }
     },
     async createGame() {
       try {
@@ -78,6 +100,7 @@ export const useGameStore = defineStore('game', {
         }
       } catch (e) {
         console.log("Error refreshing game in store", e)
+
         return e
       }
     },
