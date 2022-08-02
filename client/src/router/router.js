@@ -1,10 +1,36 @@
 import Home from "../views/Home.vue";
 import Board from "../views/Board.vue";
 import { createRouter, createWebHistory } from 'vue-router';
+import { useGameStore } from "../stores/game.js";
+import { storeToRefs } from "pinia";
+
 
 const routes = [
-    { path: "/", component: Home },
-    { path: "/game/:id", component: Board }
+    { name: 'Home', path: "/", component: Home },
+    {
+        name: 'Game', path: "/game/:id", component: Board,
+        beforeEnter: async (to, from, next) => {
+            const store = useGameStore();
+            const { checkClient } = store
+            let playerStore = storeToRefs(store);
+
+            let res = await checkClient()
+            console.log("CHECK CLIENT RES IS", res)
+            if (!res.allowed) {
+                next({ name: 'Home' })
+                return
+            } else {
+                if (!playerStore.Player.value.inGame && playerStore.Player.value.game.ID != to.params.id) {
+                    next({ name: 'Home' })
+                    return
+                } else {
+                    next()
+                    return
+                }
+            }
+
+        }
+    }
 ];
 
 export const Router = createRouter({
@@ -12,6 +38,3 @@ export const Router = createRouter({
     routes
 })
 
-Router.beforeEach((to, from) => {
-    console.log("BEFORE EACH ROUTE")
-})

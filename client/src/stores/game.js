@@ -9,12 +9,22 @@ export const useGameStore = defineStore('game', {
         name: 'Player',
         inGame: true,
         turn: false,
+        diceRolled: false,
         game: {},
       },
       // TODO ADD ERRORS
       Errors: {
 
       },
+    }
+  },
+  getters: {
+    diceAsArray(state) {
+      let arr = state.Player.game.last_roll.split(",")
+      arr.forEach((item, idx) => {
+        arr[idx] = parseInt(item)
+      })
+      return arr
     }
   },
   actions: {
@@ -37,6 +47,9 @@ export const useGameStore = defineStore('game', {
       this.Player.id = id
     },
     async checkClient() {
+      if (this.Player.id === 0) {
+        return { allowed: false, reason: "no client id" }
+      }
       var cookieArr = document.cookie.split(";");
       for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
@@ -116,6 +129,14 @@ export const useGameStore = defineStore('game', {
         this.Player.game = res
       } catch (e) {
         console.log("Erroring updating game in store", e)
+      }
+    },
+    async rollDice(dice1, dice2, game) {
+      try {
+        let res = await APIClient.RollDice(dice1, dice2, game);
+        this.Player.game = res
+      } catch (e) {
+        console.log("Erroring rolling dice in store", e)
       }
     }
   }

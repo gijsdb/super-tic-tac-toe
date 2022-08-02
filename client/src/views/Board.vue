@@ -17,7 +17,7 @@
         <p>Game Full: {{ playerStore.Player.value.game.full }}</p>
       </div>
     </div>
-    <Dice v-show="playerStore.Player.value.game.full" :clear="enableDice" />
+    <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true" />
 
     <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over" class="flex flex-col">
       <div
@@ -62,7 +62,6 @@ let playerStore = storeToRefs(store);
 
 let message = ref({ allowed: true, reason: "" });
 let feedbackLoop = null;
-let enableDice = ref(false);
 let waitForPlayerInterval = null;
 let refreshInterval = null;
 

@@ -1,7 +1,7 @@
 package game
 
 import (
-	"strconv"
+	"fmt"
 	"strings"
 
 	"github.com/inconshreveable/log15"
@@ -24,16 +24,21 @@ func (g *Game) Changeturn(currentPlayerTurn string) {
 	}
 }
 
-// GetPlayers Returns csv string as list of ints
-func (g *Game) GetPlayersAsListInt() []int {
-	var players []int
-
-	playersSplit := strings.Split(g.Players, ",")
-	for _, player := range playersSplit {
-		player = strings.Trim(player, " ")
-		playerInt, _ := strconv.Atoi(player)
-		players = append(players, playerInt)
-	}
-
-	return players
+func (g *Game) RollDice(dice1 string, dice2 string) {
+	g.LastRoll = fmt.Sprintf("%s,%s", dice1, dice2)
+	log15.Debug("ROLLED DICE", "dice", g.LastRoll)
 }
+
+// // GetPlayers Returns csv string as list of ints
+// func (g *Game) GetPlayersAsListInt() []int {
+// 	var players []int
+
+// 	playersSplit := strings.Split(g.Players, ",")
+// 	for _, player := range playersSplit {
+// 		player = strings.Trim(player, " ")
+// 		playerInt, _ := strconv.Atoi(player)
+// 		players = append(players, playerInt)
+// 	}
+
+// 	return players
+// }

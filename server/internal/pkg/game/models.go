@@ -19,6 +19,7 @@ type Game struct {
 	PlayerTurn string     `json:"player_turn"`
 	GameOver   bool       `json:"game_over"`
 	Winner     int        `json:"winner"`
-	Players    string     `json:"players"`
+	Players    string     `json:"players"` // List of string for the moment, needs changing
 	Full       bool       `json:"full"`
+	LastRoll   string     `json:"last_roll"` // Last roll of the game, e.g. 5,5
 }

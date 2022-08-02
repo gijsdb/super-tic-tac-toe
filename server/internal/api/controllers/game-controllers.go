@@ -47,7 +47,7 @@ func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	game, err := m.JoinGame(gameId, playerId)
 	log15.Debug("Player joined game", "game", game, "player id", playerId, "error", err)
 	if err != nil {
-		errorResponse(err, "game full", w)
+		errorResponse(err, "Game full", w)
 	}
 	bb, err := json.Marshal(game)
 	genericResponse(w, bb, nil)
@@ -63,7 +63,7 @@ func LeaveGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	game, err := m.LeaveGame(gameId, playerId)
 	log15.Debug("Player left game", "game", gameId, "player id", playerId, "error", err, "all games", m.Games)
 	if err != nil {
-		errorResponse(err, "error leaving game", w)
+		errorResponse(err, "Error leaving game in LeaveGame::game-controllers.go", w)
 	}
 	bb, err := json.Marshal(game)
 	genericResponse(w, bb, nil)
@@ -78,7 +78,7 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 
 	if p == "" || s == "" || c == "" {
 		err := errors.New("missing parameters")
-		errorResponse(err, "Missing parameters in UpdateGameBoard", w)
+		errorResponse(err, "Missing parameters in UpdateGameBoard::game-controllers.go", w)
 	}
 
 	// -1 because m.Games is an index
@@ -98,7 +98,24 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 
 	jsonGame, err := json.Marshal(m.Games[gameIdx])
 	if err != nil {
-		errorResponse(err, "Error marshalling state", w)
+		errorResponse(err, "Error marshalling game in UpdateGameBoard::game-controllers.go", w)
+	}
+
+	genericResponse(w, jsonGame, nil)
+}
+
+func RollDice(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+	g := r.URL.Query().Get("gameid")
+	d1 := r.URL.Query().Get("dice1")
+	d2 := r.URL.Query().Get("dice2")
+
+	gameIdx := helpers.StringToInt(g) - 1
+
+	m.Games[gameIdx].RollDice(d1, d2)
+
+	jsonGame, err := json.Marshal(m.Games[gameIdx])
+	if err != nil {
+		errorResponse(err, "Error marshalling game in RollDice::game-controllers.go", w)
 	}
 
 	genericResponse(w, jsonGame, nil)

@@ -66,18 +66,23 @@ const props = defineProps({
 
 const updateboard = async (circleIdx) => {
   if (playerStore.Player.value.turn) {
-    try {
-      let verdict = CheckRules(playerStore, props.squareIdx, circleIdx);
-      if (verdict.allowed) {
-        await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
+    if (playerStore.Player.value.diceRolled) {
+      try {
+        let verdict = CheckRules(playerStore, props.squareIdx, circleIdx);
+        if (verdict.allowed) {
+          await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
+          playerStore.Player.value.diceRolled = false;
+        }
+        emit("ruleVerdict", verdict);
+      } catch (e) {
+        console.log("Error making request updateGameBoard");
       }
-      emit("ruleVerdict", verdict);
-    } catch (e) {
-      console.log("Error making request updateGameBoard");
+      return;
+    } else {
+      alert("Roll the dice first!");
     }
-
-    return;
+  } else {
+    alert("It's not your turn!");
   }
-  alert("It's not your turn!");
 };
 </script>

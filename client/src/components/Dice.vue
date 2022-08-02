@@ -1,18 +1,14 @@
 <template>
-  <div
-    class="bg-black bg-opacity-60 border-white border-4 p-8 mx-8 rounded-2xl"
-  >
+  <div class="bg-black bg-opacity-60 border-white border-4 p-8 mx-8 rounded-2xl">
+    <div v-if="!playerStore.Player.value.turn">
+      <p v-if="playerStore.Player.value.game.last_roll == 0">Waiting for other player to roll dice</p>
+      <p>{{ store.diceAsArray }}</p>
+      <p>{{ `&#x268${store.diceAsArray[0]};` }};</p>
+    </div>
     <button
-      :disabled="rolled"
-      @click="rollDice"
-      class="
-        bg-green-500
-        rounded-md
-        p-4
-        text-white
-        font-bold
-        disabled:bg-gray-500
-      "
+      :disabled="!playerStore.Player.value.turn"
+      @click="rollDiceHandler"
+      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
     >
       Roll dice
     </button>
@@ -22,20 +18,17 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
+import { useGameStore } from "../stores/game.js";
+import { storeToRefs } from "pinia";
 
-let rolled = ref(false);
+const store = useGameStore();
+let playerStore = storeToRefs(store);
+const { rollDice } = store;
 
-const props = defineProps({
-  clear: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-const rollDice = () => {
-  rolled.value = true;
-  createDice();
-  createDice();
+const rollDiceHandler = async () => {
+  let values = createDice();
+  console.log("DIE ", values[0], values[1]);
+  await rollDice(values[0], values[1], playerStore.Player.value.game.ID);
 };
 
 const getRandomValue = () => {
@@ -43,11 +36,18 @@ const getRandomValue = () => {
 };
 
 const createDice = () => {
-  const roll = document.createElement("li");
-  roll.className = "roll";
-  roll.innerHTML = `&#x268${getRandomValue()};`;
-  roll.innerHTML = `&#x268${getRandomValue()};`;
-  document.getElementById("rolls").appendChild(roll);
+  clearDice();
+  let dice1 = getRandomValue();
+  let dice2 = getRandomValue();
+  const roll1 = document.createElement("li");
+  const roll2 = document.createElement("li");
+  roll1.className = "roll";
+  roll2.className = "roll";
+  roll1.innerHTML = `&#x268${dice1};`;
+  roll2.innerHTML = `&#x268${dice2};`;
+  document.getElementById("rolls").appendChild(roll1);
+  document.getElementById("rolls").appendChild(roll2);
+  return [dice1 + 1, dice2 + 1];
 };
 
 const clearDice = () => {
@@ -57,17 +57,4 @@ const clearDice = () => {
     dice[0].remove();
   }
 };
-
-watch(
-  () => props.clear,
-  () => {
-    if (props.clear) {
-      rolled.value = true;
-      clearDice();
-    } else {
-      rolled.value = false;
-    }
-  },
-  { immediate: true }
-);
 </script>

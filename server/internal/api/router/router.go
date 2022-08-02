@@ -41,6 +41,10 @@ func New(manager *game.Manager) *mux.Router {
 		controllers.UpdateGameBoard(w, r, manager)
 	}).Methods("GET")
 
+	api.HandleFunc("/rolldice", func(w http.ResponseWriter, r *http.Request) {
+		controllers.RollDice(w, r, manager)
+	}).Methods("GET")
+
 	api.HandleFunc("/createplayer", func(w http.ResponseWriter, r *http.Request) {
 		controllers.CreatePlayer(w, r, manager)
 	}).Methods("GET")
