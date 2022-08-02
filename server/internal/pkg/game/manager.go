@@ -52,7 +52,7 @@ func (m *Manager) createNewGame(creatingPlayer int) Game {
 		GameOver:   false,
 		Winner:     -1,
 		GameBoard:  &gb,
-		LastRoll:   "0",
+		LastRoll:   "0,0",
 	}
 	return game
 }

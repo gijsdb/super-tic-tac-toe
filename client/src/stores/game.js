@@ -10,7 +10,8 @@ export const useGameStore = defineStore('game', {
         inGame: true,
         turn: false,
         diceRolled: false,
-        game: {},
+        game: {
+        },
       },
       // TODO ADD ERRORS
       Errors: {

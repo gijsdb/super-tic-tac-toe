@@ -1,7 +1,7 @@
 <template>
   <div>
     <GamesList v-if="showGames" :games="games" @closeGamesList="showGames = false" />
-    <div class="w-screen h-screen bg-gradient flex items-center justify-center">
+    <div v-if="!showGames" class="w-screen h-screen bg-gradient flex items-center justify-center">
       <div
         v-if="!showGames"
         class="bg-black w-4/12 py-48 rounded-2xl shadow-2xl bg-opacity-70 border-white border-4 text-white flex"
