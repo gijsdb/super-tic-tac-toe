@@ -7,7 +7,7 @@ export const useGameStore = defineStore('game', {
       Player: {
         id: 0,
         name: 'Player',
-        inGame: true,
+        inGame: false,
         turn: false,
         diceRolled: false,
         game: {

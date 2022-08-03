@@ -10,7 +10,7 @@
     <div class="flex flex-col items-center justify-center h-screen w-screen bg-gradient">
       <h1 class="font-bold p-8 text-white text-4xl">Games list</h1>
       <div
-        class="bg-black bg-opacity-60 w-[50vw] h-[70vh] border-4 border-white rounded-2xl text-white items-center justify-center overflow-scroll space-y-4"
+        class="bg-black bg-opacity-60 w-[50vw] h-[70vh] border-4 border-white rounded-2xl text-white items-center justify-center overflow-y-scroll space-y-4"
       >
         <div class="flex border-2 rounded-md mx-2 my-2" :key="game.ID" v-for="game in games">
           <div class="w-8/12 mx-2 flex flex-col justify-center text-xl">
