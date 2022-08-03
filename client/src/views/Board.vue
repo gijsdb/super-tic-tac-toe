@@ -124,13 +124,9 @@ onMounted(() => {
   }, 1000);
 });
 
-onBeforeUnmount(async () => {
+onBeforeUnmount(() => {
   clearInterval(waitForPlayerInterval);
   clearInterval(refreshInterval);
+  leaveGame();
 });
-
-window.onbeforeunload = async () => {
-  console.log("LEAVING");
-  leaveGame(playerStore.Player.value.game.ID, playerStore.Player.value.id);
-};
 </script>

@@ -2,13 +2,13 @@ package game
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/inconshreveable/log15"
 )
 
 func (g *Game) Changeturn(currentPlayerTurn string) {
-	// get the current players
 	currentPlayers := strings.Split(g.Players, ",")
 
 	for _, player := range currentPlayers {
@@ -26,19 +26,24 @@ func (g *Game) Changeturn(currentPlayerTurn string) {
 
 func (g *Game) RollDice(dice1 string, dice2 string) {
 	g.LastRoll = fmt.Sprintf("%s,%s", dice1, dice2)
-	log15.Debug("ROLLED DICE", "dice", g.LastRoll)
 }
 
-// // GetPlayers Returns csv string as list of ints
-// func (g *Game) GetPlayersAsListInt() []int {
-// 	var players []int
+func (g *Game) LeaveGame(leavingPlayer int) (*Game, error) {
 
-// 	playersSplit := strings.Split(g.Players, ",")
-// 	for _, player := range playersSplit {
-// 		player = strings.Trim(player, " ")
-// 		playerInt, _ := strconv.Atoi(player)
-// 		players = append(players, playerInt)
-// 	}
+	// Remove player from Players on game
+	playersSplit := strings.Split(g.Players, ",")
+	for i, player := range playersSplit {
+		playerInt, err := strconv.Atoi(player)
+		if err != nil {
+			log15.Crit("Error converting player to int while leaving game", "err", err)
+		}
+		if playerInt == leavingPlayer {
+			playersSplit = append(playersSplit[:i], playersSplit[i+1:]...)
+			g.Players = strings.Join(playersSplit, ",")
+			break
+		}
+	}
 
-// 	return players
-// }
+	g.GameOver = true
+	return g, nil
+}

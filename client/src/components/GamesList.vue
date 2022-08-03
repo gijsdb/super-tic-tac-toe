@@ -12,11 +12,10 @@
       <div
         class="bg-black bg-opacity-60 w-[50vw] h-[70vh] border-4 border-white rounded-2xl text-white items-center justify-center overflow-y-scroll space-y-4"
       >
-        <div class="flex border-2 rounded-md mx-2 my-2" :key="game.ID" v-for="game in games">
+        <div class="flex border-2 rounded-md mx-2 my-2" :key="game.ID" v-for="game in games" v-show="!game.game_over">
           <div class="w-8/12 mx-2 flex flex-col justify-center text-xl">
             <p>Game: {{ game.ID }}</p>
           </div>
-
           <button
             class="flex-grow p-4 border-l-2 border-white font-bold text-xl"
             :class="{ 'bg-red-600': game.full, 'bg-green-500': !game.full }"

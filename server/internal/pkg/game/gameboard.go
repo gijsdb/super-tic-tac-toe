@@ -2,12 +2,6 @@ package game
 
 import "github.com/inconshreveable/log15"
 
-// var (
-// 	Player1    = -1
-// 	Player2    = -1
-// 	Unselected = -1
-// )
-
 // Gameboard represents the game board
 type GameBoard struct {
 	Player1 int      `json:"player_1"`

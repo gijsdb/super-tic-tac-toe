@@ -37,7 +37,7 @@ import { useGameStore } from "../stores/game.js";
 
 const router = useRouter();
 const store = useGameStore();
-const { registerClient, createGame } = store;
+const { registerClient, removeClient, createGame } = store;
 let playerStore = storeToRefs(store);
 
 let showGames = ref(false);
@@ -65,6 +65,6 @@ onMounted(() => {
 });
 
 window.onbeforeunload = async () => {
-  await APIClient.RemovePlayer(playerStore.Player.value.id);
+  removeClient();
 };
 </script>

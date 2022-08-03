@@ -58,9 +58,9 @@ func LeaveGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	p := r.URL.Query().Get("player")
 
 	playerId := helpers.StringToInt(p)
-	gameId := helpers.StringToInt(g)
+	gameId := helpers.StringToInt(g) - 1
 
-	game, err := m.LeaveGame(gameId, playerId)
+	game, err := m.Games[gameId].LeaveGame(playerId)
 	log15.Debug("Player left game", "game", gameId, "player id", playerId, "error", err, "all games", m.Games)
 	if err != nil {
 		errorResponse(err, "Error leaving game in LeaveGame::game-controllers.go", w)

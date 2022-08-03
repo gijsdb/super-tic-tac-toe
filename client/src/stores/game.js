@@ -11,6 +11,14 @@ export const useGameStore = defineStore('game', {
         turn: false,
         diceRolled: false,
         game: {
+          ID: -1,
+          game_board: {},
+          player_turn: -1,
+          game_over: false,
+          winner: -1,
+          players: "",
+          full: false,
+          last_roll: '0,0'
         },
       },
       // TODO ADD ERRORS
@@ -45,7 +53,6 @@ export const useGameStore = defineStore('game', {
         if (cookiePair[0].trim() === "client_id") {
           this.Player.id = cookiePair[1]
           await APIClient.CreatePlayer(cookiePair[1])
-
           return
         }
       }
@@ -55,6 +62,9 @@ export const useGameStore = defineStore('game', {
       document.cookie = "client_id=" + id + ";SameSite=none;Secure=false";
 
       this.Player.id = id
+    },
+    removeClient() {
+      APIClient.RemovePlayer(this.Player.id);
     },
     async checkClient() {
       if (this.Player.id === 0) {
@@ -101,11 +111,11 @@ export const useGameStore = defineStore('game', {
         return false
       }
     },
-    async leaveGame(gameId, playerId) {
-      this.Player.inGame = false
-      this.Player.game = {}
+    async leaveGame() {
       try {
-        const res = await APIClient.LeaveGame(gameId, playerId)
+        const res = await APIClient.LeaveGame(this.Player.game.ID, this.Player.id)
+        this.Player.inGame = false
+        this.Player.game = {}
         console.log("RES FROM LEAVING", res)
 
       } catch (e) {
