@@ -17,7 +17,7 @@
         <p>Game Full: {{ playerStore.Player.value.game.full }}</p>
       </div>
     </div>
-    <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true" />
+    <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true" :rolled="rolled" />
 
     <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over" class="flex flex-col">
       <div
@@ -32,6 +32,7 @@
         class="z-40 bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl px-4 pb-4 w-[40vw] h-[40vw] rounded-lg rounded-t-none grid grid-cols-3"
       >
         <Square
+          @clearDice="clearDiceHandler"
           v-for="(square, idx) in playerStore.Player.value.game.game_board.squares"
           :key="idx"
           :squareIdx="idx"
@@ -61,9 +62,18 @@ const { refreshGame, leaveGame } = store;
 let playerStore = storeToRefs(store);
 
 let message = ref({ allowed: true, reason: "" });
+let rolled = ref(false);
 let feedbackLoop = null;
 let waitForPlayerInterval = null;
 let refreshInterval = null;
+
+const clearDiceHandler = () => {
+  rolled.value = true;
+  // Timeout to let dice clear
+  setTimeout(() => {
+    rolled.value = false;
+  }, 500);
+};
 
 const checkMessage = () => {
   if (playerStore.Player.value.game.game_over) {

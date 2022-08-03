@@ -56,9 +56,9 @@ import { CheckRules } from "../game/rules.js";
 
 const store = useGameStore();
 let playerStore = storeToRefs(store);
-const { updateGameBoard } = store;
+const { updateGameBoard, rollDice } = store;
 
-const emit = defineEmits(["ruleVerdict"]);
+const emit = defineEmits(["ruleVerdict", "clearDice"]);
 
 const props = defineProps({
   squareIdx: Number,
@@ -72,6 +72,8 @@ const updateboard = async (circleIdx) => {
         if (verdict.allowed) {
           await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
           playerStore.Player.value.diceRolled = false;
+          emit("clearDice");
+          await rollDice(0, 0);
         }
         emit("ruleVerdict", verdict);
       } catch (e) {

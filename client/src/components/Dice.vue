@@ -1,10 +1,10 @@
 <template>
   <div class="bg-black bg-opacity-60 border-white border-4 p-8 mx-8 rounded-2xl">
     <div v-if="!playerStore.Player.value.turn">
-      <ul v-if="!playerStore.Player.value.game.last_roll != '0,0'" class="flex text-white text-6xl" id="lastroll"></ul>
+      <ul v-if="!playerStore.Player.value.game.last_roll != '0,0'" class="flex text-red-500 text-6xl" id="lastroll"></ul>
     </div>
     <button
-      :disabled="!playerStore.Player.value.turn"
+      :disabled="!playerStore.Player.value.turn || diceRolled"
       @click="rollDiceHandler"
       class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
     >
@@ -15,18 +15,23 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useGameStore } from "../stores/game.js";
 import { storeToRefs } from "pinia";
+
+const props = defineProps({
+  rolled: Boolean,
+});
 
 const store = useGameStore();
 let playerStore = storeToRefs(store);
 const { rollDice } = store;
+let diceRolled = ref(false);
 
 const rollDiceHandler = async () => {
+  diceRolled.value = true;
   let values = createDice();
-  console.log("DIE ", values[0], values[1]);
-  await rollDice(values[0], values[1], playerStore.Player.value.game.ID);
+  await rollDice(values[0], values[1]);
 };
 
 const getRandomValue = () => {
@@ -48,8 +53,20 @@ const createDice = () => {
   return [dice1 + 1, dice2 + 1];
 };
 
+const showLastRoll = () => {
+  const dice1 = document.createElement("li");
+  const dice2 = document.createElement("li");
+  dice1.className = "roll";
+  dice2.className = "roll";
+  dice1.innerHTML = `&#x268${store.diceAsArray[0] - 1};`;
+  dice2.innerHTML = `&#x268${store.diceAsArray[1] - 1};`;
+  document.getElementById("lastroll").appendChild(dice1);
+  document.getElementById("lastroll").appendChild(dice2);
+};
+
 const clearDice = () => {
   const dice = document.getElementsByClassName("roll");
+
   if (dice[0] != undefined) {
     dice[0].remove();
     dice[0].remove();
@@ -62,7 +79,6 @@ watch(
     if (playerStore.Player.value.turn) {
       return;
     }
-    console.log("newRoll", newRoll);
     if (newRoll == "0,0") {
       return;
     }
@@ -72,14 +88,17 @@ watch(
   }
 );
 
-const showLastRoll = () => {
-  const dice1 = document.createElement("li");
-  const dice2 = document.createElement("li");
-  dice1.className = "roll";
-  dice2.className = "roll";
-  dice1.innerHTML = `&#x268${store.diceAsArray[0] - 1};`;
-  dice2.innerHTML = `&#x268${store.diceAsArray[1] - 1};`;
-  document.getElementById("lastroll").appendChild(dice1);
-  document.getElementById("lastroll").appendChild(dice2);
-};
+watch(
+  () => store.Player.turn,
+  () => {
+    diceRolled.value = false;
+  }
+);
+
+watch(
+  () => props.rolled,
+  () => {
+    clearDice();
+  }
+);
 </script>

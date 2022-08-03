@@ -132,9 +132,9 @@ export const useGameStore = defineStore('game', {
         console.log("Erroring updating game in store", e)
       }
     },
-    async rollDice(dice1, dice2, game) {
+    async rollDice(dice1, dice2) {
       try {
-        let res = await APIClient.RollDice(dice1, dice2, game);
+        let res = await APIClient.RollDice(dice1, dice2, this.Player.game.ID);
         this.Player.game = res
       } catch (e) {
         console.log("Erroring rolling dice in store", e)
