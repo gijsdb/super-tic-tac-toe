@@ -68,7 +68,7 @@ const updateboard = async (circleIdx) => {
   if (playerStore.Player.value.turn) {
     if (playerStore.Player.value.diceRolled) {
       try {
-        let verdict = CheckRules(playerStore, props.squareIdx, circleIdx);
+        let verdict = CheckRules(playerStore, props.squareIdx, circleIdx, store.diceTotalAsInt);
         if (verdict.allowed) {
           await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
           playerStore.Player.value.diceRolled = false;

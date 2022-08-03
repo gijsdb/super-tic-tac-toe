@@ -1,6 +1,6 @@
 
 // TODO consider dice roll
-export const CheckRules = (store, squareIdx, circleIdx) => {
+export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
 
     if (store.Player.value.game.game_board.squares[squareIdx].captured_by != -1 && store.Player.value.game.game_board.squares[squareIdx].captured_by != store.Player.value.id) {
         return { allowed: false, reason: "You can't capture a circle in this square because the square is already captured by another player" };
@@ -10,6 +10,34 @@ export const CheckRules = (store, squareIdx, circleIdx) => {
         if (store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != -1 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != store.Player.value.id) {
             return { allowed: false, reason: "You can't select this circle because it is already selected by another player" };
         }
+
+        console.log("CIRCLE IDX", circleIdx)
+
+        // Check dice roll write tests
+
+        // // 2 = Remove opposition circle and roll again
+
+        // // If roll === index of a square its any circle in that square but the middle
+        // if (totalRoll >= 3 && totalRoll <= 11 && squareIdx >= 3 && squareIdx <= 11 && circleIdx != 4) {
+        //     return { allowed: false, reason: "You can't roll this number, it's in the middle of a square" };
+        // } else if () {
+        //     return { allowed: false, reason: `You rolled a ${totalRoll}, ` };
+        // }
+
+
+
+        // // 12 = any circle and square
+        // if (totalRoll === 12) {
+        //     return { allowed: true, reason: "You captured the circle" };
+        // }
+
+        // // 7 = in any square middle or the 7th index of any square  ??? CONFIRM THIS
+        // if (totalRoll === 7) {
+        //     if (circleIdx === 4) {
+        //         return { allowed: true, reason: "You captured the circle" };
+        //     }
+        // }
+
         return { allowed: true, reason: "You captured the circle" };
     }
 }

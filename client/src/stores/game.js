@@ -26,6 +26,15 @@ export const useGameStore = defineStore('game', {
         arr[idx] = parseInt(item)
       })
       return arr
+    },
+    diceTotalAsInt(state) {
+      let arr = state.Player.game.last_roll.split(",")
+      let total = 0
+      arr.forEach((item, idx) => {
+        arr[idx] = parseInt(item)
+        total += arr[idx]
+      })
+      return total
     }
   },
   actions: {

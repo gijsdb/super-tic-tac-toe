@@ -7,7 +7,6 @@
         class="bg-black w-4/12 py-48 rounded-2xl shadow-2xl bg-opacity-70 border-white border-4 text-white flex"
       >
         <div class="w-full flex flex-col items-center justify-center text-center">
-          <p>Player ID: {{ playerStore.Player.value.id }}</p>
           <h1 class="text-4xl font-white font-bold">SUPER TIC TAC TOE</h1>
           <div>
             <ul>
