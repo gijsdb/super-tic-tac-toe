@@ -3,7 +3,6 @@ package game
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/inconshreveable/log15"
 )
@@ -18,8 +17,8 @@ func NewManager() *Manager {
 // Creates a new game in the manager and database, takes the player creating the game as param
 func (m *Manager) CreateGame(creatingPlayer int) (*Game, error) {
 	game := m.createNewGame(creatingPlayer)
-	game.Players = fmt.Sprintf("%d,", creatingPlayer)
-	game.PlayerTurn = fmt.Sprintf("%d,", creatingPlayer)
+	game.Players = append(game.Players, creatingPlayer)
+	game.PlayerTurn = creatingPlayer
 
 	m.Games = append(m.Games, &game)
 	log15.Debug("Created new game for player", "player", creatingPlayer, "game", game)
@@ -30,11 +29,11 @@ func (m *Manager) createNewGame(creatingPlayer int) Game {
 	gb := CreateGameBoard(creatingPlayer)
 	game := Game{
 		ID:         len(m.Games) + 1,
-		PlayerTurn: "",
+		PlayerTurn: -1,
 		GameOver:   false,
 		Winner:     -1,
 		GameBoard:  &gb,
-		LastRoll:   "0,0",
+		LastRoll:   []int{0, 0},
 	}
 	return game
 }
@@ -42,11 +41,11 @@ func (m *Manager) createNewGame(creatingPlayer int) Game {
 func (m *Manager) JoinGame(gameId int, joiningPlayer int) (*Game, error) {
 	for _, game := range m.Games {
 		if game.ID == gameId {
-			playerLength := strings.Split(game.Players, ",")
-			if len(playerLength) >= 3 {
+			playerLength := len(game.Players)
+			if playerLength >= 3 {
 				return nil, fmt.Errorf("game is full")
 			}
-			game.Players = game.Players + fmt.Sprintf("%d,", joiningPlayer)
+			game.Players = append(game.Players, joiningPlayer)
 			game.GameBoard.Player2 = joiningPlayer
 			game.Full = true
 

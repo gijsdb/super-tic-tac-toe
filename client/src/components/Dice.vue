@@ -58,8 +58,8 @@ const showLastRoll = () => {
   const dice2 = document.createElement("li");
   dice1.className = "roll";
   dice2.className = "roll";
-  dice1.innerHTML = `&#x268${store.diceAsArray[0] - 1};`;
-  dice2.innerHTML = `&#x268${store.diceAsArray[1] - 1};`;
+  dice1.innerHTML = `&#x268${playerStore.Player.value.game.last_roll[0] - 1};`;
+  dice2.innerHTML = `&#x268${playerStore.Player.value.game.last_roll[1] - 1};`;
   document.getElementById("lastroll").appendChild(dice1);
   document.getElementById("lastroll").appendChild(dice2);
 };
@@ -79,10 +79,11 @@ watch(
     if (playerStore.Player.value.turn) {
       return;
     }
-    if (newRoll == "0,0") {
+    if (newRoll[0] == 0 && newRoll[1] == 0) {
+      console.log("AHHHHHH");
       return;
     }
-    if (newRoll != oldRoll) {
+    if (newRoll[0] != oldRoll[0] && newRoll[1] != oldRoll[1]) {
       showLastRoll();
     }
   }

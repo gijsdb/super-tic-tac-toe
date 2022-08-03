@@ -94,7 +94,7 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 		m.Games[gameIdx].GameOver = true
 	}
 
-	m.Games[gameIdx].Changeturn(p)
+	m.Games[gameIdx].Changeturn(playerId)
 
 	jsonGame, err := json.Marshal(m.Games[gameIdx])
 	if err != nil {
@@ -110,8 +110,10 @@ func RollDice(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	d2 := r.URL.Query().Get("dice2")
 
 	gameIdx := helpers.StringToInt(g) - 1
+	dice1 := helpers.StringToInt(d1)
+	dice2 := helpers.StringToInt(d2)
 
-	m.Games[gameIdx].RollDice(d1, d2)
+	m.Games[gameIdx].RollDice(dice1, dice2)
 
 	jsonGame, err := json.Marshal(m.Games[gameIdx])
 	if err != nil {

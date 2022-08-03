@@ -18,7 +18,7 @@ export const useGameStore = defineStore('game', {
           winner: -1,
           players: "",
           full: false,
-          last_roll: '0,0'
+          last_roll: [0, 0]
         },
       },
       // TODO ADD ERRORS
@@ -28,19 +28,11 @@ export const useGameStore = defineStore('game', {
     }
   },
   getters: {
-    diceAsArray(state) {
-      let arr = state.Player.game.last_roll.split(",")
-      arr.forEach((item, idx) => {
-        arr[idx] = parseInt(item)
-      })
-      return arr
-    },
-    diceTotalAsInt(state) {
-      let arr = state.Player.game.last_roll.split(",")
+    diceTotal(state) {
       let total = 0
-      arr.forEach((item, idx) => {
-        arr[idx] = parseInt(item)
-        total += arr[idx]
+      state.Player.game.last_roll.forEach((item, idx) => {
+
+        total += item
       })
       return total
     }
@@ -126,7 +118,7 @@ export const useGameStore = defineStore('game', {
       try {
         const res = await APIClient.GetGame(this.Player.game.ID);
         this.Player.game = res;
-        if (this.Player.game.player_turn.replace(/,/g, "") == this.Player.id) {
+        if (this.Player.game.player_turn == this.Player.id) {
           this.Player.turn = true
         } else {
           this.Player.turn = false

@@ -10,10 +10,10 @@ type Manager struct {
 type Game struct {
 	ID         int        `json:"ID"`
 	GameBoard  *GameBoard `json:"game_board" ` // JSON for gameboard
-	PlayerTurn string     `json:"player_turn"`
+	PlayerTurn int        `json:"player_turn"`
 	GameOver   bool       `json:"game_over"`
 	Winner     int        `json:"winner"`
-	Players    string     `json:"players"` // List of string for the moment, needs changing
+	Players    []int      `json:"players"` // List of string for the moment, needs changing
 	Full       bool       `json:"full"`
-	LastRoll   string     `json:"last_roll"` // Last roll of the game, e.g. 5,5
+	LastRoll   []int      `json:"last_roll"` // Last roll of the game, e.g. 5,5
 }
