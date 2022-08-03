@@ -10,8 +10,7 @@ import (
 )
 
 func Run(manager *game.Manager) {
-
 	r := router.New(manager)
-	log15.Debug("Running server on localhost:2020")
+	log15.Info("Running server on localhost:2020")
 	log.Fatal(http.ListenAndServe("localhost:2020", r))
 }

@@ -21,13 +21,6 @@ func (m *Manager) CreateGame(creatingPlayer int) (*Game, error) {
 	game.Players = fmt.Sprintf("%d,", creatingPlayer)
 	game.PlayerTurn = fmt.Sprintf("%d,", creatingPlayer)
 
-	// db := db.Get()
-	// result := db.Ins.Create(&game)
-	// if result.Error != nil {
-	// 	log15.Debug("Error saving new game CreateNewGame()::game.go", "err", result.Error)
-	// 	return nil, result.Error
-	// }
-
 	m.Games = append(m.Games, &game)
 	log15.Debug("Created new game for player", "player", creatingPlayer, "game", game)
 	return &game, nil
@@ -57,12 +50,6 @@ func (m *Manager) JoinGame(gameId int, joiningPlayer int) (*Game, error) {
 			game.GameBoard.Player2 = joiningPlayer
 			game.Full = true
 
-			// db := db.Get()
-			// result := db.Ins.Save(&game)
-			// if result.Error != nil {
-			// 	log15.Debug("Error saving game after join JoinGame()::game.go", "err", result.Error)
-			// 	return nil, result.Error
-			// }
 			return game, nil
 		}
 	}
@@ -77,22 +64,6 @@ func (m *Manager) GetGame(idx int) (Game, error) {
 		return Game{}, fmt.Errorf("no games")
 	}
 }
-
-// // GetGames is used by the List games UI to show all games
-// func (m *Manager) GetGames() error {
-// 	var games []Game
-// 	db := db.Get()
-// 	result := db.Ins.Find(&games)
-// 	if result.Error != nil {
-// 		log15.Error("Error retrieving database records game::GetGames()")
-// 	}
-
-// 	for _, game := range games {
-// 		m.Games = append(m.Games, &game)
-// 	}
-
-// 	return nil
-// }
 
 // ListGames returns a JSON representation of the manager's games
 func (m *Manager) ListGames() ([]byte, error) {
