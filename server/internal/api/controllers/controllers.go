@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
-	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/manager"
 )
 
-func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func CreateGame(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	p := r.URL.Query().Get("player")
 	playerId := helpers.StringToInt(p)
 
@@ -23,7 +23,7 @@ func CreateGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, bb, nil)
 }
 
-func ListGames(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func ListGames(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	games, err := m.ListGames()
 	if err != nil {
 		errorResponse(err, "Error listing games in controllers.go::ListGames", w)
@@ -32,7 +32,7 @@ func ListGames(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, games, nil)
 }
 
-func CreatePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func CreatePlayer(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	player := r.URL.Query().Get("id")
 	playerId := helpers.StringToInt(player)
 
@@ -44,7 +44,7 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, bb, nil)
 }
 
-func RemovePlayer(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func RemovePlayer(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	player := r.URL.Query().Get("id")
 	playerId := helpers.StringToInt(player)
 

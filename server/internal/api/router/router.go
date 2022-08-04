@@ -5,12 +5,12 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/api/controllers"
 	"github.com/gijsdb/super-tic-tac-toe/internal/api/middlewares"
-	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/manager"
 
 	"github.com/gorilla/mux"
 )
 
-func New(manager *game.Manager) *mux.Router {
+func New(m *manager.Manager) *mux.Router {
 	r := mux.NewRouter()
 
 	r.Use(middlewares.CORS)
@@ -18,39 +18,39 @@ func New(manager *game.Manager) *mux.Router {
 	api := r.PathPrefix("/api/v1").Subrouter()
 
 	api.HandleFunc("/games", func(w http.ResponseWriter, r *http.Request) {
-		controllers.ListGames(w, r, manager)
+		controllers.ListGames(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/creategame", func(w http.ResponseWriter, r *http.Request) {
-		controllers.CreateGame(w, r, manager)
+		controllers.CreateGame(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/game", func(w http.ResponseWriter, r *http.Request) {
-		controllers.GetGame(w, r, manager)
+		controllers.GetGame(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/joingame", func(w http.ResponseWriter, r *http.Request) {
-		controllers.JoinGame(w, r, manager)
+		controllers.JoinGame(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/leavegame", func(w http.ResponseWriter, r *http.Request) {
-		controllers.LeaveGame(w, r, manager)
+		controllers.LeaveGame(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/updateboard", func(w http.ResponseWriter, r *http.Request) {
-		controllers.UpdateGameBoard(w, r, manager)
+		controllers.UpdateGameBoard(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/rolldice", func(w http.ResponseWriter, r *http.Request) {
-		controllers.RollDice(w, r, manager)
+		controllers.RollDice(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/createplayer", func(w http.ResponseWriter, r *http.Request) {
-		controllers.CreatePlayer(w, r, manager)
+		controllers.CreatePlayer(w, r, m)
 	}).Methods("GET")
 
 	api.HandleFunc("/removeplayer", func(w http.ResponseWriter, r *http.Request) {
-		controllers.RemovePlayer(w, r, manager)
+		controllers.RemovePlayer(w, r, m)
 	}).Methods("GET")
 
 	return r

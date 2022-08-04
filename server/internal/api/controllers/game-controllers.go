@@ -9,7 +9,7 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
 	h "github.com/gijsdb/super-tic-tac-toe/internal/api/helpers"
-	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/manager"
 	"github.com/inconshreveable/log15"
 )
 
@@ -37,7 +37,7 @@ func errorResponse(err error, msg string, w http.ResponseWriter) {
 	w.Write(res)
 }
 
-func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func JoinGame(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	g := r.URL.Query().Get("id")
 	p := r.URL.Query().Get("player")
 
@@ -53,7 +53,7 @@ func JoinGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, bb, nil)
 }
 
-func LeaveGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func LeaveGame(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	g := r.URL.Query().Get("id")
 	p := r.URL.Query().Get("player")
 
@@ -70,7 +70,7 @@ func LeaveGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 }
 
 // Update the game board with the selected circle for the player
-func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	g := r.URL.Query().Get("gameid")
 	p := r.URL.Query().Get("player")
 	s := r.URL.Query().Get("square")
@@ -104,7 +104,7 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, jsonGame, nil)
 }
 
-func RollDice(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func RollDice(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	g := r.URL.Query().Get("gameid")
 	d1 := r.URL.Query().Get("dice1")
 	d2 := r.URL.Query().Get("dice2")
@@ -123,7 +123,7 @@ func RollDice(w http.ResponseWriter, r *http.Request, m *game.Manager) {
 	genericResponse(w, jsonGame, nil)
 }
 
-func GetGame(w http.ResponseWriter, r *http.Request, m *game.Manager) {
+func GetGame(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	id := r.URL.Query().Get("id")
 	gameIdx := helpers.StringToInt(id) - 1
 	game, err := m.GetGame(gameIdx)

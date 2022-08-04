@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/api"
-	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/game"
+	"github.com/gijsdb/super-tic-tac-toe/internal/pkg/manager"
 )
 
 func main() {
-	var m *game.Manager
+	var m *manager.Manager
 	if m == nil {
-		m = game.NewManager()
+		m = manager.NewManager()
 	}
 
 	api.Run(m)

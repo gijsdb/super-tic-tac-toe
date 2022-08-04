@@ -10,11 +10,13 @@
     </div>
 
     <div v-show="playerStore.Player.value.game.full" class="flex flex-col space-y-10">
-      <div class="rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 border-white border-4">
-        <p>Player ID: {{ playerStore.Player.value.id }}</p>
-        <p>Game ID: {{ playerStore.Player.value.game.ID }}</p>
-        <p>Your turn: {{ playerStore.Player.value.turn }}</p>
-        <p>Game Full: {{ playerStore.Player.value.game.full }}</p>
+      <div class="text-center rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 border-white border-4 font-bold">
+        <p v-show="playerStore.Player.value.turn" class="text-green-500">Your turn</p>
+        <p v-show="!playerStore.Player.value.turn" class="text-red-500">Not your turn</p>
+        <p>Game {{ playerStore.Player.value.game.ID }}</p>
+        <p v-for="(player, idx) in playerStore.Player.value.game.players" :key="idx">
+          <span v-show="player != playerStore.Player.value.id">VS player {{ player }}</span>
+        </p>
       </div>
     </div>
     <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true" :rolled="rolled" />
