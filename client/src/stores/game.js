@@ -14,7 +14,10 @@ export const useGameStore = defineStore('game', {
           ID: -1,
           game_board: {},
           player_turn: -1,
-          game_over: false,
+          game_over: {
+            over: false,
+            reason: "",
+          },
           winner: -1,
           players: "",
           full: false,

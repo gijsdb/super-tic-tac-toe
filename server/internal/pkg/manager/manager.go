@@ -31,10 +31,13 @@ func (m *Manager) createNewGame(creatingPlayer int) game.Game {
 	game := game.Game{
 		ID:         len(m.Games) + 1,
 		PlayerTurn: -1,
-		GameOver:   false,
-		Winner:     -1,
-		GameBoard:  &gb,
-		LastRoll:   []int{0, 0},
+		GameOver: &game.GameOver{
+			Over:   false,
+			Reason: "",
+		},
+		Winner:    -1,
+		GameBoard: &gb,
+		LastRoll:  []int{0, 0},
 	}
 	return game
 }
@@ -67,7 +70,16 @@ func (m *Manager) GetGame(idx int) (game.Game, error) {
 
 // ListGames returns a JSON representation of the manager's games
 func (m *Manager) ListGames() ([]byte, error) {
-	bb, err := json.Marshal(m.Games)
+	gamesList := []game.Game{}
+
+	for _, game := range m.Games {
+		if game.Full || game.GameOver.Over {
+			continue
+		}
+		gamesList = append(gamesList, *game)
+	}
+
+	bb, err := json.Marshal(gamesList)
 	if err != nil {
 		log15.Error("Error marshalling games list", "err", err)
 		return nil, err

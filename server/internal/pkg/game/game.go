@@ -29,6 +29,11 @@ func (g *Game) LeaveGame(leavingPlayer int) (*Game, error) {
 		}
 	}
 
-	g.GameOver = true
+	g.SetGameOver("Player left the game")
 	return g, nil
+}
+
+func (g *Game) SetGameOver(reason string) {
+	g.GameOver.Over = true
+	g.GameOver.Reason = reason
 }

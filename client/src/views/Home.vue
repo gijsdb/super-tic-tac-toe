@@ -1,46 +1,52 @@
 <template>
-  <div>
-    <GamesList v-if="showGames" :games="games" @closeGamesList="showGames = false" />
-    <div v-if="!showGames" class="w-screen h-screen bg-gradient flex items-center justify-center">
+  <div class="w-screen h-screen bg-gradient flex items-center justify-center">
+    <div class="w-10/12 flex flex-col text-white items-center">
+      <h1 class="text-4xl font-white font-bold py-4">SUPER TIC TAC TOE</h1>
       <div
-        v-if="!showGames"
-        class="bg-black w-4/12 py-48 rounded-2xl shadow-2xl bg-opacity-70 border-white border-4 text-white flex"
+        v-show="games.length > 0"
+        class="bg-black bg-opacity-60 border-4 p-8 my-4 border-white rounded-2xl text-white overflow-y-scroll space-y-4 w-6/12 max-h-40vh"
       >
-        <div class="w-full flex flex-col items-center justify-center text-center">
-          <h1 class="text-4xl font-white font-bold">SUPER TIC TAC TOE</h1>
-          <div>
-            <ul>
-              <li>
-                <button @click="listGames()" class="bg-[#1fddff] p-4 rounded-md text-white font-bold m-4">List Games</button>
-              </li>
-              <li>
-                <button @click="createGameHandler()" class="bg-[#1fddff] p-4 rounded-md text-white font-bold">
-                  Create Game
-                </button>
-              </li>
-            </ul>
+        <div
+          class="flex border-2 rounded-md my-2 w-8/12 mx-auto"
+          :key="game.ID"
+          v-for="game in games"
+          v-show="!game.game_over.over"
+        >
+          <div class="w-8/12 mx-2 flex flex-col justify-center text-xl">
+            <p>Game: {{ game.ID }}</p>
           </div>
+          <button
+            class="flex-grow p-4 border-l-2 border-white font-bold text-xl"
+            :class="{ 'bg-red-600': game.full, 'bg-green-500': !game.full }"
+            @click="JoinGame(game.ID)"
+            :disabled="game.full"
+          >
+            <p v-if="!game.full">Join</p>
+            <p v-if="game.full">Full</p>
+          </button>
         </div>
       </div>
+      <button @click="createGameHandler()" class="bg-[#1fddff] p-4 rounded-md text-white font-bold w-2/12">
+        Create Game
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useRouter } from "vue-router";
-import GamesList from "../components/GamesList.vue";
 import APIClient from "../APIClient";
 import { useGameStore } from "../stores/game.js";
 
 const router = useRouter();
 const store = useGameStore();
-const { registerClient, removeClient, createGame } = store;
+const { registerClient, removeClient, createGame, joinGame } = store;
 let playerStore = storeToRefs(store);
 
-let showGames = ref(false);
+let getGamesLoop;
 let games = ref([]);
 
 const listGames = async () => {
@@ -53,6 +59,18 @@ const listGames = async () => {
   }
 };
 
+const JoinGame = async (gameId) => {
+  try {
+    let res = await store.joinGame(gameId);
+    if (res === true) {
+      router.push("/game/" + gameId);
+    }
+  } catch (e) {
+    console.log("Error joining game", e);
+    return;
+  }
+};
+
 const createGameHandler = async () => {
   let res = await createGame();
   if (res) {
@@ -60,8 +78,17 @@ const createGameHandler = async () => {
   }
 };
 
-onMounted(() => {
-  registerClient();
+onMounted(async () => {
+  await registerClient();
+  await listGames();
+
+  getGamesLoop = setInterval(async () => {
+    await listGames();
+  }, 5000);
+});
+
+onUnmounted(() => {
+  clearInterval(getGamesLoop);
 });
 
 window.onbeforeunload = async () => {

@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gradient w-screen h-screen flex items-center justify-center">
-    <GameOver v-show="playerStore.Player.value.game.game_over" />
+    <GameOver v-show="playerStore.Player.value.game.game_over.over" />
     <div
       v-show="!playerStore.Player.value.game.full"
       class="bg-black bg-opacity-50 p-12 rounded-2xl shadow-2xl text-white font-bold text-center"
@@ -21,7 +21,7 @@
     </div>
     <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true" :rolled="rolled" />
 
-    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over" class="flex flex-col">
+    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over.over" class="flex flex-col">
       <div
         class="bg-black bg-opacity-80 px-8 rounded-lg rounded-b-none border-white border-2 border-b-0 text-center py-2 font-bold text-sm"
       >
@@ -78,7 +78,7 @@ const clearDiceHandler = () => {
 };
 
 const checkMessage = () => {
-  if (playerStore.Player.value.game.game_over) {
+  if (playerStore.Player.value.game.game_over.over) {
     message.value = {
       allowed: true,
       reason: "Game over",
@@ -129,6 +129,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearInterval(waitForPlayerInterval);
   clearInterval(refreshInterval);
+  clearInterval(feedbackLoop);
   leaveGame();
 });
 </script>

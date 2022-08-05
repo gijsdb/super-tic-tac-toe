@@ -80,7 +80,6 @@ watch(
       return;
     }
     if (newRoll[0] == 0 && newRoll[1] == 0) {
-      console.log("AHHHHHH");
       return;
     }
     if (newRoll[0] != oldRoll[0] && newRoll[1] != oldRoll[1]) {

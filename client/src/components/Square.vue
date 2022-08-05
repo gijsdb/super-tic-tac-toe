@@ -68,6 +68,12 @@ const updateboard = async (circleIdx) => {
   if (playerStore.Player.value.turn) {
     if (playerStore.Player.value.diceRolled) {
       try {
+        // 2 = Remove opposition circle and roll again
+        if (store.diceTotal === 2) {
+          // make request to remove an opposition circle and roll again
+          console.log("TWOOOOOO ");
+        }
+
         let verdict = CheckRules(playerStore, props.squareIdx, circleIdx, store.diceTotal);
         if (verdict.allowed) {
           await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);

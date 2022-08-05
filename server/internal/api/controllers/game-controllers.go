@@ -91,7 +91,8 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *manager.Manager)
 
 	if m.Games[gameIdx].GameBoard.Winner != -1 {
 		m.Games[gameIdx].Winner = m.Games[gameIdx].GameBoard.Winner
-		m.Games[gameIdx].GameOver = true
+		m.Games[gameIdx].GameOver.Reason = fmt.Sprintf("Player %d wins!", m.Games[gameIdx].Winner)
+		m.Games[gameIdx].GameOver.Over = true
 	}
 
 	m.Games[gameIdx].Changeturn(playerId)
