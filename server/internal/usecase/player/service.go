@@ -1,0 +1,17 @@
+package player
+
+import "github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+
+type InteractorI interface {
+	CreatePlayer()
+}
+
+func NewService(repo repository.PlayerRepositoryI) InteractorI {
+	return &Service{
+		repo: repo,
+	}
+}
+
+type Service struct {
+	repo repository.PlayerRepositoryI
+}
