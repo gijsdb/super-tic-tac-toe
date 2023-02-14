@@ -7,8 +7,9 @@ import (
 
 type GameRepositoryI interface {
 	Create(game *entity.Game) *entity.Game
-	// Get() (*entity.Game, error)
+	Get(id int64) *entity.Game
 	Index() []*entity.Game
+	Update(game *entity.Game) *entity.Game
 	// Changeturn()
 	// RollDice(int, int)
 	// RemovePlayer(int)
@@ -25,10 +26,18 @@ func NewGameRepository(store *memorystore.GameStore) GameRepositoryI {
 	}
 }
 
-func (g GameMemoryRepository) Index() []*entity.Game {
+func (g *GameMemoryRepository) Index() []*entity.Game {
 	return g.store.IndexGames()
 }
 
-func (g GameMemoryRepository) Create(game *entity.Game) *entity.Game {
+func (g *GameMemoryRepository) Get(id int64) *entity.Game {
+	return g.store.GetGame(id)
+}
+
+func (g *GameMemoryRepository) Create(game *entity.Game) *entity.Game {
 	return g.store.CreateGame(game)
+}
+
+func (g *GameMemoryRepository) Update(game *entity.Game) *entity.Game {
+	return g.store.UpdateGame(game)
 }

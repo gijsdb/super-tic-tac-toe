@@ -10,4 +10,6 @@ func NewGameRouter(e *echo.Echo, service game.InteractorI) {
 	var gc = controller.NewGameController(service)
 	e.GET("/games", gc.Index)
 	e.GET("/game/create", gc.Create)
+	e.GET("/game/join", gc.Join)
+	e.GET("/game/:id", gc.Get)
 }

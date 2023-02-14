@@ -32,7 +32,7 @@ const APIClient = {
   },
 
   GetGame(id) {
-    return this.perform(GET, `/game?id=` + id);
+    return this.perform(GET, `/game/${id}`);
   },
 
   UpdateGameBoard(player, square, circle, gameId) {
@@ -48,7 +48,7 @@ const APIClient = {
   },
 
   JoinGame(id, player) {
-    return this.perform(GET, `/joingame?id=` + id + `&player=` + player);
+    return this.perform(GET, `/game/join?id=` + id + `&player=` + player);
   },
 
   LeaveGame(gameId, playerId) {
