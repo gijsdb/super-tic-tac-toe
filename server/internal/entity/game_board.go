@@ -2,21 +2,21 @@ package entity
 
 // Gameboard represents the game board
 type GameBoard struct {
-	Player1 int      `json:"player_1"`
-	Player2 int      `json:"player_2"`
-	Winner  int      `json:"winner"`
+	Player1 int64    `json:"player_1"`
+	Player2 int64    `json:"player_2"`
+	Winner  int64    `json:"winner"`
 	Squares []Square `json:"squares"`
 }
 
 // The 9 squares on the board
 type Square struct {
 	Circles    []Circle `json:"circles"`
-	CapturedBy int      `json:"captured_by"` // 0 = player 1, 1 = player 2
-	index      int
+	CapturedBy int64    `json:"captured_by"` // 0 = player 1, 1 = player 2
+	Index      int
 }
 
 // The 9 circles in each square
 type Circle struct {
-	SelectedBy int `json:"selected_by"`
+	SelectedBy int64 `json:"selected_by"`
 	Index      int
 }

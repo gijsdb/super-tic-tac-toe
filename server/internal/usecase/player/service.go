@@ -3,7 +3,7 @@ package player
 import "github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
 
 type InteractorI interface {
-	CreatePlayer()
+	CreatePlayer(isNewPlayer int64) int64
 }
 
 func NewService(repo repository.PlayerRepositoryI) InteractorI {

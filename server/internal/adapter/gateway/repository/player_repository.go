@@ -6,7 +6,8 @@ import (
 )
 
 type PlayerRepositoryI interface {
-	Create(*entity.Player)
+	Create(player *entity.Player) int64
+	SetPlayerActive(id int64)
 }
 
 type PlayerMemoryRepository struct {
@@ -19,6 +20,10 @@ func NewPlayerRepository() PlayerRepositoryI {
 	}
 }
 
-func (p *PlayerMemoryRepository) Create(player *entity.Player) {
-	p.store.Create(player)
+func (p *PlayerMemoryRepository) Create(player *entity.Player) int64 {
+	return p.store.Create(player)
+}
+
+func (p *PlayerMemoryRepository) SetPlayerActive(id int64) {
+	p.store.SetPlayerActive(id)
 }

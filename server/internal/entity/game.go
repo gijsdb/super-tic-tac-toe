@@ -1,7 +1,7 @@
 package entity
 
 type Game struct {
-	ID         int        `json:"ID"`
+	ID         int64      `json:"ID"`
 	GameBoard  *GameBoard `json:"game_board" ` // JSON for gameboard
 	PlayerTurn int        `json:"player_turn"`
 	GameOver   *GameOver  `json:"game_over"`

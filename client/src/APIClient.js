@@ -5,7 +5,7 @@ const GET = "get"
 
 
 const client = axios.create({
-  baseURL: "http://localhost:2020/api/v1", // If empty, uses the current origin. If developing locally point to API running locally (HalUpdater)
+  baseURL: "http://localhost:1323/", // If empty, uses the current origin. If developing locally point to API running locally (HalUpdater)
   json: true,
   validateStatus: function (status) {
     return status < 600; // Reject only if the status code is greater than or equal to 500
@@ -16,11 +16,11 @@ client.defaults.timeout = 15000;
 const APIClient = {
 
   CreateGame(playerId) {
-    return this.perform(GET, `/creategame?player=${playerId}`);
+    return this.perform(GET, `/game/create?player=${playerId}`);
   },
 
   CreatePlayer(playerId) {
-    return this.perform(GET, `/createplayer?id=${playerId}`);
+    return this.perform(GET, `/player/create?id=${playerId}`);
   },
 
   RemovePlayer(playerId) {

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/game"
 	"github.com/labstack/echo/v4"
 )
@@ -16,6 +18,19 @@ func NewGameController(service game.InteractorI) GameController {
 	}
 }
 
-func (gc *GameController) GetAllGames(c echo.Context) error {
+func (gc *GameController) Index(c echo.Context) error {
+
+	return nil
+}
+
+func (gc *GameController) Create(c echo.Context) error {
+	id := c.QueryParam("player")
+	playerId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	gc.service.CreateGame(playerId)
+
 	return nil
 }

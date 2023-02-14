@@ -34,7 +34,7 @@ func NewGameMemoryStore() *GameStore {
 	}
 }
 
-func (gs *GameStore) newID() int64 {
+func (gs *GameStore) NewID() int64 {
 	gs.idCounterMutex.Lock()
 	defer gs.idCounterMutex.Unlock()
 	id := gs.idCounter
@@ -42,7 +42,7 @@ func (gs *GameStore) newID() int64 {
 	return id
 }
 
-func (ps *PlayerStore) newID() int64 {
+func (ps *PlayerStore) NewID() int64 {
 	ps.idCounterMutex.Lock()
 	defer ps.idCounterMutex.Unlock()
 	id := ps.idCounter
@@ -51,7 +51,37 @@ func (ps *PlayerStore) newID() int64 {
 }
 
 func (ps *PlayerStore) Create(player *entity.Player) int64 {
-	player.ID = ps.newID()
+	player.ID = ps.NewID()
 	ps.players[player.ID] = player
 
+	return player.ID
+}
+
+func (ps *PlayerStore) SetPlayerActive(id int64) {
+	ps.idCounterMutex.Lock()
+	defer ps.idCounterMutex.Unlock()
+	for pid, p := range ps.players {
+		if id == pid {
+			p.Active = true
+		}
+	}
+}
+
+func (gs *GameStore) IndexGames() []*entity.Game {
+	games := []*entity.Game{}
+
+	for _, g := range gs.games {
+		games = append(games, g)
+	}
+
+	return games
+}
+
+func (gs *GameStore) CreateGame(game *entity.Game) *entity.Game {
+	gs.idCounterMutex.Lock()
+	defer gs.idCounterMutex.Unlock()
+	game.ID = gs.NewID()
+	gs.games[game.ID] = game
+
+	return game
 }

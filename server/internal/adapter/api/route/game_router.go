@@ -8,5 +8,6 @@ import (
 
 func NewGameRouter(e *echo.Echo, service game.InteractorI) {
 	var gc = controller.NewGameController(service)
-	e.GET("/games", gc.GetAllGames)
+	e.GET("/games", gc.Index)
+	e.GET("/game/create", gc.Create)
 }
