@@ -48,7 +48,7 @@
 <script setup>
 import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useGameStore } from "../stores/game.js";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import APIClient from "../APIClient";
 
@@ -68,6 +68,27 @@ let rolled = ref(false);
 let feedbackLoop = null;
 let waitForPlayerInterval = null;
 let refreshInterval = null;
+
+// onBeforeRouteLeave((to, from, next) => {
+//   if (confirmStayInGame()) {
+//     next(false);
+//   } else {
+//     next();
+//   }
+// });
+
+// const confirmLeave = () => {
+//   return window.confirm("Do you really want to leave? The game is still going!");
+// };
+
+// const confirmStayInGame = () => {
+//   return !confirmLeave();
+// };
+
+const beforeWindowUnload = (e) => {
+  leaveGame();
+  router.push("/");
+};
 
 const clearDiceHandler = () => {
   rolled.value = true;
@@ -111,6 +132,10 @@ const updateMessage = async (verdict) => {
 };
 
 onMounted(() => {
+  window.addEventListener("beforeunload", function (e) {
+    console.log(e);
+    beforeWindowUnload(e);
+  });
   if (!playerStore.Player.value.game.full) {
     waitForPlayerInterval = setInterval(async () => {
       await refreshGame();
@@ -130,6 +155,7 @@ onBeforeUnmount(() => {
   clearInterval(waitForPlayerInterval);
   clearInterval(refreshInterval);
   clearInterval(feedbackLoop);
+  window.removeEventListener("beforeunload", beforeWindowUnload);
   leaveGame();
 });
 </script>

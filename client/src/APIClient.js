@@ -24,7 +24,7 @@ const APIClient = {
   },
 
   RemovePlayer(playerId) {
-    return this.perform(GET, `/removeplayer?id=${playerId}`);
+    return this.perform(GET, `/player/${playerId}/setinactive`);
   },
 
   ListGames() {
@@ -40,7 +40,7 @@ const APIClient = {
   },
 
   RemoveCircle(player, square, circle, gameId) {
-    return this.perform(GET, `/removecircle ? player = ` + player + ` & square=` + square + ` & circle=` + circle + ` & gameid=` + gameId);
+    return this.perform(GET, `/game/${gameId}/board/circle/${circle}/remove?player=` + player + `&square=` + square);
   },
 
   RollDice(dice1, dice2, gameId) {
@@ -52,7 +52,7 @@ const APIClient = {
   },
 
   LeaveGame(gameId, playerId) {
-    return this.perform(GET, `/leavegame?id=` + gameId + `&player=` + playerId);
+    return this.perform(GET, `/game/${gameId}/leave?&player=` + playerId);
   },
 
   async perform(method, resource, data) {

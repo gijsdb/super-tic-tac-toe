@@ -10,7 +10,6 @@ import (
 
 type PlayerController struct {
 	service player.InteractorI
-	// TODO: Implement Logger
 }
 
 func NewPlayerController(service player.InteractorI) PlayerController {
@@ -30,4 +29,16 @@ func (gc *PlayerController) CreatePlayer(c echo.Context) error {
 	res := gc.service.CreatePlayer(isNewPlayer)
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func (gc *PlayerController) SetInactive(c echo.Context) error {
+	id := c.Param("id")
+	playerId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	gc.service.SetInactive(playerId)
+
+	return nil
 }

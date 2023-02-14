@@ -52,6 +52,8 @@ func (gs *GameStore) CreateGame(game *entity.Game) *entity.Game {
 }
 
 func (gs *GameStore) UpdateGame(game *entity.Game) *entity.Game {
+	gs.mutex.Lock()
+	defer gs.mutex.Unlock()
 	gs.games[game.ID] = game
 	return gs.games[game.ID]
 }
