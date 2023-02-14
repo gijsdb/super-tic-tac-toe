@@ -31,7 +31,7 @@
       </div>
 
       <div
-        class="z-40 bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl px-4 pb-4 w-[40vw] h-[40vw] rounded-lg rounded-t-none grid grid-cols-3"
+        class="bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl px-4 pb-4 w-[40vw] h-[40vw] rounded-lg rounded-t-none grid grid-cols-3"
       >
         <Square
           @clearDice="clearDiceHandler"

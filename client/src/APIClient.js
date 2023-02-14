@@ -39,6 +39,10 @@ const APIClient = {
     return this.perform(GET, `/updateboard?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
   },
 
+  RemoveCircle(player, square, circle, gameId) {
+    return this.perform(GET, `/removecircle?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
+  },
+
   RollDice(dice1, dice2, gameId) {
     return this.perform(GET, `/rolldice?dice1=` + dice1 + `&dice2=` + dice2 + `&gameid=` + gameId);
   },

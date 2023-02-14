@@ -109,3 +109,8 @@ func (m *Manager) SetPlayerInactive(playerId int) {
 	log15.Debug("Player set to inactive", "playerId", playerId, "all players", m.Players)
 	return
 }
+
+// Should run periodically and remove any games that are finished
+func (m *Manager) ClearGames() {
+
+}

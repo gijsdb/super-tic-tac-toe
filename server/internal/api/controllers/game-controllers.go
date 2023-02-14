@@ -105,6 +105,28 @@ func UpdateGameBoard(w http.ResponseWriter, r *http.Request, m *manager.Manager)
 	genericResponse(w, jsonGame, nil)
 }
 
+func RemoveCircle(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
+	g := r.URL.Query().Get("gameid")
+	p := r.URL.Query().Get("player")
+	s := r.URL.Query().Get("square")
+	c := r.URL.Query().Get("circle")
+
+	// -1 because m.Games is an index
+	gameIdx := helpers.StringToInt(g) - 1
+	playerId := helpers.StringToInt(p)
+	squareIdx := helpers.StringToInt(s)
+	circleIdx := helpers.StringToInt(c)
+
+	result := m.Games[gameIdx].GameBoard.RemoveCircle(playerId, squareIdx, circleIdx)
+
+	res, err := json.Marshal(result)
+	if err != nil {
+		errorResponse(err, "Error marshalling game in RemoveSquare::game-controllers.go", w)
+	}
+
+	genericResponse(w, res, nil)
+}
+
 func RollDice(w http.ResponseWriter, r *http.Request, m *manager.Manager) {
 	g := r.URL.Query().Get("gameid")
 	d1 := r.URL.Query().Get("dice1")

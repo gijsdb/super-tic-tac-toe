@@ -41,6 +41,10 @@ func New(m *manager.Manager) *mux.Router {
 		controllers.UpdateGameBoard(w, r, m)
 	}).Methods("GET")
 
+	api.HandleFunc("/removecircle", func(w http.ResponseWriter, r *http.Request) {
+		controllers.RemoveCircle(w, r, m)
+	}).Methods("GET")
+
 	api.HandleFunc("/rolldice", func(w http.ResponseWriter, r *http.Request) {
 		controllers.RollDice(w, r, m)
 	}).Methods("GET")

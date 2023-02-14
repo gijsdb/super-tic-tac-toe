@@ -146,6 +146,24 @@ export const useGameStore = defineStore('game', {
         console.log("Erroring updating game in store", e)
       }
     },
+    async removeCircle(square, circle) {
+      try {
+        let res = await APIClient.RemoveCircle(
+          this.Player.id,
+          square,
+          circle,
+          this.Player.game.ID
+        );
+        if (res == "success") {
+          this.Player.turn = false
+          await this.refreshGame()
+        } else {
+          return res
+        }
+      } catch (e) {
+        console.log("Erroring updating game in store", e)
+      }
+    },
     async rollDice(dice1, dice2) {
       try {
         let res = await APIClient.RollDice(dice1, dice2, this.Player.game.ID);

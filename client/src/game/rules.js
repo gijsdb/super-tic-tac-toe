@@ -10,14 +10,8 @@ export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
             return { allowed: false, reason: "You can't select this circle because it is already selected by another player" };
         }
 
-
-        // If roll === index of a square its any circle in that square but the middle
-        if (totalRoll >= 3 && totalRoll <= 11 && squareIdx >= 3 && squareIdx <= 11 && circleIdx != 4) {
-            console.log("index of a square its any circle in that square but the middle")
-            return { allowed: true, reason: "You captured the circle" };
-        } else if (circleIdx === 4) {
-            return { allowed: false, reason: `Can't select the middle` };
-        }
+        // A throw of twelve gives the player the freedom to peg any hole. A throw of seven lets a player peg any box's center hole. 
+        // A throw of two lets one remove an opponent's peg. A player wins a box by getting three in a row or any five holes.
 
         // 12 = any circle and square
         if (totalRoll === 12) {
@@ -29,9 +23,16 @@ export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
         if (totalRoll === 7 && circleIdx === 4) {
             console.log("in any square middle")
             return { allowed: true, reason: "You captured the circle" };
+        } else if (totalRoll === 7 && circleIdx !== 4) {
+            return { allowed: false, reason: "You can't select this circle because it is not in the middle" };
         }
-        return { allowed: true, reason: `You captured the circle` };
 
+        // If player selects a circle that does not match the total roll value then they can't select it.
+        if (totalRoll !== circleIdx + 3) {
+            return { allowed: false, reason: `You can only select a circle with the number ${totalRoll}` };
+        } else {
+            return { allowed: true, reason: "You captured the circle" };
+        }
     }
 }
 

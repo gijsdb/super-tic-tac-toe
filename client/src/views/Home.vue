@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen bg-gradient flex items-center justify-center">
     <div class="w-10/12 flex flex-col text-white items-center">
-      <h1 class="text-4xl font-white font-bold py-4">SUPER TIC TAC TOE</h1>
+      <h1 class="text-4xl font-white font-bold py-4">Super Tic Tac Toe</h1>
       <div
         v-show="games.length > 0"
         class="bg-black bg-opacity-60 border-4 p-8 my-4 border-white rounded-2xl text-white overflow-y-scroll space-y-4 w-6/12 max-h-40vh"
@@ -84,7 +84,7 @@ onMounted(async () => {
 
   getGamesLoop = setInterval(async () => {
     await listGames();
-  }, 5000);
+  }, 3000);
 });
 
 onUnmounted(() => {

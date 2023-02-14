@@ -1,6 +1,8 @@
 package game
 
-import "github.com/inconshreveable/log15"
+import (
+	"github.com/inconshreveable/log15"
+)
 
 func CreateGameBoard(creatingPlayer int) GameBoard {
 	var board GameBoard
@@ -27,6 +29,19 @@ func (gb *GameBoard) Update(player, square, circle int) {
 	gb.checkSquareCondition()
 
 	return
+}
+
+func (gb *GameBoard) RemoveCircle(player, square, circle int) string {
+	if gb.Squares[square].Circles[circle].SelectedBy == player {
+		return "you must select a circle of the other player, not your own"
+	}
+	if gb.Squares[square].Circles[circle].SelectedBy == -1 {
+		return "you must select a circle of the other player, this one has not been captured"
+	}
+
+	gb.Squares[square].Circles[circle].SelectedBy = -1
+
+	return "success"
 }
 
 func initCircles() []Circle {

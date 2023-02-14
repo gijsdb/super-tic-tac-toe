@@ -56,7 +56,7 @@ import { CheckRules } from "../game/rules.js";
 
 const store = useGameStore();
 let playerStore = storeToRefs(store);
-const { updateGameBoard, rollDice } = store;
+const { updateGameBoard, rollDice, removeCircle } = store;
 
 const emit = defineEmits(["ruleVerdict", "clearDice"]);
 
@@ -70,8 +70,13 @@ const updateboard = async (circleIdx) => {
       try {
         // 2 = Remove opposition circle and roll again
         if (store.diceTotal === 2) {
-          // make request to remove an opposition circle and roll again
+          // make request to remove an opposition circle
           console.log("TWOOOOOO ");
+          let res = await removeCircle(props.squareIdx, circleIdx);
+          if (res != null) {
+            // WRONG CIRCLE
+            emit("ruleVerdict", { allowed: false, reason: res });
+          }
         }
 
         let verdict = CheckRules(playerStore, props.squareIdx, circleIdx, store.diceTotal);
