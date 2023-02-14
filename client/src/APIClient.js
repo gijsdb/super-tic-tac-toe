@@ -36,15 +36,15 @@ const APIClient = {
   },
 
   UpdateGameBoard(player, square, circle, gameId) {
-    return this.perform(GET, `/updateboard?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
+    return this.perform(GET, `/game/${gameId}/board/update?player=` + player + `&square=` + square + `&circle=` + circle);
   },
 
   RemoveCircle(player, square, circle, gameId) {
-    return this.perform(GET, `/removecircle?player=` + player + `&square=` + square + `&circle=` + circle + `&gameid=` + gameId);
+    return this.perform(GET, `/removecircle ? player = ` + player + ` & square=` + square + ` & circle=` + circle + ` & gameid=` + gameId);
   },
 
   RollDice(dice1, dice2, gameId) {
-    return this.perform(GET, `/rolldice?dice1=` + dice1 + `&dice2=` + dice2 + `&gameid=` + gameId);
+    return this.perform(GET, `/game/${gameId}/roll?dice1=` + dice1 + `&dice2=` + dice2);
   },
 
   JoinGame(id, player) {

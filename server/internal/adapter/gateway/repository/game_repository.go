@@ -20,9 +20,9 @@ type GameMemoryRepository struct {
 	store *memorystore.GameStore
 }
 
-func NewGameRepository(store *memorystore.GameStore) GameRepositoryI {
+func NewGameRepository() GameRepositoryI {
 	return &GameMemoryRepository{
-		store: store,
+		store: memorystore.NewGameMemoryStore(),
 	}
 }
 

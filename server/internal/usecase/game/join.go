@@ -7,9 +7,7 @@ import (
 )
 
 func (s *Service) Join(gameId, joiningPlayer int64) (*entity.Game, error) {
-	// Find game thats being joined
 	game := s.repo.Get(gameId)
-	// Assign player joining to that game and gameboard
 	noOfPlayers := len(game.Players)
 	if noOfPlayers >= 3 {
 		return nil, fmt.Errorf("game is full")

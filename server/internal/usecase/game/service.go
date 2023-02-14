@@ -10,6 +10,8 @@ type InteractorI interface {
 	Get(id int64) *entity.Game
 	CreateGame(creatingPlayer int64) *entity.Game
 	Join(gameId, playerId int64) (*entity.Game, error)
+	UpdateBoard(gameId, playerId, square, circle int64) *entity.Game
+	RollDice(dice1, dice2 int, gameId int64) *entity.Game
 }
 
 func NewService(repo repository.GameRepositoryI) InteractorI {
