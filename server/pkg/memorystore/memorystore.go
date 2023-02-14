@@ -78,8 +78,8 @@ func (gs *GameStore) IndexGames() []*entity.Game {
 }
 
 func (gs *GameStore) CreateGame(game *entity.Game) *entity.Game {
-	gs.idCounterMutex.Lock()
-	defer gs.idCounterMutex.Unlock()
+	gs.mutex.Lock()
+	defer gs.mutex.Unlock()
 	game.ID = gs.NewID()
 	gs.games[game.ID] = game
 

@@ -1,6 +1,8 @@
 package game
 
-import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
+import (
+	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
+)
 
 func (s *Service) CreateGame(creatingPlayer int64) *entity.Game {
 	gb := newGameboard(creatingPlayer)
@@ -17,7 +19,6 @@ func (s *Service) CreateGame(creatingPlayer int64) *entity.Game {
 		Full:     false,
 		LastRoll: []int{0, 0},
 	}
-
 	return s.repo.Create(&game)
 }
 

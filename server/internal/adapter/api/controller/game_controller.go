@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/game"
@@ -30,7 +31,7 @@ func (gc *GameController) Create(c echo.Context) error {
 		return err
 	}
 
-	gc.service.CreateGame(playerId)
+	game := gc.service.CreateGame(playerId)
 
-	return nil
+	return c.JSON(http.StatusOK, game)
 }
