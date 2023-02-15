@@ -69,22 +69,6 @@ let feedbackLoop = null;
 let waitForPlayerInterval = null;
 let refreshInterval = null;
 
-// onBeforeRouteLeave((to, from, next) => {
-//   if (confirmStayInGame()) {
-//     next(false);
-//   } else {
-//     next();
-//   }
-// });
-
-// const confirmLeave = () => {
-//   return window.confirm("Do you really want to leave? The game is still going!");
-// };
-
-// const confirmStayInGame = () => {
-//   return !confirmLeave();
-// };
-
 const beforeWindowUnload = (e) => {
   leaveGame();
   router.push("/");
