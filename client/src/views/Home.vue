@@ -53,7 +53,6 @@ const listGames = async () => {
   try {
     const res = await APIClient.ListGames();
     games.value = res;
-    showGames.value = true;
   } catch (e) {
     console.log("Error listing games", e);
   }

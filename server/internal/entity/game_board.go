@@ -1,65 +1,30 @@
-package game
+package entity
 
-import (
-	"github.com/inconshreveable/log15"
-)
+import "github.com/inconshreveable/log15"
 
-func CreateGameBoard(creatingPlayer int) GameBoard {
-	var board GameBoard
-	board.Player1 = creatingPlayer
-	board.Winner = -1
-	var squares []Square
-	for i := 0; i < 9; i++ {
-		var square Square
-		square = Square{
-			Circles:    initCircles(),
-			CapturedBy: -1,
-			index:      i,
-		}
-		squares = append(squares, square)
-	}
-	board.Squares = squares
-	return board
+// Gameboard represents the game board
+type GameBoard struct {
+	Player1 int64    `json:"player_1"`
+	Player2 int64    `json:"player_2"`
+	Winner  int64    `json:"winner"`
+	Squares []Square `json:"squares"`
 }
 
-func (gb *GameBoard) Update(player, square, circle int) {
-	gb.Squares[square].Circles[circle].SelectedBy = player
-	updatedSquare := gb.checkCirclesCondition(gb.Squares[square])
-	gb.Squares[square] = updatedSquare
-	gb.checkSquareCondition()
-
-	return
+// The 9 squares on the board
+type Square struct {
+	Circles    []Circle `json:"circles"`
+	CapturedBy int64    `json:"captured_by"` // 0 = player 1, 1 = player 2
+	Index      int
 }
 
-func (gb *GameBoard) RemoveCircle(player, square, circle int) string {
-	if gb.Squares[square].Circles[circle].SelectedBy == player {
-		return "you must select a circle of the other player, not your own"
-	}
-	if gb.Squares[square].Circles[circle].SelectedBy == -1 {
-		return "you must select a circle of the other player, this one has not been captured"
-	}
-
-	gb.Squares[square].Circles[circle].SelectedBy = -1
-
-	return "success"
-}
-
-func initCircles() []Circle {
-	var circles []Circle
-
-	for i := 0; i < 9; i++ {
-		var circle Circle
-		circle.Index = i
-		circle.SelectedBy = -1
-
-		circles = append(circles, circle)
-	}
-
-	return circles
+// The 9 circles in each square
+type Circle struct {
+	SelectedBy int64 `json:"selected_by"`
+	Index      int
 }
 
 // Check for three in a row for circles in a square
-func (gb *GameBoard) checkCirclesCondition(s Square) Square {
+func (gb *GameBoard) CheckCirclesCondition(s Square) Square {
 
 	var (
 		x = (s.Circles[0].SelectedBy == gb.Player1 && s.Circles[1].SelectedBy == gb.Player1 && s.Circles[2].SelectedBy == gb.Player1) || // Check all rows.
@@ -106,7 +71,7 @@ func (gb *GameBoard) checkCirclesCondition(s Square) Square {
 }
 
 // Check for three in a row for squares
-func (gb *GameBoard) checkSquareCondition() {
+func (gb *GameBoard) CheckSquareCondition() {
 
 	var (
 		x = (gb.Squares[0].CapturedBy == gb.Player1 && gb.Squares[1].CapturedBy == gb.Player1 && gb.Squares[2].CapturedBy == gb.Player1) || // Check all rows.
