@@ -170,6 +170,7 @@ export const useGameStore = defineStore('game', {
       try {
         let res = await APIClient.RollDice(dice1, dice2, this.Player.game.ID);
         this.Player.game = res
+
       } catch (e) {
         console.log("Erroring rolling dice in store", e)
       }

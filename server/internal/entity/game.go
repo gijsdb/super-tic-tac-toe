@@ -1,5 +1,6 @@
 package entity
 
+// Add in a turn success w/ message and do all logic in backend?
 type Game struct {
 	ID         int64      `json:"ID"`
 	GameBoard  *GameBoard `json:"game_board" ` // JSON for gameboard

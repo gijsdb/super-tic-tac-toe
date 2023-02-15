@@ -1,16 +1,20 @@
 <template>
-  <div class="bg-black bg-opacity-60 border-white border-4 p-8 mx-8 rounded-2xl">
-    <div v-if="!playerStore.Player.value.turn">
-      <ul v-if="!playerStore.Player.value.game.last_roll != '0,0'" class="flex text-red-500 text-6xl" id="lastroll"></ul>
+  <div class="text-center mx-8">
+    <p class="text-sm text-red-600 font-bold py-2" v-if="message != null">{{ message }}</p>
+
+    <div class="bg-black bg-opacity-60 border-white border-4 p-8 rounded-2xl">
+      <div v-if="!playerStore.Player.value.turn">
+        <ul v-if="!playerStore.Player.value.game.last_roll != '0,0'" class="flex text-red-500 text-6xl" id="lastroll"></ul>
+      </div>
+      <button
+        :disabled="!playerStore.Player.value.turn || diceRolled"
+        @click="rollDiceHandler"
+        class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
+      >
+        Roll dice
+      </button>
+      <ul class="flex text-white text-6xl" id="rolls"></ul>
     </div>
-    <button
-      :disabled="!playerStore.Player.value.turn || diceRolled"
-      @click="rollDiceHandler"
-      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
-    >
-      Roll dice
-    </button>
-    <ul class="flex text-white text-6xl" id="rolls"></ul>
   </div>
 </template>
 
@@ -27,11 +31,66 @@ const store = useGameStore();
 let playerStore = storeToRefs(store);
 const { rollDice } = store;
 let diceRolled = ref(false);
+let message = ref(null);
 
 const rollDiceHandler = async () => {
-  diceRolled.value = true;
   let values = createDice();
-  await rollDice(values[0], values[1]);
+  let totalRoll = values[0] + values[1];
+  diceRolled.value = true;
+
+  // check if there are any circles left uncaptured for that roll
+  let availableCircles = [];
+  let availableSquare = 0;
+  let totalAvailableCircles = 0;
+
+  // Loop over each square on the board
+  store.Player.game.game_board.squares.forEach((square) => {
+    // If a square is captured by a player, it is locked and no moves can be made on it so we ignore it from the count of circles left
+    if (square.captured_by == -1) {
+      let circleCount = 0;
+      let availableCircle = 0;
+      // For each square, loop over the 9 circles
+      square.circles.forEach((circle) => {
+        // if the circle index is equal to the dice total or the dicetotal is 12 (any circle) AND the circle is not captured by a player
+        if ((circle.Index + 3 == totalRoll || totalRoll == 12) && circle.selected_by == -1) {
+          // Record the circle
+          circleCount = circleCount + 1;
+          availableSquare++;
+        }
+        if (circle.selected_by == -1) {
+          availableCircle = availableCircle + 1;
+        }
+      });
+      totalAvailableCircles = totalAvailableCircles + availableCircle;
+      // After ALL of the squares circles are counted add the circleCount to an arrray
+      availableCircles.push(circleCount);
+    }
+  });
+
+  // If the roll is a 2 and there are no captured circles yet reroll
+  if (totalRoll == 2 && totalAvailableCircles == 81) {
+    message.value = "Please reroll, a 2 doesn't work at this time";
+    diceRolled.value = false;
+  } else if (totalRoll == 2 && totalAvailableCircles < 81) {
+    message.value = null;
+    await rollDice(values[0], values[1]);
+    return;
+  } else {
+    // Loop over the available circles for each square that we recorded earlier
+    availableCircles.forEach(async (val) => {
+      // if a circle had been recorded the value would be greater than 1
+      if (val > 0) {
+        message.value = null;
+        await rollDice(values[0], values[1]);
+        return;
+      } else {
+        if (availableSquare == 0) {
+          diceRolled.value = false;
+          message.value = `Please reroll, a ${totalRoll} doesn't work at this time`;
+        }
+      }
+    });
+  }
 };
 
 const getRandomValue = () => {

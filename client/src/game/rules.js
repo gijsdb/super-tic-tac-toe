@@ -14,19 +14,16 @@ export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
 
         // A throw of two lets one remove an opponent's peg. A player wins a box by getting three in a row or any five holes.
         if (totalRoll === 2 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != -1 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != store.Player.value.id && store.Player.value.game.game_board.squares[squareIdx].captured_by == -1) {
-            console.log("remove others peg")
             return { allowed: true, reason: "You've removed your opponents circle!" }
         }
 
         // 12 = any circle and square
         if (totalRoll === 12) {
-            console.log("any circle and square")
             return { allowed: true, reason: "You captured the circle" };
         }
 
         // 7 = in any square middle
         if (totalRoll === 7 && circleIdx === 4) {
-            console.log("in any square middle")
             return { allowed: true, reason: "You captured the circle" };
         } else if (totalRoll === 7 && circleIdx !== 4) {
             return { allowed: false, reason: "You can't select this circle because it is not in the middle" };
