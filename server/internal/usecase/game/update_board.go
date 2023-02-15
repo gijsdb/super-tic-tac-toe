@@ -8,6 +8,7 @@ import (
 
 func (s *Service) UpdateBoard(gameId, playerId, square, circle int64) *entity.Game {
 	game := s.repo.Get(gameId)
+
 	game.GameBoard.Squares[square].Circles[circle].SelectedBy = playerId
 	updatedSquare := game.GameBoard.CheckCirclesCondition(game.GameBoard.Squares[square])
 	game.GameBoard.Squares[square] = updatedSquare

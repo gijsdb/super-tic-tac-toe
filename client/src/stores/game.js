@@ -155,6 +155,8 @@ export const useGameStore = defineStore('game', {
           this.Player.game.ID
         );
         if (res == "success") {
+          console.log("RES", res)
+
           this.Player.turn = false
           await this.refreshGame()
         } else {

@@ -68,27 +68,37 @@ const updateboard = async (circleIdx) => {
   if (playerStore.Player.value.turn) {
     if (playerStore.Player.value.diceRolled) {
       try {
+        let verdict = CheckRules(playerStore, props.squareIdx, circleIdx, store.diceTotal);
+        console.log("verdict", verdict);
         // 2 = Remove opposition circle and roll again
         if (store.diceTotal === 2) {
           // make request to remove an opposition circle
-          console.log("TWOOOOOO ");
-          let res = await removeCircle(props.squareIdx, circleIdx);
-          if (res != null) {
-            // WRONG CIRCLE
+          if (verdict.allowed) {
+            let res = await removeCircle(props.squareIdx, circleIdx);
+            if (res == "success") {
+              playerStore.Player.value.diceRolled = false;
+              emit("clearDice");
+              await rollDice(0, 0);
+              emit("ruleVerdict", verdict);
+              return;
+            }
             emit("ruleVerdict", { allowed: false, reason: res });
+            return;
           }
+          emit("ruleVerdict", { allowed: false, reason: verdict.reason });
+        } else {
+          if (verdict.allowed) {
+            await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
+            playerStore.Player.value.diceRolled = false;
+            emit("clearDice");
+            await rollDice(0, 0);
+            emit("ruleVerdict", verdict);
+            return;
+          }
+          emit("ruleVerdict", { allowed: false, reason: verdict.reason });
         }
-
-        let verdict = CheckRules(playerStore, props.squareIdx, circleIdx, store.diceTotal);
-        if (verdict.allowed) {
-          await updateGameBoard(playerStore.Player.value.id, props.squareIdx, circleIdx, playerStore.Player.value.game.ID);
-          playerStore.Player.value.diceRolled = false;
-          emit("clearDice");
-          await rollDice(0, 0);
-        }
-        emit("ruleVerdict", verdict);
       } catch (e) {
-        console.log("Error making request updateGameBoard");
+        console.log("Error making request updateGameBoard", e);
       }
       return;
     } else {
