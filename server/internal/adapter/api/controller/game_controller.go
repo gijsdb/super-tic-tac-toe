@@ -125,9 +125,7 @@ func (gc *GameController) RemoveCircle(c echo.Context) error {
 		return err
 	}
 
-	res := gc.service.RemoveCircle(game, player, square, circle)
-
-	return c.String(http.StatusOK, res)
+	return c.JSON(http.StatusOK, gc.service.RemoveCircle(game, player, square, circle))
 }
 
 func (gc *GameController) RollDice(c echo.Context) error {

@@ -1,20 +1,18 @@
 package game
 
+import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
+
 // TODO: change front-end store to receive game or error instead of string
-func (s *Service) RemoveCircle(gameId, playerId, square, circle int64) string {
+func (s *Service) RemoveCircle(gameId, playerId, square, circle int64) *entity.Game {
 	game := s.repo.Get(gameId)
-
-	if game.GameBoard.Squares[square].Circles[circle].SelectedBy == playerId {
-		return "you must select a circle of the other player, not your own"
-	}
-
-	if game.GameBoard.Squares[square].Circles[circle].SelectedBy == -1 {
-		return "you must select a circle of the other player, this one has not been captured"
-	}
 
 	game.GameBoard.Squares[square].Circles[circle].SelectedBy = -1
 
-	s.repo.Update(game)
+	if int(playerId) == game.Players[0] {
+		game.PlayerTurn = game.Players[1]
+	} else {
+		game.PlayerTurn = game.Players[0]
+	}
 
-	return "success"
+	return s.repo.Update(game)
 }

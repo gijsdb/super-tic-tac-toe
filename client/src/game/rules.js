@@ -1,5 +1,16 @@
+import { toDisplayString } from "vue";
 
 export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
+    if (totalRoll == 2) {
+        if (store.Player.value.game.game_board.squares[squareIdx].captured_by != -1) {
+            return { allowed: false, reason: "This square has been captured" };
+
+        }
+        if (store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by == store.Player.value.id || store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by == -1) {
+            return { allowed: false, reason: "You must select a circle from the opposition" };
+        }
+        return { allowed: true, reason: "You removed a circle from the opposition" };
+    }
 
     if (store.Player.value.game.game_board.squares[squareIdx].captured_by != -1 && store.Player.value.game.game_board.squares[squareIdx].captured_by != store.Player.value.id) {
         return { allowed: false, reason: "You can't capture a circle in this square because the square is already captured by another player" };

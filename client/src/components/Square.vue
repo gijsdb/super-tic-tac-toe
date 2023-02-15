@@ -73,15 +73,12 @@ const updateboard = async (circleIdx) => {
         if (store.diceTotal === 2) {
           // make request to remove an opposition circle
           if (verdict.allowed) {
-            let res = await removeCircle(props.squareIdx, circleIdx);
-            if (res == "success") {
-              playerStore.Player.value.diceRolled = false;
-              emit("clearDice");
-              await rollDice(0, 0);
-              emit("ruleVerdict", verdict);
-              return;
-            }
-            emit("ruleVerdict", { allowed: false, reason: res });
+            await removeCircle(props.squareIdx, circleIdx);
+
+            playerStore.Player.value.diceRolled = false;
+            emit("clearDice");
+            await rollDice(0, 0);
+            emit("ruleVerdict", verdict);
             return;
           }
           emit("ruleVerdict", { allowed: false, reason: verdict.reason });

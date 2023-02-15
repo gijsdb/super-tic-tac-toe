@@ -154,14 +154,10 @@ export const useGameStore = defineStore('game', {
           circle,
           this.Player.game.ID
         );
-        if (res == "success") {
-          console.log("RES", res)
 
-          this.Player.turn = false
-          await this.refreshGame()
-        } else {
-          return res
-        }
+        this.Player.turn = false
+        this.Player.game = res
+
       } catch (e) {
         console.log("Erroring updating game in store", e)
       }
