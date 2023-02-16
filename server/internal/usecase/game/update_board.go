@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
@@ -19,6 +20,7 @@ func (s *Service) UpdateBoard(gameId, playerId, square, circle int64) *entity.Ga
 		game.Winner = game.GameBoard.Winner
 		game.GameOver.Reason = fmt.Sprintf("Player %d wins!", game.Winner)
 		game.GameOver.Over = true
+		game.GameOver.EndTime = time.Now().Unix()
 	}
 
 	// Change turn

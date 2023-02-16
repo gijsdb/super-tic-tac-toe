@@ -12,6 +12,7 @@ type Game struct {
 }
 
 type GameOver struct {
-	Reason string `json:"reason"`
-	Over   bool   `json:"over"`
+	Reason  string `json:"reason"`
+	Over    bool   `json:"over"`
+	EndTime int64  `json:"endtime"`
 }

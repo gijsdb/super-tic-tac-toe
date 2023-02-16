@@ -1,4 +1,3 @@
-import { toDisplayString } from "vue";
 
 export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
     if (totalRoll == 2) {
