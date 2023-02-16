@@ -29,6 +29,8 @@ func (ps *PlayerStore) NewID() int64 {
 }
 
 func (ps *PlayerStore) Create(player *entity.Player) int64 {
+	ps.mutex.Lock()
+	defer ps.mutex.Unlock()
 	player.ID = ps.NewID()
 	ps.players[player.ID] = player
 

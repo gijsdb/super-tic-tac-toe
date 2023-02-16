@@ -15,7 +15,6 @@ const routes = [
             let playerStore = storeToRefs(store);
 
             let res = await checkClient()
-            console.log("CHECK CLIENT RES IS", res)
             if (!res.allowed) {
                 next({ name: 'Home' })
                 return

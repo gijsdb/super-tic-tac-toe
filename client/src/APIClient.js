@@ -5,7 +5,7 @@ const GET = "get"
 
 
 const client = axios.create({
-  baseURL: "http://localhost:1323/", // If empty, uses the current origin. If developing locally point to API running locally (HalUpdater)
+  baseURL: "http://localhost:1323/", // If empty, uses the current origin. If developing locally point to API running locally
   json: true,
   validateStatus: function (status) {
     return status < 600; // Reject only if the status code is greater than or equal to 500
@@ -61,7 +61,6 @@ const APIClient = {
       url: resource,
       data,
     }).then((req) => {
-      //   console.log("req: ", req);
       if (req.status >= 500) {
         if (req.data.Error !== undefined) {
           throw new Error(req.data.Error);
