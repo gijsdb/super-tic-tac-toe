@@ -2,7 +2,6 @@ package game
 
 import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
 
-// TODO: change front-end store to receive game or error instead of string
 func (s *Service) RemoveCircle(gameId, playerId, square, circle int64) *entity.Game {
 	game := s.repo.Get(gameId)
 

@@ -24,10 +24,6 @@ export const useGameStore = defineStore('game', {
           last_roll: [0, 0]
         },
       },
-      // TODO ADD ERRORS
-      Errors: {
-
-      },
     }
   },
   getters: {
@@ -51,7 +47,6 @@ export const useGameStore = defineStore('game', {
           return
         }
       }
-      console.log("NEW PLAYER")
       const id = await APIClient.CreatePlayer(0)
 
       document.cookie = "client_id=" + id + ";SameSite=none;Secure=false";
@@ -69,8 +64,6 @@ export const useGameStore = defineStore('game', {
       for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
         if (cookiePair[0].trim() === "client_id") {
-          console.log("Player found")
-
           // Check cookie and store match
           if (!cookiePair[1] === this.Player.id) {
             return { allowed: false, reason: "Cookie does not match store" }
@@ -90,7 +83,7 @@ export const useGameStore = defineStore('game', {
         this.Player.game = res
         return true
       } catch (e) {
-        console.log("Erroring creating game in store", e)
+        console.log("Error creating game in store", e)
         return false
       }
     },
@@ -102,7 +95,7 @@ export const useGameStore = defineStore('game', {
         this.Player.game = res
         return true
       } catch (e) {
-        console.log("Erroring joining game in store", e)
+        console.log("Error joining game in store", e)
         return false
       }
     },
@@ -111,8 +104,6 @@ export const useGameStore = defineStore('game', {
         const res = await APIClient.LeaveGame(this.Player.game.ID, this.Player.id)
         this.Player.inGame = false
         this.Player.game = {}
-        console.log("RES FROM LEAVING", res)
-
       } catch (e) {
         console.log("Error leaving game", e)
       }
@@ -166,7 +157,6 @@ export const useGameStore = defineStore('game', {
       try {
         let res = await APIClient.RollDice(dice1, dice2, this.Player.game.ID);
         this.Player.game = res
-
       } catch (e) {
         console.log("Erroring rolling dice in store", e)
       }

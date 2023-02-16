@@ -1,22 +1,17 @@
 <template>
   <div class="w-screen h-screen bg-gradient flex items-center justify-center">
-    <div class="w-10/12 flex flex-col text-white items-center">
-      <h1 class="text-4xl font-white font-bold py-4">Super Tic Tac Toe</h1>
+    <div class="flex flex-col gap-y-4 text-white items-center bg-black bg-opacity-50 rounded-md p-8 shadow-2xl">
+      <h1 class="text-4xl font-white font-bold">Super Tic Tac Toe</h1>
       <div
-        v-show="games.length > 0"
-        class="bg-black bg-opacity-60 border-4 p-8 my-4 border-white rounded-2xl text-white overflow-y-scroll space-y-4 w-6/12 max-h-40vh"
+        v-show="gamesAvailable"
+        class="p-8 my-4 text-white overflow-y-scroll space-y-4 max-h-40vh border-y custom-scroll-bar"
       >
-        <div
-          class="flex border-2 rounded-md my-2 w-8/12 mx-auto"
-          :key="game.ID"
-          v-for="game in games"
-          v-show="!game.game_over.over"
-        >
-          <div class="w-8/12 mx-2 flex flex-col justify-center text-xl">
-            <p>Game: {{ game.ID }}</p>
+        <div class="flex border-2 rounded-md" :key="game.ID" v-for="game in games" v-show="!game.game_over.over">
+          <div class="mx-2 flex flex-col justify-center text-xl px-4">
+            <p>Game waiting for player</p>
           </div>
           <button
-            class="flex-grow p-4 border-l-2 border-white font-bold text-xl"
+            class="p-4 border-l-2 border-white font-bold text-xl px-6"
             :class="{ 'bg-red-600': game.full, 'bg-green-500': !game.full }"
             @click="JoinGame(game.ID)"
             :disabled="game.full"
@@ -26,15 +21,36 @@
           </button>
         </div>
       </div>
-      <button @click="createGameHandler()" class="bg-[#1fddff] p-4 rounded-md text-white font-bold w-2/12">
-        Create Game
-      </button>
+      <button @click="createGameHandler()" class="bg-[#1fddff] p-4 rounded-md text-white font-bold">Create New Game</button>
     </div>
   </div>
 </template>
 
+<style scoped>
+/* Firefox */
+.custom-scroll-bar {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #000000;
+}
+
+/* Chrome, Edge, and Safari */
+.custom-scroll-bar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #ffffff;
+}
+</style>
+
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useRouter } from "vue-router";
@@ -48,6 +64,19 @@ let playerStore = storeToRefs(store);
 
 let getGamesLoop;
 let games = ref([]);
+
+const gamesAvailable = computed({
+  get() {
+    let res = false;
+    games.value.forEach((game) => {
+      if (!game.full && !game.game_over.over) {
+        res = true;
+      }
+    });
+
+    return res;
+  },
+});
 
 const listGames = async () => {
   try {

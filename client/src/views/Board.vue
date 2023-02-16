@@ -1,25 +1,31 @@
 <template>
-  <div class="bg-gradient w-screen h-screen flex items-center justify-center">
+  <div class="bg-gradient w-screen h-screen flex items-center justify-center gap-x-12">
     <GameOver v-show="playerStore.Player.value.game.game_over.over" />
     <div
       v-show="!playerStore.Player.value.game.full"
       class="bg-black bg-opacity-50 p-12 rounded-2xl shadow-2xl text-white font-bold text-center"
     >
-      <p class="text-4xl py-4">Game {{ playerStore.Player.value.game.ID }} - Waiting for players...</p>
+      <p class="text-4xl py-4">Waiting for player...</p>
       <Loader />
     </div>
 
-    <div v-show="playerStore.Player.value.game.full" class="flex flex-col space-y-10">
-      <div class="text-center rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 border-white border-4 font-bold">
-        <p v-show="playerStore.Player.value.turn" class="text-green-500">Your turn</p>
-        <p v-show="!playerStore.Player.value.turn" class="text-red-500">Not your turn</p>
-        <p>Game {{ playerStore.Player.value.game.ID }}</p>
-        <p v-for="(player, idx) in playerStore.Player.value.game.players" :key="idx">
-          <span v-show="player != playerStore.Player.value.id">VS player {{ player }}</span>
-        </p>
+    <div class="flex flex-col gap-y-8">
+      <div v-show="playerStore.Player.value.game.full" class="flex flex-col space-y-8">
+        <div class="text-center rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 font-bold py-6 flex flex-col">
+          <p v-show="playerStore.Player.value.turn" class="text-green-500">Your turn</p>
+          <p v-show="!playerStore.Player.value.turn" class="text-red-500">Not your turn</p>
+          <p>Game {{ playerStore.Player.value.game.ID }}</p>
+          <p v-for="(player, idx) in playerStore.Player.value.game.players" :key="idx">
+            <span v-show="player != playerStore.Player.value.id">VS Player {{ player }}</span>
+          </p>
+        </div>
       </div>
+      <Dice
+        v-show="playerStore.Player.value.game.full"
+        @click="playerStore.Player.value.diceRolled = true"
+        :rolled="rolled"
+      />
     </div>
-    <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true" :rolled="rolled" />
 
     <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over.over" class="flex flex-col">
       <div

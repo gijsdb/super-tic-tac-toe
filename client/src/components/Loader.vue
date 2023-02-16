@@ -15,7 +15,6 @@
   </div>
 </template>
 
-
 <style scoped>
 .lds-default {
   display: inline-block;

@@ -1,8 +1,10 @@
 <template>
-  <div class="absolute right-5 top-5 bg-black bg-opacity-50 rounded-xl border-2 border-white p-4">
+  <div class="absolute right-5 top-5 bg-black bg-opacity-50 rounded-xl shadow-2xl p-4">
     <div class="flex justify-end items-center">
       <div class="flex-col mr-4 text-sm text-white">
-        <p><span class="font-bold mr-2">ID:</span>{{ playerStore.Player.value.id }}</p>
+        <p>
+          <span class="font-bold mr-2">Player {{ playerStore.Player.value.id }}</span>
+        </p>
         <p
           class="font-bold"
           :class="{

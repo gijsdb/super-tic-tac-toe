@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+  
 .bg-gradient {
     background-color: hsla(0, 100%, 50%, 1);
     background-image: radial-gradient(
