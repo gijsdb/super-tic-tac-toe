@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute right-5 top-5 bg-black bg-opacity-50 rounded-xl shadow-2xl p-4">
+  <div class="absolute right-5 top-5 bg-black bg-opacity-50 rounded-xl shadow-2xl p-4 hidden lg:block">
     <div class="flex justify-end items-center">
       <div class="flex-col mr-4 text-sm text-white">
         <p>

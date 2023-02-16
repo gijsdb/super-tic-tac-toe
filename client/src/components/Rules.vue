@@ -3,16 +3,16 @@
     <button
       @click="toggleRules"
       :class="showRules ? 'border-2 border-white' : 'border-0'"
-      class="absolute z-50 bg-black bg-opacity-60 w-12 h-12 flex items-center justify-center rounded-full top-5 left-5 text-white font-bold shadow-2xl"
+      class="absolute z-50 left-1 top-1 bg-black bg-opacity-60 w-12 h-12 flex items-center justify-center rounded-full text-white font-bold shadow-2xl"
     >
       <span v-show="!showRules">?</span>
       <span v-show="showRules">X</span>
     </button>
     <div
       v-show="showRules"
-      class="z-40 w-screen h-screen absolute bg-black bg-opacity-95 flex flex-col items-center justify-center text-gray-200"
+      class="z-40 w-screen absolute bg-black bg-opacity-95 flex flex-col items-center justify-center text-gray-200 p-12"
     >
-      <div class="flex flex-col items-center text-center mx-24 gap-y-4">
+      <div class="flex flex-col items-center text-center lg:mx-24 gap-y-4">
         <h1 class="text-4xl font-bold underline">Super Tic Tac Toe Rules</h1>
         <p class="text-2xl leading-10">Super Tic Tac Toe is a variation of regular tic tac toe or 'three in a row'.</p>
 

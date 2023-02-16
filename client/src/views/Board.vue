@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient w-screen h-screen flex items-center justify-center gap-x-12">
+  <div class="bg-gradient w-screen min-h-screen flex flex-col lg:flex-row items-center justify-center gap-x-12 gap-y-4">
     <GameOver v-show="playerStore.Player.value.game.game_over.over" />
     <div
       v-show="!playerStore.Player.value.game.full"
@@ -9,7 +9,28 @@
       <Loader />
     </div>
 
-    <div class="flex flex-col gap-y-8">
+    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over.over" class="flex flex-col">
+      <div
+        class="bg-black bg-opacity-80 px-8 rounded-lg rounded-b-none border-white border-2 border-b-0 text-center py-2 font-bold text-sm"
+      >
+        <p :class="{ 'text-red-600': !message.allowed, 'text-white': message.allowed }">
+          {{ message.reason }}
+        </p>
+      </div>
+
+      <div
+        class="bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl lg:px-4 pb-4 rounded-lg rounded-t-none grid grid-cols-3"
+      >
+        <Square
+          @clearDice="clearDiceHandler"
+          v-for="(square, idx) in playerStore.Player.value.game.game_board.squares"
+          :key="idx"
+          :squareIdx="idx"
+          @ruleVerdict="updateMessage"
+        />
+      </div>
+    </div>
+    <div class="flex lg:flex-col gap-y-8 gap-x-8">
       <div v-show="playerStore.Player.value.game.full" class="flex flex-col space-y-8">
         <div class="text-center rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 font-bold py-6 flex flex-col">
           <p v-show="playerStore.Player.value.turn" class="text-green-500">Your turn</p>
@@ -25,28 +46,6 @@
         @click="playerStore.Player.value.diceRolled = true"
         :rolled="rolled"
       />
-    </div>
-
-    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over.over" class="flex flex-col">
-      <div
-        class="bg-black bg-opacity-80 px-8 rounded-lg rounded-b-none border-white border-2 border-b-0 text-center py-2 font-bold text-sm"
-      >
-        <p :class="{ 'text-red-600': !message.allowed, 'text-white': message.allowed }">
-          {{ message.reason }}
-        </p>
-      </div>
-
-      <div
-        class="bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl px-4 pb-4 w-[40vw] h-[40vw] rounded-lg rounded-t-none grid grid-cols-3"
-      >
-        <Square
-          @clearDice="clearDiceHandler"
-          v-for="(square, idx) in playerStore.Player.value.game.game_board.squares"
-          :key="idx"
-          :squareIdx="idx"
-          @ruleVerdict="updateMessage"
-        />
-      </div>
     </div>
   </div>
 </template>
