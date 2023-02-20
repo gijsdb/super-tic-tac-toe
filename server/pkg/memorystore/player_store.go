@@ -8,25 +8,14 @@ import (
 )
 
 type PlayerStore struct {
-	idCounterMutex sync.Mutex
-	idCounter      int64
-	mutex          sync.Mutex
-	players        map[string]*entity.Player
+	mutex   sync.Mutex
+	players map[string]*entity.Player
 }
 
 func NewPlayerMemoryStore() *PlayerStore {
 	return &PlayerStore{
-		idCounter: 1,
-		players:   make(map[string]*entity.Player),
+		players: make(map[string]*entity.Player),
 	}
-}
-
-func (ps *PlayerStore) NewID() int64 {
-	ps.idCounterMutex.Lock()
-	defer ps.idCounterMutex.Unlock()
-	id := ps.idCounter
-	ps.idCounter++
-	return id
 }
 
 func (ps *PlayerStore) NewUUID() string {

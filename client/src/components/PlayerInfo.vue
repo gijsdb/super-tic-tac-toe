@@ -3,7 +3,7 @@
     <div class="flex justify-end items-center">
       <div class="flex-col mr-4 text-sm text-white">
         <p>
-          <span class="font-bold mr-2">Player {{ playerStore.Player.value.id }}</span>
+          <span class="font-bold mr-2">{{ generateName(playerStore.Player.value.id) }}</span>
         </p>
         <p
           class="font-bold"
@@ -24,6 +24,7 @@
 import { useRouter } from "vue-router";
 import { useGameStore } from "../stores/game.js";
 import { storeToRefs } from "pinia";
+import { generateName } from "../game/nameGenerator.js";
 
 const router = useRouter();
 const store = useGameStore();

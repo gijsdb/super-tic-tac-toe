@@ -37,7 +37,7 @@
           <p v-show="!playerStore.Player.value.turn" class="text-red-500">Not your turn</p>
           <p>Game {{ playerStore.Player.value.game.ID }}</p>
           <p v-for="(player, idx) in playerStore.Player.value.game.players" :key="idx">
-            <span v-show="player != playerStore.Player.value.id">VS Player {{ player }}</span>
+            <span v-show="player != playerStore.Player.value.id">VS {{ generateName(player) }}</span>
           </p>
         </div>
       </div>
@@ -53,9 +53,9 @@
 <script setup>
 import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useGameStore } from "../stores/game.js";
-import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import APIClient from "../APIClient";
+import { generateName } from "../game/nameGenerator.js";
 
 import Square from "../components/Square.vue";
 import GameOver from "../components/GameOver.vue";
