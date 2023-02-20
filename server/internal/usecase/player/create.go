@@ -5,6 +5,7 @@ import (
 	"github.com/inconshreveable/log15"
 )
 
+// Need a better system for this. Currently a player can get over ridden by another quite easily if the server restarts
 func (s *Service) CreatePlayer(playerId int64) int64 {
 
 	if playerId == 0 {
@@ -21,14 +22,12 @@ func (s *Service) CreatePlayer(playerId int64) int64 {
 		if player == nil {
 			log15.Debug("Player returning after restart")
 			return s.repo.Create(&entity.Player{
-				ID:     -1,
+				ID:     playerId,
 				Active: true,
 			})
 		}
 		player.Active = true
 
-		s.repo.Update(player)
-
-		return playerId
+		return s.repo.Update(player).ID
 	}
 }

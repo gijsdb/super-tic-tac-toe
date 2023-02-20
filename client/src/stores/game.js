@@ -42,16 +42,18 @@ export const useGameStore = defineStore('game', {
       for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
         if (cookiePair[0].trim() === "client_id") {
-          this.Player.id = cookiePair[1]
+          this.Player.id = parseInt(cookiePair[1])
+
           await APIClient.CreatePlayer(cookiePair[1])
           return
         }
       }
       const id = await APIClient.CreatePlayer(0)
-
       document.cookie = "client_id=" + id + ";SameSite=none;Secure=false";
 
       this.Player.id = id
+
+      console.log(this.Player.id)
     },
     removeClient() {
       APIClient.RemovePlayer(this.Player.id);
