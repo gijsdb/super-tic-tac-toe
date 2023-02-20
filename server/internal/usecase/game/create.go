@@ -4,34 +4,34 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *Service) CreateGame(creatingPlayer int64) *entity.Game {
+func (s *Service) CreateGame(creatingPlayer string) *entity.Game {
 	gb := newGameboard(creatingPlayer)
 	game := entity.Game{
 		ID:         -1,
 		GameBoard:  &gb,
-		PlayerTurn: int(creatingPlayer),
+		PlayerTurn: creatingPlayer,
 		GameOver: &entity.GameOver{
 			Over:   false,
 			Reason: "",
 		},
-		Winner:   -1,
-		Players:  []int{int(creatingPlayer)},
+		Winner:   "",
+		Players:  []string{creatingPlayer},
 		Full:     false,
 		LastRoll: []int{0, 0},
 	}
 	return s.repo.Create(&game)
 }
 
-func newGameboard(creatingPlayer int64) entity.GameBoard {
+func newGameboard(creatingPlayer string) entity.GameBoard {
 	var board entity.GameBoard
 	board.Player1 = creatingPlayer
-	board.Winner = -1
+	board.Winner = ""
 	var squares []entity.Square
 	for i := 0; i < 9; i++ {
 		var square entity.Square
 		square = entity.Square{
 			Circles:    initCircles(),
-			CapturedBy: -1,
+			CapturedBy: "",
 			Index:      i,
 		}
 		squares = append(squares, square)
@@ -46,7 +46,7 @@ func initCircles() []entity.Circle {
 	for i := 0; i < 9; i++ {
 		var circle entity.Circle
 		circle.Index = i
-		circle.SelectedBy = -1
+		circle.SelectedBy = ""
 
 		circles = append(circles, circle)
 	}

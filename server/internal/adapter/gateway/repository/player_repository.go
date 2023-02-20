@@ -6,8 +6,8 @@ import (
 )
 
 type PlayerRepositoryI interface {
-	Create(player *entity.Player) int64
-	Get(playerId int64) *entity.Player
+	Create(player *entity.Player) string
+	Get(playerId string) *entity.Player
 	Update(player *entity.Player) *entity.Player
 }
 
@@ -21,11 +21,11 @@ func NewPlayerRepository() PlayerRepositoryI {
 	}
 }
 
-func (p *PlayerMemoryRepository) Create(player *entity.Player) int64 {
+func (p *PlayerMemoryRepository) Create(player *entity.Player) string {
 	return p.store.Create(player)
 }
 
-func (p *PlayerMemoryRepository) Get(playerId int64) *entity.Player {
+func (p *PlayerMemoryRepository) Get(playerId string) *entity.Player {
 	return p.store.Get(playerId)
 }
 

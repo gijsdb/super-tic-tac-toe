@@ -43,18 +43,18 @@ const rollDiceHandler = async () => {
   // Loop over each square on the board
   store.Player.game.game_board.squares.forEach((square) => {
     // If a square is captured by a player, it is locked and no moves can be made on it so we ignore it from the count of circles left
-    if (square.captured_by == -1) {
+    if (square.captured_by == "") {
       let circleCount = 0;
       let availableCircle = 0;
       // For each square, loop over the 9 circles
       square.circles.forEach((circle) => {
         // if the circle index is equal to the dice total or the dicetotal is 12 (any circle) AND the circle is not captured by a player
-        if ((circle.Index + 3 == totalRoll || totalRoll == 12) && circle.selected_by == -1) {
+        if ((circle.Index + 3 == totalRoll || totalRoll == 12) && circle.selected_by == "") {
           // Record the circle
           circleCount = circleCount + 1;
           availableSquare++;
         }
-        if (circle.selected_by == -1) {
+        if (circle.selected_by == "") {
           availableCircle = availableCircle + 1;
         }
       });

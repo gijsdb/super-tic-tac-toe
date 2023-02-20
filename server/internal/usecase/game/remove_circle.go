@@ -2,12 +2,12 @@ package game
 
 import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
 
-func (s *Service) RemoveCircle(gameId, playerId, square, circle int64) *entity.Game {
+func (s *Service) RemoveCircle(gameId, square, circle int64, playerId string) *entity.Game {
 	game := s.repo.Get(gameId)
 
-	game.GameBoard.Squares[square].Circles[circle].SelectedBy = -1
+	game.GameBoard.Squares[square].Circles[circle].SelectedBy = ""
 
-	if int(playerId) == game.Players[0] {
+	if playerId == game.Players[0] {
 		game.PlayerTurn = game.Players[1]
 	} else {
 		game.PlayerTurn = game.Players[0]

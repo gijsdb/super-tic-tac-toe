@@ -33,13 +33,7 @@ func (gc *GameController) Get(c echo.Context) error {
 }
 
 func (gc *GameController) Create(c echo.Context) error {
-	id := c.QueryParam("player")
-	playerId, err := strconv.ParseInt(id, 10, 64)
-	if err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusOK, gc.service.CreateGame(playerId))
+	return c.JSON(http.StatusOK, gc.service.CreateGame(c.QueryParam("player")))
 }
 
 func (gc *GameController) Join(c echo.Context) error {
@@ -48,13 +42,8 @@ func (gc *GameController) Join(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	pId := c.QueryParam("player")
-	playerId, err := strconv.ParseInt(pId, 10, 64)
-	if err != nil {
-		return err
-	}
 
-	game, err := gc.service.Join(gameId, playerId)
+	game, err := gc.service.Join(gameId, c.QueryParam("player"))
 	if err != nil {
 		return err
 	}
@@ -69,13 +58,7 @@ func (gc *GameController) Leave(c echo.Context) error {
 		return err
 	}
 
-	pId := c.QueryParam("player")
-	playerId, err := strconv.ParseInt(pId, 10, 64)
-	if err != nil {
-		return err
-	}
-
-	return c.JSON(http.StatusOK, gc.service.Leave(game, playerId))
+	return c.JSON(http.StatusOK, gc.service.Leave(game, c.QueryParam("player")))
 }
 
 func (gc *GameController) UpdateBoard(c echo.Context) error {
@@ -89,18 +72,14 @@ func (gc *GameController) UpdateBoard(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	p := c.QueryParam("player")
-	player, err := strconv.ParseInt(p, 10, 64)
-	if err != nil {
-		return err
-	}
+
 	s := c.QueryParam("square")
 	square, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, gc.service.UpdateBoard(game, player, square, circle))
+	return c.JSON(http.StatusOK, gc.service.UpdateBoard(game, square, circle, c.QueryParam("player")))
 }
 
 func (gc *GameController) RemoveCircle(c echo.Context) error {
@@ -109,11 +88,7 @@ func (gc *GameController) RemoveCircle(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	p := c.QueryParam("player")
-	player, err := strconv.ParseInt(p, 10, 64)
-	if err != nil {
-		return err
-	}
+
 	s := c.QueryParam("square")
 	square, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
@@ -125,7 +100,7 @@ func (gc *GameController) RemoveCircle(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, gc.service.RemoveCircle(game, player, square, circle))
+	return c.JSON(http.StatusOK, gc.service.RemoveCircle(game, square, circle, c.QueryParam("player")))
 }
 
 func (gc *GameController) RollDice(c echo.Context) error {

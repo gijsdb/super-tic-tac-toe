@@ -1,6 +1,6 @@
 package player
 
-func (s *Service) SetInactive(playerId int64) {
+func (s *Service) SetInactive(playerId string) {
 	player := s.repo.Get(playerId)
 	if player == nil {
 		return

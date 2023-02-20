@@ -1,29 +1,29 @@
 
 export const CheckRules = (store, squareIdx, circleIdx, totalRoll) => {
     if (totalRoll == 2) {
-        if (store.Player.value.game.game_board.squares[squareIdx].captured_by != -1) {
+        if (store.Player.value.game.game_board.squares[squareIdx].captured_by != '') {
             return { allowed: false, reason: "This square has been captured" };
 
         }
-        if (store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by == store.Player.value.id || store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by == -1) {
+        if (store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by == store.Player.value.id || store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by == '') {
             return { allowed: false, reason: "You must select a circle from the opposition" };
         }
         return { allowed: true, reason: "You removed a circle from the opposition" };
     }
 
-    if (store.Player.value.game.game_board.squares[squareIdx].captured_by != -1 && store.Player.value.game.game_board.squares[squareIdx].captured_by != store.Player.value.id) {
+    if (store.Player.value.game.game_board.squares[squareIdx].captured_by != '' && store.Player.value.game.game_board.squares[squareIdx].captured_by != store.Player.value.id) {
         return { allowed: false, reason: "You can't capture a circle in this square because the square is already captured by another player" };
     } else if (store.Player.value.game.game_board.squares[squareIdx].captured_by == store.Player.value.id) {
         return { allowed: false, reason: "You have already captured this circle, pick another circle" };
     } else {
-        if (store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != -1 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != store.Player.value.id && totalRoll != 2) {
+        if (store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != '' && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != store.Player.value.id && totalRoll != 2) {
             return { allowed: false, reason: "You can't select this circle because it is already selected by another player" };
         }
 
         // A throw of twelve gives the player the freedom to peg any hole. A throw of seven lets a player peg any box's center hole. 
 
         // A throw of two lets one remove an opponent's peg. A player wins a box by getting three in a row or any five holes.
-        if (totalRoll === 2 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != -1 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != store.Player.value.id && store.Player.value.game.game_board.squares[squareIdx].captured_by == -1) {
+        if (totalRoll === 2 && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != '' && store.Player.value.game.game_board.squares[squareIdx].circles[circleIdx].selected_by != store.Player.value.id && store.Player.value.game.game_board.squares[squareIdx].captured_by == '') {
             return { allowed: true, reason: "You've removed your opponents circle!" }
         }
 

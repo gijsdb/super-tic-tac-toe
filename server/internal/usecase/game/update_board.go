@@ -7,7 +7,7 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *Service) UpdateBoard(gameId, playerId, square, circle int64) *entity.Game {
+func (s *Service) UpdateBoard(gameId, square, circle int64, playerId string) *entity.Game {
 	game := s.repo.Get(gameId)
 
 	game.GameBoard.Squares[square].Circles[circle].SelectedBy = playerId
@@ -16,15 +16,15 @@ func (s *Service) UpdateBoard(gameId, playerId, square, circle int64) *entity.Ga
 	game.GameBoard.CheckSquareCondition()
 
 	// Check for winner
-	if game.GameBoard.Winner != -1 {
+	if game.GameBoard.Winner != "" {
 		game.Winner = game.GameBoard.Winner
-		game.GameOver.Reason = fmt.Sprintf("Player %d wins!", game.Winner)
+		game.GameOver.Reason = fmt.Sprintf("Player %s wins!", game.Winner)
 		game.GameOver.Over = true
 		game.GameOver.EndTime = time.Now().Unix()
 	}
 
 	// Change turn
-	if int(playerId) == game.Players[0] {
+	if playerId == game.Players[0] {
 		game.PlayerTurn = game.Players[1]
 	} else {
 		game.PlayerTurn = game.Players[0]

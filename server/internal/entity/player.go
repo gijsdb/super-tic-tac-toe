@@ -1,6 +1,7 @@
 package entity
 
 type Player struct {
-	ID     int64 `json:"ID"`
-	Active bool  `json:"active"`
+	ID       string `json:"ID"`
+	Active   bool   `json:"active"`
+	LastSeen int64  `json:"last_seen"`
 }

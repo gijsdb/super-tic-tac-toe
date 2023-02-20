@@ -4,19 +4,20 @@ import (
 	"sync"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
+	"github.com/google/uuid"
 )
 
 type PlayerStore struct {
 	idCounterMutex sync.Mutex
 	idCounter      int64
 	mutex          sync.Mutex
-	players        map[int64]*entity.Player
+	players        map[string]*entity.Player
 }
 
 func NewPlayerMemoryStore() *PlayerStore {
 	return &PlayerStore{
 		idCounter: 1,
-		players:   make(map[int64]*entity.Player),
+		players:   make(map[string]*entity.Player),
 	}
 }
 
@@ -28,16 +29,20 @@ func (ps *PlayerStore) NewID() int64 {
 	return id
 }
 
-func (ps *PlayerStore) Create(player *entity.Player) int64 {
+func (ps *PlayerStore) NewUUID() string {
+	return uuid.New().String()
+}
+
+func (ps *PlayerStore) Create(player *entity.Player) string {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
-	player.ID = ps.NewID()
+	player.ID = ps.NewUUID()
 	ps.players[player.ID] = player
 
 	return player.ID
 }
 
-func (ps *PlayerStore) Get(playerId int64) *entity.Player {
+func (ps *PlayerStore) Get(playerId string) *entity.Player {
 	return ps.players[playerId]
 }
 

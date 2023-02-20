@@ -5,7 +5,7 @@ export const useGameStore = defineStore('game', {
   state: () => {
     return {
       Player: {
-        id: 0,
+        id: '',
         name: 'Player',
         inGame: false,
         turn: false,
@@ -13,13 +13,13 @@ export const useGameStore = defineStore('game', {
         game: {
           ID: -1,
           game_board: {},
-          player_turn: -1,
+          player_turn: '',
           game_over: {
             over: false,
-            reason: "",
+            reason: '',
           },
-          winner: -1,
-          players: "",
+          winner: '',
+          players: '',
           full: false,
           last_roll: [0, 0]
         },
@@ -42,7 +42,7 @@ export const useGameStore = defineStore('game', {
       for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
         if (cookiePair[0].trim() === "client_id") {
-          this.Player.id = parseInt(cookiePair[1])
+          this.Player.id = cookiePair[1]
 
           await APIClient.CreatePlayer(cookiePair[1])
           return
@@ -59,7 +59,7 @@ export const useGameStore = defineStore('game', {
       APIClient.RemovePlayer(this.Player.id);
     },
     async checkClient() {
-      if (this.Player.id === 0) {
+      if (this.Player.id === '') {
         return { allowed: false, reason: "no client id" }
       }
       var cookieArr = document.cookie.split(";");

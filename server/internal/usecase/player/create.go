@@ -6,11 +6,11 @@ import (
 )
 
 // Need a better system for this. Currently a player can get over ridden by another quite easily if the server restarts
-func (s *Service) CreatePlayer(playerId int64) int64 {
+func (s *Service) CreatePlayer(playerId string) string {
 
-	if playerId == 0 {
+	if playerId == "" {
 		player := &entity.Player{
-			ID:     -1,
+			ID:     "",
 			Active: true,
 		}
 

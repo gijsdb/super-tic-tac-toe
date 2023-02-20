@@ -3,11 +3,11 @@
     :class="{
       'border-red-500 border-2':
         playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== playerStore.Player.value.id &&
-        playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== -1,
+        playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
       'border-blue-500 border-2':
         playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == playerStore.Player.value.id &&
-        playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== -1,
-      'border-white border-2': playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == -1,
+        playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
+      'border-white border-2': playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == '',
     }"
     class="lg:m-2 m-1 grid grid-cols-3 items-center"
   >
@@ -19,13 +19,13 @@
         'border-red-500 border-2':
           idx + 3 == 7 &&
           playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== playerStore.Player.value.id &&
-          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== -1,
+          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
         'border-blue-500 border-2':
           idx + 3 == 7 &&
           playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == playerStore.Player.value.id &&
-          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== -1,
+          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
         'border-white border-2':
-          idx + 3 == 7 && playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == -1,
+          idx + 3 == 7 && playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == '',
       }"
       @click="updateboard(idx)"
     >
@@ -37,12 +37,12 @@
           'bg-red-500':
             playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !==
               playerStore.Player.value.id &&
-            playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== -1,
+            playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
           'bg-blue-500':
             playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by ==
               playerStore.Player.value.id &&
-            playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== -1,
-          'bg-black': playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by == -1,
+            playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
+          'bg-black': playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by == '',
         }"
       ></div>
     </div>

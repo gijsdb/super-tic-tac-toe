@@ -4,22 +4,22 @@ import "github.com/inconshreveable/log15"
 
 // Gameboard represents the game board
 type GameBoard struct {
-	Player1 int64    `json:"player_1"`
-	Player2 int64    `json:"player_2"`
-	Winner  int64    `json:"winner"`
+	Player1 string   `json:"player_1"`
+	Player2 string   `json:"player_2"`
+	Winner  string   `json:"winner"`
 	Squares []Square `json:"squares"`
 }
 
 // The 9 squares on the board
 type Square struct {
 	Circles    []Circle `json:"circles"`
-	CapturedBy int64    `json:"captured_by"` // 0 = player 1, 1 = player 2
+	CapturedBy string   `json:"captured_by"` // 0 = player 1, 1 = player 2
 	Index      int
 }
 
 // The 9 circles in each square
 type Circle struct {
-	SelectedBy int64 `json:"selected_by"`
+	SelectedBy string `json:"selected_by"`
 	Index      int
 }
 
@@ -49,9 +49,9 @@ func (gb *GameBoard) CheckCirclesCondition(s Square) Square {
 			(s.Circles[0].SelectedBy == gb.Player2 && s.Circles[4].SelectedBy == gb.Player2 && s.Circles[8].SelectedBy == gb.Player2) || // Check all diagonals.
 			(s.Circles[2].SelectedBy == gb.Player2 && s.Circles[4].SelectedBy == gb.Player2 && s.Circles[6].SelectedBy == gb.Player2)
 
-		freeCellsLeft = s.Circles[0].SelectedBy == -1 || s.Circles[1].SelectedBy == -1 || s.Circles[2].SelectedBy == -1 ||
-			s.Circles[3].SelectedBy == -1 || s.Circles[4].SelectedBy == -1 || s.Circles[5].SelectedBy == -1 ||
-			s.Circles[6].SelectedBy == -1 || s.Circles[7].SelectedBy == -1 || s.Circles[8].SelectedBy == -1
+		freeCellsLeft = s.Circles[0].SelectedBy == "" || s.Circles[1].SelectedBy == "" || s.Circles[2].SelectedBy == "" ||
+			s.Circles[3].SelectedBy == "" || s.Circles[4].SelectedBy == "" || s.Circles[5].SelectedBy == "" ||
+			s.Circles[6].SelectedBy == "" || s.Circles[7].SelectedBy == "" || s.Circles[8].SelectedBy == ""
 	)
 	switch {
 	case x && !o:
@@ -63,7 +63,7 @@ func (gb *GameBoard) CheckCirclesCondition(s Square) Square {
 		s.CapturedBy = gb.Player2
 		return s
 	case !freeCellsLeft:
-		s.CapturedBy = -1
+		s.CapturedBy = ""
 		return s
 	default:
 		return s
@@ -96,9 +96,9 @@ func (gb *GameBoard) CheckSquareCondition() {
 			(gb.Squares[0].CapturedBy == gb.Player2 && gb.Squares[4].CapturedBy == gb.Player2 && gb.Squares[8].CapturedBy == gb.Player2) || // Check all diaggb.Player2nals.
 			(gb.Squares[2].CapturedBy == gb.Player2 && gb.Squares[4].CapturedBy == gb.Player2 && gb.Squares[6].CapturedBy == gb.Player2)
 
-		freeCellsLeft = gb.Squares[0].CapturedBy == -1 || gb.Squares[1].CapturedBy == -1 || gb.Squares[2].CapturedBy == -1 ||
-			gb.Squares[3].CapturedBy == -1 || gb.Squares[4].CapturedBy == -1 || gb.Squares[5].CapturedBy == -1 ||
-			gb.Squares[6].CapturedBy == -1 || gb.Squares[7].CapturedBy == -1 || gb.Squares[8].CapturedBy == -1
+		freeCellsLeft = gb.Squares[0].CapturedBy == "" || gb.Squares[1].CapturedBy == "" || gb.Squares[2].CapturedBy == "" ||
+			gb.Squares[3].CapturedBy == "" || gb.Squares[4].CapturedBy == "" || gb.Squares[5].CapturedBy == "" ||
+			gb.Squares[6].CapturedBy == "" || gb.Squares[7].CapturedBy == "" || gb.Squares[8].CapturedBy == ""
 	)
 
 	switch {

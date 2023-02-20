@@ -8,11 +8,11 @@ import (
 type InteractorI interface {
 	Index() []*entity.Game
 	Get(id int64) *entity.Game
-	CreateGame(creatingPlayer int64) *entity.Game
-	Join(gameId, playerId int64) (*entity.Game, error)
-	Leave(gameId, playerId int64) *entity.Game
-	UpdateBoard(gameId, playerId, square, circle int64) *entity.Game
-	RemoveCircle(gameId, playerId, square, circle int64) *entity.Game
+	CreateGame(creatingPlayer string) *entity.Game
+	Join(gameId int64, playerId string) (*entity.Game, error)
+	Leave(gameId int64, playerId string) *entity.Game
+	UpdateBoard(gameId, square, circle int64, playerId string) *entity.Game
+	RemoveCircle(gameId, square, circle int64, playerId string) *entity.Game
 	RollDice(dice1, dice2 int, gameId int64) *entity.Game
 }
 
