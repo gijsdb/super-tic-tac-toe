@@ -7,5 +7,4 @@ func (s *Service) SetInactive(playerId string) {
 	}
 	player.Active = false
 	s.repo.Update(player)
-	return
 }

@@ -1,38 +1,31 @@
 <template>
-  <div class="bg-gradient w-screen min-h-screen flex flex-col lg:flex-row items-center justify-center gap-x-12 gap-y-4">
+  <div class=" w-screen my-auto flex flex-col lg:flex-row items-center justify-center gap-x-12 gap-y-4">
     <GameOver v-show="playerStore.Player.value.game.game_over.over" />
-    <div
-      v-show="!playerStore.Player.value.game.full"
-      class="bg-black bg-opacity-50 p-12 rounded-2xl shadow-2xl text-white font-bold text-center"
-    >
+    <div v-show="!playerStore.Player.value.game.full"
+      class="bg-black bg-opacity-50 p-12 rounded-2xl shadow-2xl text-white font-bold text-center">
       <p class="text-4xl py-4">Waiting for player...</p>
       <Loader />
     </div>
 
-    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over.over" class="flex flex-col">
+    <div v-show="playerStore.Player.value.game.full && !playerStore.Player.value.game.game_over.over"
+      class="flex flex-col">
       <div
-        class="bg-black bg-opacity-80 px-8 rounded-lg rounded-b-none border-white border-2 border-b-0 text-center py-2 font-bold text-sm"
-      >
+        class="bg-black bg-opacity-80 px-8 rounded-lg rounded-b-none border-white border-2 border-b-0 text-center py-2 font-bold text-sm">
         <p :class="{ 'text-red-600': !message.allowed, 'text-white': message.allowed }">
           {{ message.reason }}
         </p>
       </div>
 
       <div
-        class="bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl lg:px-4 pb-4 rounded-lg rounded-t-none grid grid-cols-3"
-      >
-        <Square
-          @clearDice="clearDiceHandler"
-          v-for="(square, idx) in playerStore.Player.value.game.game_board.squares"
-          :key="idx"
-          :squareIdx="idx"
-          @ruleVerdict="updateMessage"
-        />
+        class="bg-black bg-opacity-80 border-white border-2 border-t-0 shadow-2xl lg:px-4 pb-4 rounded-lg rounded-t-none grid grid-cols-3">
+        <Square @clearDice="clearDiceHandler" v-for="(square, idx) in playerStore.Player.value.game.game_board.squares"
+          :key="idx" :squareIdx="idx" @ruleVerdict="updateMessage" />
       </div>
     </div>
     <div class="flex lg:flex-col gap-y-8 gap-x-8">
       <div v-show="playerStore.Player.value.game.full" class="flex flex-col space-y-8">
-        <div class="text-center rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 font-bold py-6 flex flex-col">
+        <div
+          class="text-center rounded-2xl shadow-2xl p-2 text-white bg-black bg-opacity-60 font-bold py-6 flex flex-col">
           <p v-show="playerStore.Player.value.turn" class="text-green-500">Your turn</p>
           <p v-show="!playerStore.Player.value.turn" class="text-red-500">Not your turn</p>
           <p>Game {{ playerStore.Player.value.game.ID }}</p>
@@ -41,11 +34,8 @@
           </p>
         </div>
       </div>
-      <Dice
-        v-show="playerStore.Player.value.game.full"
-        @click="playerStore.Player.value.diceRolled = true"
-        :rolled="rolled"
-      />
+      <Dice v-show="playerStore.Player.value.game.full" @click="playerStore.Player.value.diceRolled = true"
+        :rolled="rolled" />
     </div>
   </div>
 </template>

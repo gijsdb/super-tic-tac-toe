@@ -1,17 +1,14 @@
 <template>
-  <div class="absolute right-1 top-1 bg-black bg-opacity-50 rounded-xl shadow-2xl p-4 hidden lg:block">
+  <div class="bg-opacity-50 rounded-xl bg-black p-4">
     <div class="flex justify-end items-center">
       <div class="flex-col mr-4 text-sm text-white">
         <p>
           <span class="font-bold mr-2">{{ generateName(playerStore.Player.value.id) }}</span>
         </p>
-        <p
-          class="font-bold"
-          :class="{
-            'text-red-500': !playerStore.Player.value.inGame,
-            'text-green-500': playerStore.Player.value.inGame != false,
-          }"
-        >
+        <p class="font-bold" :class="{
+          'text-red-500': !playerStore.Player.value.inGame,
+          'text-green-500': playerStore.Player.value.inGame != false,
+        }">
           In Game
         </p>
       </div>

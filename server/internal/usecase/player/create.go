@@ -4,7 +4,6 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-// Need a better system for this. Currently a player can get over ridden by another quite easily if the server restarts
 func (s *Service) CreatePlayer(playerId string) string {
 
 	if playerId == "" {
