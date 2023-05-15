@@ -6,7 +6,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Service) AuthenticateCookie(next echo.HandlerFunc) echo.HandlerFunc {
+/*
+	Middleware function to check cookie is attached with a valid session token
+*/
+
+func (s *SessionService) AuthenticateCookie(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cookie, err := c.Cookie("session_token")
 		if err != nil {

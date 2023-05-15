@@ -1,7 +1,7 @@
-package game
+package player
 
 import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
 
-func (s *GameService) Get(id int64) *entity.Game {
+func (s *PlayerService) Get(id string) *entity.Player {
 	return s.repo.Get(id)
 }

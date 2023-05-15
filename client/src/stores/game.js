@@ -37,26 +37,34 @@ export const useGameStore = defineStore('game', {
     }
   },
   actions: {
+    // Check for cookie temp_account, if it exists ask for a session for the player id in the cookie
+    // If it does not exist, create a new player
     async registerClient() {
       var cookieArr = document.cookie.split(";");
       for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
-        if (cookiePair[0].trim() === "session_token") {
-          this.Player.id = cookiePair[1]
-
-          await APIClient.CreatePlayer(cookiePair[1])
-          return
+        if (cookiePair[0].trim() === "temp_account") {
+          try {
+            await APIClient.CreateSession(cookiePair[1])
+            this.Player.id = cookiePair[1]
+            return
+          } catch (e) {
+            console.log("could not create session for returning player, creating new temp user")
+          }
         }
       }
-      const id = await APIClient.CreatePlayer(0)
-
-      this.Player.id = id
-
-      console.log(this.Player.id)
+      try {
+        const id = await APIClient.CreatePlayer()
+        this.Player.id = id
+      } catch (e) {
+        console.log("Error creating player in store", e)
+      }
     },
-    removeClient() {
-      APIClient.RemovePlayer(this.Player.id);
-    },
+    // Replace with deleting session for user AKA logout
+    // removeClient() {
+    //   APIClient.RemovePlayer(this.Player.id);
+    // },
+    // REPLACE WITH REFRESHING SESSION
     async checkClient() {
       if (this.Player.id === '') {
         return { allowed: false, reason: "no client id" }

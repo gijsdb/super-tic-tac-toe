@@ -36,5 +36,7 @@ func main() {
 
 	route.NewPlayerRouter(e, player_interactor, session_interactor)
 	route.NewGameRouter(e, game_interactor, session_interactor)
+	route.NewSessionRouter(e, session_interactor, player_interactor)
+
 	e.Logger.Fatal(e.Start(":1323"))
 }

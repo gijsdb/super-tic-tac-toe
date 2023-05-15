@@ -2,7 +2,7 @@ package game
 
 import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
 
-func (s *Service) RemoveCircle(gameId, square, circle int64, playerId string) *entity.Game {
+func (s *GameService) RemoveCircle(gameId, square, circle int64, playerId string) *entity.Game {
 	game := s.repo.Get(gameId)
 
 	game.GameBoard.Squares[square].Circles[circle].SelectedBy = ""

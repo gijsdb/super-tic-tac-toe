@@ -8,10 +8,8 @@ import (
 )
 
 func NewPlayerRouter(e *echo.Echo, pService player.InteractorI, sService session.InteractorI) {
-	var player_controller = controller.NewPlayerController(pService, sService)
-	e.GET("/player/create", player_controller.HandleCreatePlayer)
-	e.GET("/player/:id/setinactive", player_controller.HandleSetInactive, sService.AuthenticateCookie)
-	e.GET("/login", player_controller.HandleOauthLogin)
-	e.GET("/callback", player_controller.HandleGoogleCallback)
-	e.GET("/session/refresh", player_controller.HandleRefreshSession, sService.AuthenticateCookie)
+	var pc = controller.NewPlayerController(pService, sService)
+	e.GET("/player/create", pc.HandleCreatePlayer)
+	e.GET("/login", pc.HandleOauthLogin)
+	e.GET("/callback", pc.HandleGoogleCallback)
 }

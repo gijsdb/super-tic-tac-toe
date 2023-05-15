@@ -4,7 +4,7 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *Service) CreateGame(creatingPlayer string) *entity.Game {
+func (s *GameService) CreateGame(creatingPlayer string) *entity.Game {
 	gb := newGameboard(creatingPlayer)
 	game := entity.Game{
 		ID:         -1,

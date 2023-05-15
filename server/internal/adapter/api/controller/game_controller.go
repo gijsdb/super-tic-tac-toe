@@ -24,12 +24,12 @@ func (gc *GameController) HandleIndex(c echo.Context) error {
 
 func (gc *GameController) HandleGet(c echo.Context) error {
 	id := c.Param("id")
-	gameId, err := strconv.ParseInt(id, 10, 64)
+	game_id, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, gc.service.Get(gameId))
+	return c.JSON(http.StatusOK, gc.service.Get(game_id))
 }
 
 func (gc *GameController) HandleCreate(c echo.Context) error {
@@ -37,13 +37,13 @@ func (gc *GameController) HandleCreate(c echo.Context) error {
 }
 
 func (gc *GameController) HandleJoin(c echo.Context) error {
-	gId := c.QueryParam("id")
-	gameId, err := strconv.ParseInt(gId, 10, 64)
+	g := c.QueryParam("id")
+	game_id, err := strconv.ParseInt(g, 10, 64)
 	if err != nil {
 		return err
 	}
 
-	game, err := gc.service.Join(gameId, c.QueryParam("player"))
+	game, err := gc.service.Join(game_id, c.QueryParam("player"))
 	if err != nil {
 		return err
 	}

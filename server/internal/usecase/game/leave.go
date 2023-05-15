@@ -6,7 +6,7 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *Service) Leave(gameId int64, leavingPlayer string) *entity.Game {
+func (s *GameService) Leave(gameId int64, leavingPlayer string) *entity.Game {
 	game := s.repo.Get(gameId)
 
 	for i, player := range game.Players {

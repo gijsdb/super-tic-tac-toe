@@ -35,5 +35,7 @@ func (ss *SessionStore) Get(token string) (*entity.Session, error) {
 }
 
 func (ss *SessionStore) Delete(token string) {
+	ss.mutex.Lock()
+	defer ss.mutex.Unlock()
 	delete(ss.sessions, token)
 }

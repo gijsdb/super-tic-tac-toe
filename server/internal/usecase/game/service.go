@@ -17,11 +17,11 @@ type InteractorI interface {
 }
 
 func NewService(repo repository.GameRepositoryI) InteractorI {
-	return &Service{
+	return &GameService{
 		repo: repo,
 	}
 }
 
-type Service struct {
+type GameService struct {
 	repo repository.GameRepositoryI
 }

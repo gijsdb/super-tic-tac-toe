@@ -10,10 +10,6 @@ type GameRepositoryI interface {
 	Get(id int64) *entity.Game
 	Index() []*entity.Game
 	Update(game *entity.Game) *entity.Game
-	// Changeturn()
-	// RollDice(int, int)
-	// RemovePlayer(int)
-	// EndGame(string)
 }
 
 type GameMemoryRepository struct {

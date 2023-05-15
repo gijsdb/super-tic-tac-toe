@@ -6,7 +6,7 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *Service) Join(gameId int64, joiningPlayer string) (*entity.Game, error) {
+func (s *GameService) Join(gameId int64, joiningPlayer string) (*entity.Game, error) {
 	game := s.repo.Get(gameId)
 	noOfPlayers := len(game.Players)
 	if noOfPlayers >= 3 {

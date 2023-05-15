@@ -12,7 +12,7 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *Service) OauthLogin() string {
+func (s *PlayerService) OauthLogin() string {
 	oauthStateString := generateStateString(charset)
 	s.oauthStateStrings[oauthStateString] = true
 
@@ -34,7 +34,7 @@ func generateStateString(charset string) string {
 	return string(b)
 }
 
-func (s *Service) GoogleCallback(state, code string) (string, error) {
+func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 	content, err := s.getUserInfo(state, code)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -56,9 +56,8 @@ func (s *Service) GoogleCallback(state, code string) (string, error) {
 		return "", err
 	}
 
-	p := s.playerRepo.Update(&entity.Player{
+	p := s.repo.Update(&entity.Player{
 		ID:      temp.ID,
-		Active:  true,
 		Email:   temp.Email,
 		Picture: temp.Picture,
 	})
@@ -66,7 +65,7 @@ func (s *Service) GoogleCallback(state, code string) (string, error) {
 	return p.ID, nil
 }
 
-func (s *Service) getUserInfo(state string, code string) ([]byte, error) {
+func (s *PlayerService) getUserInfo(state string, code string) ([]byte, error) {
 	_, ok := s.oauthStateStrings[state]
 	if !ok {
 		return nil, fmt.Errorf("invalid state strings")
@@ -84,5 +83,6 @@ func (s *Service) getUserInfo(state string, code string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed reading response body: %s", err.Error())
 	}
+	delete(s.oauthStateStrings, state)
 	return contents, nil
 }

@@ -13,16 +13,19 @@ type InteractorI interface {
 	Create(playerId string, expiry time.Time) string
 	Get(token string) (*entity.Session, error)
 	Delete(token string)
-	AuthenticateCookie(next echo.HandlerFunc) echo.HandlerFunc
+	AuthenticateCookie(next echo.HandlerFunc) echo.HandlerFunc // Middleware
 	Refresh(token string)
+	GetExpiry() time.Duration
 }
 
-func NewService(sessionRepo repository.SessionRepositoryI) InteractorI {
-	return &Service{
-		sessionRepo: sessionRepo,
+func NewService(repo repository.SessionRepositoryI) InteractorI {
+	return &SessionService{
+		repo:          repo,
+		sessionExpiry: 120 * time.Second,
 	}
 }
 
-type Service struct {
-	sessionRepo repository.SessionRepositoryI
+type SessionService struct {
+	repo          repository.SessionRepositoryI
+	sessionExpiry time.Duration
 }
