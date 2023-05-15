@@ -3,3 +3,4 @@ super-tic-tac-toe.db
 .editorconfig
 edgecases.txt
 /server/todo.txt
+/server/.env

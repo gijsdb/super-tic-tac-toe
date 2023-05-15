@@ -11,6 +11,7 @@
         }">
           In Game
         </p>
+        <a href="http://localhost:1323/login" target="_blank">login</a>
       </div>
       <img class="rounded-full w-14 h-14" src="../assets/avatar.png" />
     </div>

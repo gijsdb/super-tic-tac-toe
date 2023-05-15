@@ -8,6 +8,8 @@ import (
 
 func NewPlayerRouter(e *echo.Echo, service player.InteractorI) {
 	var player_controller = controller.NewPlayerController(service)
-	e.GET("/player/create", player_controller.CreatePlayer)
-	e.GET("/player/:id/setinactive", player_controller.SetInactive)
+	e.GET("/player/create", player_controller.HandleCreatePlayer)
+	e.GET("/player/:id/setinactive", player_controller.HandleSetInactive)
+	e.GET("/login", player_controller.HandleOauthLogin)
+	e.GET("/callback", player_controller.HandleGoogleCallback)
 }

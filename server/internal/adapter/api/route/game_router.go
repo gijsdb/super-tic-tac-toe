@@ -8,12 +8,12 @@ import (
 
 func NewGameRouter(e *echo.Echo, service game.InteractorI) {
 	var gc = controller.NewGameController(service)
-	e.GET("/games", gc.Index)
-	e.GET("/game/create", gc.Create)
-	e.GET("/game/join", gc.Join)
-	e.GET("/game/:id/leave", gc.Leave)
-	e.GET("/game/:id", gc.Get)
-	e.GET("/game/:id/board/update", gc.UpdateBoard)
-	e.GET("/game/:id/board/circle/:c/remove", gc.RemoveCircle)
-	e.GET("/game/:id/roll", gc.RollDice)
+	e.GET("/games", gc.HandleIndex)
+	e.GET("/game/create", gc.HandleCreate)
+	e.GET("/game/join", gc.HandleJoin)
+	e.GET("/game/:id/leave", gc.HandleLeave)
+	e.GET("/game/:id", gc.HandleGet)
+	e.GET("/game/:id/board/update", gc.HandleUpdateBoard)
+	e.GET("/game/:id/board/circle/:c/remove", gc.HandleRemoveCircle)
+	e.GET("/game/:id/roll", gc.HandleRollDice)
 }

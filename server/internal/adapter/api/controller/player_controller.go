@@ -17,7 +17,7 @@ func NewPlayerController(service player.InteractorI) PlayerController {
 	}
 }
 
-func (gc *PlayerController) CreatePlayer(c echo.Context) error {
+func (gc *PlayerController) HandleCreatePlayer(c echo.Context) error {
 	id := c.QueryParam("id")
 
 	res := gc.service.CreatePlayer(id)
@@ -25,10 +25,22 @@ func (gc *PlayerController) CreatePlayer(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func (gc *PlayerController) SetInactive(c echo.Context) error {
+func (gc *PlayerController) HandleSetInactive(c echo.Context) error {
 	id := c.Param("id")
 
 	gc.service.SetInactive(id)
 
 	return nil
+}
+
+func (gc *PlayerController) HandleOauthLogin(c echo.Context) error {
+	url := gc.service.OauthLogin()
+
+	return c.Redirect(http.StatusTemporaryRedirect, url)
+}
+
+func (gc *PlayerController) HandleGoogleCallback(c echo.Context) error {
+	gc.service.GoogleCallback(c.FormValue("state"), c.FormValue("code"))
+
+	return c.Redirect(http.StatusTemporaryRedirect, "http://localhost:3000/")
 }
