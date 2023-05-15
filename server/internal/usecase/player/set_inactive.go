@@ -1,10 +1,10 @@
 package player
 
 func (s *Service) SetInactive(playerId string) {
-	player := s.repo.Get(playerId)
+	player := s.playerRepo.Get(playerId)
 	if player == nil {
 		return
 	}
 	player.Active = false
-	s.repo.Update(player)
+	s.playerRepo.Update(player)
 }

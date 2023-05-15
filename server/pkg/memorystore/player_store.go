@@ -4,7 +4,6 @@ import (
 	"sync"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
-	"github.com/google/uuid"
 )
 
 type PlayerStore struct {
@@ -18,14 +17,10 @@ func NewPlayerMemoryStore() *PlayerStore {
 	}
 }
 
-func (ps *PlayerStore) NewUUID() string {
-	return uuid.New().String()
-}
-
 func (ps *PlayerStore) Create(player *entity.Player) string {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
-	player.ID = ps.NewUUID()
+	player.ID = NewUUID()
 	ps.players[player.ID] = player
 
 	return player.ID

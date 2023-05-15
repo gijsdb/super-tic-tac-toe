@@ -10,6 +10,7 @@ const client = axios.create({
   validateStatus: function (status) {
     return status < 600; // Reject only if the status code is greater than or equal to 500
   },
+  withCredentials: true,
 });
 client.defaults.timeout = 15000;
 
@@ -53,6 +54,10 @@ const APIClient = {
 
   LeaveGame(gameId, playerId) {
     return this.perform(GET, `/game/${gameId}/leave?&player=` + playerId);
+  },
+
+  OAuthLogin() {
+    return this.perform(GET, '/login');
   },
 
   async perform(method, resource, data) {

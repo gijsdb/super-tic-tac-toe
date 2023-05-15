@@ -2,39 +2,76 @@ package player
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
+	"time"
 
-	"golang.org/x/oauth2"
-)
-
-var (
-	// TODO: randomize it
-	oauthStateString = "pseudo-random"
+	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
 func (s *Service) OauthLogin() string {
-	url := s.googleOauthConfig.AuthCodeURL(oauthStateString)
+	oauthStateString := generateStateString(charset)
+	s.oauthStateStrings[oauthStateString] = true
 
+	url := s.googleOauthConfig.AuthCodeURL(oauthStateString)
 	return url
 }
 
-func (s *Service) GoogleCallback(state, code string) ([]byte, error) {
-	content, err := getUserInfo(state, code, s.googleOauthConfig)
-	if err != nil {
-		fmt.Println(err.Error())
-		return nil, err
+const charset = "abcdefghijklmnopqrstuvwxyz" +
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+var seededRand *rand.Rand = rand.New(
+	rand.NewSource(time.Now().UnixNano()))
+
+func generateStateString(charset string) string {
+	b := make([]byte, 32)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
 	}
-	fmt.Printf("Content: %s\n", content)
-	return content, nil
+	return string(b)
 }
 
-func getUserInfo(state string, code string, conf *oauth2.Config) ([]byte, error) {
-	if state != oauthStateString {
-		return nil, fmt.Errorf("invalid oauth state")
+func (s *Service) GoogleCallback(state, code string) (string, error) {
+	content, err := s.getUserInfo(state, code)
+	if err != nil {
+		fmt.Println(err.Error())
+		return "", err
 	}
-	token, err := conf.Exchange(context.Background(), code)
+	fmt.Printf("Content: %s\n", content)
+
+	type oauthContent struct {
+		ID            string `json:"id"`
+		Email         string `json:"email"`
+		VerifiedEmail bool   `json:"verified_email"`
+		Picture       string `json:"picture"`
+	}
+
+	var temp oauthContent
+
+	err = json.Unmarshal(content, &temp)
+	if err != nil {
+		return "", err
+	}
+
+	p := s.playerRepo.Update(&entity.Player{
+		ID:      temp.ID,
+		Active:  true,
+		Email:   temp.Email,
+		Picture: temp.Picture,
+	})
+
+	return p.ID, nil
+}
+
+func (s *Service) getUserInfo(state string, code string) ([]byte, error) {
+	_, ok := s.oauthStateStrings[state]
+	if !ok {
+		return nil, fmt.Errorf("invalid state strings")
+	}
+	token, err := s.googleOauthConfig.Exchange(context.Background(), code)
 	if err != nil {
 		return nil, fmt.Errorf("code exchange failed: %s", err.Error())
 	}

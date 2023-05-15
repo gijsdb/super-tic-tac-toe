@@ -41,7 +41,7 @@ export const useGameStore = defineStore('game', {
       var cookieArr = document.cookie.split(";");
       for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split("=");
-        if (cookiePair[0].trim() === "client_id") {
+        if (cookiePair[0].trim() === "session_token") {
           this.Player.id = cookiePair[1]
 
           await APIClient.CreatePlayer(cookiePair[1])
@@ -49,7 +49,6 @@ export const useGameStore = defineStore('game', {
         }
       }
       const id = await APIClient.CreatePlayer(0)
-      document.cookie = "client_id=" + id + ";SameSite=none;Secure=false";
 
       this.Player.id = id
 
@@ -161,6 +160,19 @@ export const useGameStore = defineStore('game', {
         this.Player.game = res
       } catch (e) {
         console.log("Erroring rolling dice in store", e)
+      }
+    },
+    async OAuthLogin() {
+      try {
+        await APIClient.OAuthLogin()
+        for (var i = 0; i < cookieArr.length; i++) {
+          var cookiePair = cookieArr[i].split("=");
+          if (cookiePair[0].trim() === "client_id") {
+            this.Player.id = cookiePair[1]
+          }
+        }
+      } catch (e) {
+        console.log("Erroring performing OAuth login", e)
       }
     }
   }

@@ -12,12 +12,12 @@ type InteractorI interface {
 	CreatePlayer(isNewPlayer string) string
 	SetInactive(playerId string)
 	OauthLogin() string
-	GoogleCallback(state, code string) ([]byte, error)
+	GoogleCallback(state, code string) (string, error)
 }
 
-func NewService(repo repository.PlayerRepositoryI) InteractorI {
+func NewService(playerRepo repository.PlayerRepositoryI) InteractorI {
 	return &Service{
-		repo: repo,
+		playerRepo: playerRepo,
 		googleOauthConfig: &oauth2.Config{
 			RedirectURL:  "http://localhost:1323/callback",
 			ClientID:     os.Getenv("OAUTH_CLIENT_ID"),
@@ -25,10 +25,12 @@ func NewService(repo repository.PlayerRepositoryI) InteractorI {
 			Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
 			Endpoint:     google.Endpoint,
 		},
+		oauthStateStrings: make(map[string]bool),
 	}
 }
 
 type Service struct {
-	repo              repository.PlayerRepositoryI
+	playerRepo        repository.PlayerRepositoryI
 	googleOauthConfig *oauth2.Config
+	oauthStateStrings map[string]bool
 }
