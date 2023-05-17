@@ -12,4 +12,6 @@ runui:
 runuinetwork: 
 	cd ./client && npm run devnetwork
 
-
+plantuml: 
+	goplantuml -aggregate-private-members -show-aggregations -show-connection-labels -recursive server/internal/ > classDiagram.puml
+	plantuml classDiagram.puml 

@@ -4,11 +4,8 @@
     <div v-if="!playerStore.Player.value.turn">
       <ul v-if="!playerStore.Player.value.game.last_roll != '0,0'" class="flex text-red-500 text-6xl" id="lastroll"></ul>
     </div>
-    <button
-      :disabled="!playerStore.Player.value.turn || diceRolled"
-      @click="rollDiceHandler"
-      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
-    >
+    <button :disabled="!playerStore.Player.value.turn || diceRolled" @click="rollDiceHandler"
+      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500">
       Roll dice
     </button>
     <ul class="flex text-white text-6xl" id="rolls"></ul>
@@ -73,13 +70,12 @@ const rollDiceHandler = async () => {
     await rollDice(values[0], values[1]);
     return;
   } else {
+    let allowRoll = false
     // Loop over the available circles for each square that we recorded earlier
     availableCircles.forEach(async (val) => {
       // if a circle had been recorded the value would be greater than 1
       if (val > 0) {
-        message.value = null;
-        await rollDice(values[0], values[1]);
-        return;
+        allowRoll = true
       } else {
         if (availableSquare == 0) {
           diceRolled.value = false;
@@ -87,6 +83,10 @@ const rollDiceHandler = async () => {
         }
       }
     });
+    if (allowRoll) {
+      message.value = null;
+      await rollDice(values[0], values[1]);
+    }
   }
 };
 

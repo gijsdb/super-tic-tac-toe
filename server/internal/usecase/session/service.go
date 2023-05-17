@@ -14,6 +14,7 @@ type InteractorI interface {
 	Get(token string) (*entity.Session, error)
 	Delete(token string)
 	Refresh(token string) (string, error)
+	GetPlayerIdFromSession(token string) (string, error)
 }
 
 func NewService(repo repository.SessionRepositoryI) InteractorI {
