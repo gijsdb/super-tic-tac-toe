@@ -9,6 +9,6 @@ import (
 
 func NewSessionRouter(e *echo.Echo, session_service session.InteractorI, player_service player.InteractorI) {
 	var sc = controller.NewSessionController(session_service, player_service)
-	e.GET("/session/create", sc.HandleCreateSession)
-	e.GET("/session/refresh", sc.HandleRefreshSession, session_service.AuthenticateCookie)
+	e.GET("/session/create", sc.HandleCreateTempSession)
+	// e.GET("/session/refresh", sc.HandleRefreshSession, session_service.AuthenticateCookie)
 }

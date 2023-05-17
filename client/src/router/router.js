@@ -9,26 +9,26 @@ const routes = [
     { name: 'Home', path: "/", component: Home },
     {
         name: 'Game', path: "/game/:id", component: Board,
-        beforeEnter: async (to, from, next) => {
-            const store = useGameStore();
-            const { checkClient } = store
-            let playerStore = storeToRefs(store);
+        // beforeEnter: async (to, from, next) => {
+        //     const store = useGameStore();
+        //     const { checkClient } = store
+        //     let playerStore = storeToRefs(store);
 
-            let res = await checkClient()
-            if (!res.allowed) {
-                next({ name: 'Home' })
-                return
-            } else {
-                if (!playerStore.Player.value.inGame && playerStore.Player.value.game.ID != to.params.id) {
-                    next({ name: 'Home' })
-                    return
-                } else {
-                    next()
-                    return
-                }
-            }
+        //     let res = await checkClient()
+        //     if (!res.allowed) {
+        //         next({ name: 'Home' })
+        //         return
+        //     } else {
+        //         if (!playerStore.Player.value.inGame && playerStore.Player.value.game.ID != to.params.id) {
+        //             next({ name: 'Home' })
+        //             return
+        //         } else {
+        //             next()
+        //             return
+        //         }
+        //     }
 
-        }
+        // }
     }
 ];
 

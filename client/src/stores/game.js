@@ -47,6 +47,7 @@ export const useGameStore = defineStore('game', {
           try {
             await APIClient.CreateSession(cookiePair[1])
             this.Player.id = cookiePair[1]
+            console.log("THIS PLAYER ID RETURNING", this.Player.id)
             return
           } catch (e) {
             console.log("could not create session for returning player, creating new temp user")
@@ -56,6 +57,7 @@ export const useGameStore = defineStore('game', {
       try {
         const id = await APIClient.CreatePlayer()
         this.Player.id = id
+        console.log("THIS PLAYER ID NOT RETURNING", this.Player.id)
       } catch (e) {
         console.log("Error creating player in store", e)
       }

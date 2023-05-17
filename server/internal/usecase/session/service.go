@@ -5,27 +5,25 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
-	"github.com/labstack/echo/v4"
 )
 
 type InteractorI interface {
 	IsSessionExpired(token string) bool
+	GetTempSessionExpiry() time.Time
 	Create(playerId string, expiry time.Time) string
 	Get(token string) (*entity.Session, error)
 	Delete(token string)
-	AuthenticateCookie(next echo.HandlerFunc) echo.HandlerFunc // Middleware
-	Refresh(token string)
-	GetExpiry() time.Duration
+	Refresh(token string) (string, error)
 }
 
 func NewService(repo repository.SessionRepositoryI) InteractorI {
 	return &SessionService{
-		repo:          repo,
-		sessionExpiry: 120 * time.Second,
+		repo:                  repo,
+		temp_session_duration: 1 * time.Minute, // TODO change to 5 minutes
 	}
 }
 
 type SessionService struct {
-	repo          repository.SessionRepositoryI
-	sessionExpiry time.Duration
+	repo                  repository.SessionRepositoryI
+	temp_session_duration time.Duration
 }

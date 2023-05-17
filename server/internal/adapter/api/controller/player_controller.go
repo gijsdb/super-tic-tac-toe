@@ -11,48 +11,48 @@ import (
 )
 
 type PlayerController struct {
-	playerService  player.InteractorI
-	sessionService session.InteractorI
+	player_service  player.InteractorI
+	session_service session.InteractorI
 }
 
 func NewPlayerController(playerService player.InteractorI, sessionService session.InteractorI) PlayerController {
 	return PlayerController{
-		playerService:  playerService,
-		sessionService: sessionService,
+		player_service:  playerService,
+		session_service: sessionService,
 	}
 }
 
 // make unauthenticated user use different cookie and store relevant data in the cookie so the user can continue with that cookie if they return
-func (pc *PlayerController) HandleCreatePlayer(c echo.Context) error {
-	player_id := pc.playerService.Create()
+func (pc *PlayerController) HandleCreateTempPlayer(c echo.Context) error {
+	player_id := pc.player_service.Create()
 
-	session_expiry := pc.getSessionExpiry()
-	session := pc.sessionService.Create(player_id, session_expiry)
-	c.SetCookie(&http.Cookie{Name: "session_token", Value: session, Expires: session_expiry, SameSite: http.SameSiteStrictMode, Path: "/"})
-	c.SetCookie(&http.Cookie{Name: "temp_account", Value: player_id, Expires: time.Now().Add(730 * time.Hour), SameSite: http.SameSiteStrictMode, Path: "/"})
+	session_expiry := pc.session_service.GetTempSessionExpiry()
+	session := pc.session_service.Create(player_id, session_expiry)
+
+	c.SetCookie(CreateCookie("session_token", session, session_expiry, true))
+	c.SetCookie(CreateCookie("temp_account", player_id, time.Now().Add(730*time.Hour), false))
+
 	return c.JSON(http.StatusOK, player_id)
 }
 
+// --------------- OAUTH -----------//
+
 func (pc *PlayerController) HandleOauthLogin(c echo.Context) error {
-	url := pc.playerService.OauthLogin()
+	url := pc.player_service.OauthLogin()
 
 	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
-	player_id, err := pc.playerService.GoogleCallback(c.FormValue("state"), c.FormValue("code"))
+	player_id, err := pc.player_service.GoogleCallback(c.FormValue("state"), c.FormValue("code"))
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 
-	session_expiry := pc.getSessionExpiry()
-	session := pc.sessionService.Create(player_id, session_expiry)
+	session_expiry := pc.session_service.GetTempSessionExpiry()
+	session := pc.session_service.Create(player_id, session_expiry)
 
-	c.SetCookie(&http.Cookie{Name: "session_token", Value: session, Expires: session_expiry, SameSite: http.SameSiteStrictMode, Path: "/"})
+	c.SetCookie(CreateCookie("session_token", session, session_expiry, true))
 	return c.Redirect(http.StatusTemporaryRedirect, "http://localhost:3000/")
-}
-
-func (pc *PlayerController) getSessionExpiry() time.Time {
-	return time.Now().Add(pc.sessionService.GetExpiry())
 }

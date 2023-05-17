@@ -116,6 +116,6 @@ onUnmounted(() => {
 });
 
 window.onbeforeunload = async () => {
-  removeClient();
+  // removeClient();
 };
 </script>

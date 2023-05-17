@@ -7,9 +7,9 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewPlayerRouter(e *echo.Echo, pService player.InteractorI, sService session.InteractorI) {
-	var pc = controller.NewPlayerController(pService, sService)
-	e.GET("/player/create", pc.HandleCreatePlayer)
+func NewPlayerRouter(e *echo.Echo, player_service player.InteractorI, session_service session.InteractorI) {
+	var pc = controller.NewPlayerController(player_service, session_service)
+	e.GET("/player/create", pc.HandleCreateTempPlayer)
 	e.GET("/login", pc.HandleOauthLogin)
 	e.GET("/callback", pc.HandleGoogleCallback)
 }
