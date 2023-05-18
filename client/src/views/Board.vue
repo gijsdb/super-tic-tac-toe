@@ -64,10 +64,10 @@ let feedbackLoop = null;
 let waitForPlayerInterval = null;
 let refreshInterval = null;
 
-const beforeWindowUnload = (e) => {
-  leaveGame();
-  router.push("/");
-};
+// const beforeWindowUnload = (e) => {
+//   leaveGame();
+//   router.push("/");
+// };
 
 const clearDiceHandler = () => {
   rolled.value = true;
@@ -111,10 +111,8 @@ const updateMessage = async (verdict) => {
 };
 
 onMounted(() => {
-  window.addEventListener("beforeunload", function (e) {
-    console.log(e);
-    beforeWindowUnload(e);
-  });
+  // prevents popup "Changes you made may not be saved" 
+  window.onbeforeunload = null
   if (!playerStore.Player.value.game.full) {
     waitForPlayerInterval = setInterval(async () => {
       await refreshGame();
@@ -123,7 +121,10 @@ onMounted(() => {
     clearInterval(waitForPlayerInterval);
   }
   refreshInterval = setInterval(async () => {
-    await refreshGame();
+    let res = await refreshGame();
+    if (res === "game abandoned") {
+      router.push("/")
+    }
   }, 1000);
   feedbackLoop = setInterval(() => {
     checkMessage();
@@ -134,7 +135,6 @@ onBeforeUnmount(() => {
   clearInterval(waitForPlayerInterval);
   clearInterval(refreshInterval);
   clearInterval(feedbackLoop);
-  window.removeEventListener("beforeunload", beforeWindowUnload);
   leaveGame();
 });
 </script>

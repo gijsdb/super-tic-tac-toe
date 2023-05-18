@@ -70,7 +70,7 @@ const APIClient = {
       url: resource,
       data,
     }).then((req) => {
-      if (req.status >= 500) {
+      if (req.status >= 400) {
         if (req.data.Error !== undefined) {
           throw new Error(req.data.Error);
         }

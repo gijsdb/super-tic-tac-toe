@@ -24,6 +24,7 @@ export const useGameStore = defineStore('game', {
           last_roll: [0, 0]
         },
       },
+      FlashMessage: ''
     }
   },
   getters: {
@@ -47,7 +48,6 @@ export const useGameStore = defineStore('game', {
           try {
             await APIClient.CreateSession(cookiePair[1])
             this.Player.id = cookiePair[1]
-            console.log("THIS PLAYER ID RETURNING", this.Player.id)
             return
           } catch (e) {
             console.log("could not create session for returning player, creating new temp user")
@@ -129,9 +129,14 @@ export const useGameStore = defineStore('game', {
           this.Player.turn = false
         }
       } catch (e) {
-        console.log("Error refreshing game in store", e)
-
-        return e
+        // Cookie has expired meaning the player has not interacted with the game
+        if (e.message === "Unauthorized") {
+          this.FlashMessage = "Game abandoned by player"
+          return "game abandoned"
+        } else {
+          console.log("Error refreshing game in store", e.message)
+          return e
+        }
       }
     },
     async updateGameBoard(player, square, circle, game) {
@@ -184,7 +189,10 @@ export const useGameStore = defineStore('game', {
       } catch (e) {
         console.log("Erroring performing OAuth login", e)
       }
-    }
+    },
+    // resetFlashMessage() {
+    //   this.FlashMessage = ''
+    // }
   }
 })
 

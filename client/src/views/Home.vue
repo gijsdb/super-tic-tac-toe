@@ -1,5 +1,8 @@
 <template>
   <div class="flex justify-center my-auto">
+    <!-- <div v-show="store.FlashMessage != ''" class="absolute bg-black text-white p-28 rounded-md text-xl">
+      <p>{{ store.FlashMessage }}</p>
+    </div> -->
     <div class="flex flex-col gap-y-4 text-white items-center bg-black bg-opacity-50 rounded-md p-8 shadow-2xl">
       <h1 class="text-4xl font-white font-bold">Super Tic Tac Toe</h1>
       <div v-show="gamesAvailable"
@@ -55,7 +58,7 @@ import { useGameStore } from "../stores/game.js";
 
 const router = useRouter();
 const store = useGameStore();
-const { registerClient, removeClient, createGame, joinGame } = store;
+const { registerClient, createGame, joinGame } = store;
 let playerStore = storeToRefs(store);
 
 let getGamesLoop;
@@ -109,6 +112,10 @@ onMounted(async () => {
   getGamesLoop = setInterval(async () => {
     await listGames();
   }, 3000);
+
+  // setTimeout(() => {
+  //   resetFlashMessage()
+  // }, 3000)
 });
 
 onUnmounted(() => {
