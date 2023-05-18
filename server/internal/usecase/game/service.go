@@ -10,7 +10,7 @@ type InteractorI interface {
 	Get(id int64) *entity.Game
 	CreateGame(creatingPlayer string) *entity.Game
 	Join(gameId int64, playerId string) (*entity.Game, error)
-	Leave(gameId int64, playerId string) *entity.Game
+	Leave(gameId int64, playerId string) error
 	UpdateBoard(gameId, square, circle int64, playerId string) *entity.Game
 	RemoveCircle(gameId, square, circle int64, playerId string) *entity.Game
 	RollDice(dice1, dice2 int, gameId int64) *entity.Game

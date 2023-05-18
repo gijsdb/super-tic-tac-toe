@@ -2,7 +2,6 @@ package entity
 
 import "github.com/inconshreveable/log15"
 
-// Gameboard represents the game board
 type GameBoard struct {
 	Player1 string   `json:"player_1"`
 	Player2 string   `json:"player_2"`

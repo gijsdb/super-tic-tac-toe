@@ -62,30 +62,6 @@ export const useGameStore = defineStore('game', {
         console.log("Error creating player in store", e)
       }
     },
-    // Replace with deleting session for user AKA logout
-    // removeClient() {
-    //   APIClient.RemovePlayer(this.Player.id);
-    // },
-    // REPLACE WITH REFRESHING SESSION
-    async checkClient() {
-      if (this.Player.id === '') {
-        return { allowed: false, reason: "no client id" }
-      }
-      var cookieArr = document.cookie.split(";");
-      for (var i = 0; i < cookieArr.length; i++) {
-        var cookiePair = cookieArr[i].split("=");
-        if (cookiePair[0].trim() === "client_id") {
-          // Check cookie and store match
-          if (!cookiePair[1] === this.Player.id) {
-            return { allowed: false, reason: "Cookie does not match store" }
-          }
-          // Make sure player is active
-          await APIClient.CreatePlayer(cookiePair[1])
-
-          return { allowed: true, reason: "player active, cookie matches store" }
-        }
-      }
-    },
     async createGame() {
       try {
         const res = await APIClient.CreateGame(this.Player.id);
@@ -112,11 +88,13 @@ export const useGameStore = defineStore('game', {
     },
     async leaveGame() {
       try {
-        const res = await APIClient.LeaveGame(this.Player.game.ID, this.Player.id)
+        await APIClient.LeaveGame(this.Player.game.ID, this.Player.id)
         this.Player.inGame = false
         this.Player.game = {}
       } catch (e) {
         console.log("Error leaving game", e)
+        this.Player.inGame = false
+        this.Player.game = {}
       }
     },
     async refreshGame() {

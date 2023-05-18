@@ -58,7 +58,12 @@ func (gc *GameController) HandleLeave(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, gc.service.Leave(game, c.QueryParam("player")))
+	err = gc.service.Leave(game, c.QueryParam("player"))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (gc *GameController) HandleUpdateBoard(c echo.Context) error {

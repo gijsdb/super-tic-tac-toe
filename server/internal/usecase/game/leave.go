@@ -1,13 +1,15 @@
 package game
 
 import (
+	"fmt"
 	"time"
-
-	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *GameService) Leave(gameId int64, leavingPlayer string) *entity.Game {
+func (s *GameService) Leave(gameId int64, leavingPlayer string) error {
 	game := s.repo.Get(gameId)
+	if game == nil {
+		return fmt.Errorf("game being left does not exist")
+	}
 
 	for i, player := range game.Players {
 		if player == leavingPlayer {
@@ -18,6 +20,7 @@ func (s *GameService) Leave(gameId int64, leavingPlayer string) *entity.Game {
 	game.GameOver.Over = true
 	game.GameOver.Reason = "Player left the game"
 	game.GameOver.EndTime = time.Now().Unix()
+	s.repo.Update(game)
 
-	return s.repo.Update(game)
+	return nil
 }

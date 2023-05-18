@@ -62,6 +62,7 @@ func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
 	session := pc.session_service.Create(player_id, session_expiry)
 	log15.Debug("PLAYER AUTHENTICATED", "p", pc.player_service.Get(player_id))
 	c.SetCookie(CreateCookie("authenticated", "true", session_expiry, true))
+	// Need to deal with the temp_account cookie from here. The client currently automatically makes a new one
 	c.SetCookie(&http.Cookie{Name: "temp_account", Value: "", MaxAge: -1, SameSite: http.SameSiteStrictMode, Path: "/", Secure: true, HttpOnly: true})
 	c.SetCookie(CreateCookie("session_token", session, session_expiry, true))
 	return c.Redirect(http.StatusTemporaryRedirect, "http://localhost:3000/")
