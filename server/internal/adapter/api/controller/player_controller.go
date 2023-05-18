@@ -7,6 +7,7 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
+	"github.com/inconshreveable/log15"
 	"github.com/labstack/echo/v4"
 )
 
@@ -38,11 +39,18 @@ func (pc *PlayerController) HandleCreateTempPlayer(c echo.Context) error {
 // --------------- OAUTH -----------//
 
 func (pc *PlayerController) HandleOauthLogin(c echo.Context) error {
-	url := pc.player_service.OauthLogin()
+	cookie, err := c.Cookie("temp_account")
+	if err != nil {
+		return fmt.Errorf("no temp account found for google login")
+	}
+
+	url := pc.player_service.OauthLogin(cookie.Value)
 
 	return c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
+// End point used by google servers
+// How do we figure out the current temp id for the user here? We don't receive cookies from google
 func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
 	player_id, err := pc.player_service.GoogleCallback(c.FormValue("state"), c.FormValue("code"))
 	if err != nil {
@@ -52,7 +60,9 @@ func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
 
 	session_expiry := pc.session_service.GetTempSessionExpiry()
 	session := pc.session_service.Create(player_id, session_expiry)
-
+	log15.Debug("PLAYER AUTHENTICATED", "p", pc.player_service.Get(player_id))
+	c.SetCookie(CreateCookie("authenticated", "true", session_expiry, true))
+	c.SetCookie(&http.Cookie{Name: "temp_account", Value: "", MaxAge: -1, SameSite: http.SameSiteStrictMode, Path: "/", Secure: true, HttpOnly: true})
 	c.SetCookie(CreateCookie("session_token", session, session_expiry, true))
 	return c.Redirect(http.StatusTemporaryRedirect, "http://localhost:3000/")
 }

@@ -180,12 +180,6 @@ export const useGameStore = defineStore('game', {
     async OAuthLogin() {
       try {
         await APIClient.OAuthLogin()
-        for (var i = 0; i < cookieArr.length; i++) {
-          var cookiePair = cookieArr[i].split("=");
-          if (cookiePair[0].trim() === "client_id") {
-            this.Player.id = cookiePair[1]
-          }
-        }
       } catch (e) {
         console.log("Erroring performing OAuth login", e)
       }

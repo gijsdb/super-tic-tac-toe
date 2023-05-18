@@ -11,7 +11,7 @@
         }">
           In Game
         </p>
-        <a href="http://localhost:1323/login" target="_blank">login</a>
+        <a href="http://localhost:1323/login">login</a>
       </div>
       <img v-if="playerStore.Player.value.picture == null" class="rounded-full w-14 h-14" src="../assets/avatar.png" />
       <img v-if="playerStore.Player.value.picture != null" class="rounded-full w-14 h-14"

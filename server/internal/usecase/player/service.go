@@ -12,7 +12,7 @@ import (
 type InteractorI interface {
 	Create() string
 	Get(id string) *entity.Player
-	OauthLogin() string
+	OauthLogin(temp_player_id string) string
 	GoogleCallback(state, code string) (string, error)
 }
 
@@ -26,12 +26,18 @@ func NewService(repo repository.PlayerRepositoryI) InteractorI {
 			Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},
 			Endpoint:     google.Endpoint,
 		},
-		oauthStateStrings: make(map[string]bool),
+		oauthStateStrings: make(map[string]*OauthStateString),
 	}
 }
 
 type PlayerService struct {
 	repo              repository.PlayerRepositoryI
 	googleOauthConfig *oauth2.Config
-	oauthStateStrings map[string]bool
+	oauthStateStrings map[string]*OauthStateString
+}
+
+// Todo move to entities?
+type OauthStateString struct {
+	Active         bool
+	Temp_player_id string
 }

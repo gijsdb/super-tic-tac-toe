@@ -12,9 +12,12 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-func (s *PlayerService) OauthLogin() string {
+func (s *PlayerService) OauthLogin(temp_player_id string) string {
 	oauthStateString := generateStateString(charset)
-	s.oauthStateStrings[oauthStateString] = true
+	s.oauthStateStrings[oauthStateString] = &OauthStateString{
+		Active:         true,
+		Temp_player_id: temp_player_id,
+	}
 
 	url := s.googleOauthConfig.AuthCodeURL(oauthStateString)
 	return url
@@ -35,7 +38,7 @@ func generateStateString(charset string) string {
 }
 
 func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
-	content, err := s.getUserInfo(state, code)
+	content, state_string, err := s.getUserInfo(state, code)
 	if err != nil {
 		fmt.Println(err.Error())
 		return "", err
@@ -56,33 +59,34 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 		return "", err
 	}
 
-	p := s.repo.Update(&entity.Player{
-		ID:      temp.ID,
-		Email:   temp.Email,
-		Picture: temp.Picture,
+	player := s.repo.Update(&entity.Player{
+		ID:       state_string.Temp_player_id,
+		GoogleID: temp.ID,
+		Email:    temp.Email,
+		Picture:  temp.Picture,
 	})
 
-	return p.ID, nil
+	return player.ID, nil
 }
 
-func (s *PlayerService) getUserInfo(state string, code string) ([]byte, error) {
-	_, ok := s.oauthStateStrings[state]
+func (s *PlayerService) getUserInfo(state string, code string) ([]byte, *OauthStateString, error) {
+	state_string, ok := s.oauthStateStrings[state]
 	if !ok {
-		return nil, fmt.Errorf("invalid state strings")
+		return nil, nil, fmt.Errorf("invalid state strings")
 	}
 	token, err := s.googleOauthConfig.Exchange(context.Background(), code)
 	if err != nil {
-		return nil, fmt.Errorf("code exchange failed: %s", err.Error())
+		return nil, nil, fmt.Errorf("code exchange failed: %s", err.Error())
 	}
 	response, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + token.AccessToken)
 	if err != nil {
-		return nil, fmt.Errorf("failed getting user info: %s", err.Error())
+		return nil, nil, fmt.Errorf("failed getting user info: %s", err.Error())
 	}
 	defer response.Body.Close()
 	contents, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed reading response body: %s", err.Error())
+		return nil, nil, fmt.Errorf("failed reading response body: %s", err.Error())
 	}
 	delete(s.oauthStateStrings, state)
-	return contents, nil
+	return contents, state_string, nil
 }
