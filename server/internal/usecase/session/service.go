@@ -13,8 +13,8 @@ type InteractorI interface {
 	Create(playerId string, expiry time.Time) string
 	Get(token string) (*entity.Session, error)
 	Delete(token string)
-	Refresh(token string) (string, error)
-	GetPlayerIdFromSession(token string) (string, error)
+	Refresh(token string) (*entity.Session, string, error)
+	// GetPlayerIdFromSession(token string) (string, error)
 }
 
 func NewService(repo repository.SessionRepositoryI) InteractorI {

@@ -35,29 +35,30 @@ func (s *SessionService) Delete(token string) {
 	s.repo.Delete(token)
 }
 
-func (s *SessionService) Refresh(token string) (string, error) {
+func (s *SessionService) Refresh(token string) (*entity.Session, string, error) {
 	current_session, err := s.repo.Get(token)
 	if err != nil {
-		return "", fmt.Errorf("session does not exist - Refresh()::session.go")
+		return nil, "", fmt.Errorf("session does not exist - Refresh()::session.go")
 	}
 
+	// TODO check if player is authenticated or temporary and set expiry accordingly
 	current_session.Expiry = s.GetTempSessionExpiry()
 
 	s.repo.Delete(token)
 
 	new_token := s.repo.Create(current_session)
-	return new_token, nil
+	return &entity.Session{current_session.PlayerID, current_session.Expiry, current_session.CSRF}, new_token, nil
 }
 
 func (s *SessionService) GetTempSessionExpiry() time.Time {
 	return time.Now().Add(s.temp_session_duration)
 }
 
-func (s *SessionService) GetPlayerIdFromSession(token string) (string, error) {
-	session, err := s.repo.Get(token)
-	if err != nil {
-		return "", fmt.Errorf("session not found for token")
-	}
+// func (s *SessionService) GetPlayerIdFromSession(token string) (string, error) {
+// 	session, err := s.repo.Get(token)
+// 	if err != nil {
+// 		return "", fmt.Errorf("session not found for token")
+// 	}
 
-	return session.PlayerID, nil
-}
+// 	return session.PlayerID, nil
+// }

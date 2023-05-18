@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
@@ -38,26 +37,12 @@ func (sm *SessionMiddleware) RenewSession(next echo.HandlerFunc) echo.HandlerFun
 			return c.JSON(http.StatusBadRequest, "bad request")
 		}
 
-		// renew session
-		new_token, err := sm.session_service.Refresh(cookie.Value)
+		new_session, new_token, err := sm.session_service.Refresh(cookie.Value)
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized, "unauthorized: session does not exist during refresh")
 		}
 
-		playerId, err := sm.session_service.GetPlayerIdFromSession(cookie.Value)
-		if err != nil {
-			return c.JSON(http.StatusUnauthorized, "unauthorized: session does not exist")
-		}
-
-		player := sm.player_service.Get(playerId)
-		var session_expiry time.Time
-		if player.Email == "" {
-			session_expiry = sm.session_service.GetTempSessionExpiry()
-		} else {
-			// TODO session_expiry = sm.session_service.GetSessionExpiry()
-		}
-
-		c.SetCookie(&http.Cookie{Name: "session_token", Value: new_token, Expires: session_expiry, SameSite: http.SameSiteStrictMode, Path: "/", Secure: true, HttpOnly: true})
+		c.SetCookie(&http.Cookie{Name: "session_token", Value: new_token, Expires: new_session.Expiry, SameSite: http.SameSiteStrictMode, Path: "/", Secure: true, HttpOnly: true})
 
 		return next(c)
 	}
