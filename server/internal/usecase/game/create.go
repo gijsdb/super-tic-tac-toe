@@ -28,8 +28,7 @@ func newGameboard(creatingPlayer string) entity.GameBoard {
 	board.Winner = ""
 	var squares []entity.Square
 	for i := 0; i < 9; i++ {
-		var square entity.Square
-		square = entity.Square{
+		square := entity.Square{
 			Circles:    initCircles(),
 			CapturedBy: "",
 			Index:      i,

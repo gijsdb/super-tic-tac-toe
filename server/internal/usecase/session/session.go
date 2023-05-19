@@ -47,7 +47,7 @@ func (s *SessionService) Refresh(token string) (*entity.Session, string, error) 
 	s.repo.Delete(token)
 
 	new_token := s.repo.Create(current_session)
-	return &entity.Session{current_session.PlayerID, current_session.Expiry, current_session.CSRF}, new_token, nil
+	return &entity.Session{PlayerID: current_session.PlayerID, Expiry: current_session.Expiry, CSRF: current_session.CSRF}, new_token, nil
 }
 
 func (s *SessionService) GetTempSessionExpiry() time.Time {

@@ -40,11 +40,13 @@ func TestCreate(t *testing.T) {
 
 func TestGet(t *testing.T) {
 	service := SetUp()
+
+	// Get a game that exists
 	expected := service.CreateGame(player_id_one)
-
 	actual := service.Get(expected.ID)
-
 	assert.Equal(t, expected, actual)
+
+	// Get a game that does not exist
 }
 
 func TestIndex(t *testing.T) {
@@ -71,6 +73,10 @@ func TestJoin(t *testing.T) {
 	assert.Equal(t, updated_game.Players, []string{player_id_one, player_id_two})
 	assert.Equal(t, updated_game.Full, true)
 	assert.Equal(t, updated_game.GameBoard.Player2, player_id_two)
+
+	// a player joins a game that is full
+
+	// a player tries to join a game that does not exist
 }
 
 func TestLeave(t *testing.T) {
@@ -92,4 +98,31 @@ func TestLeave(t *testing.T) {
 	assert.Equal(t, []string{player_id_two}, expected.Players)
 
 	// one player creates a game and leaves before another player joins
+}
+
+func TestRollDice(t *testing.T) {
+	service := SetUp()
+
+	game := service.CreateGame(player_id_one)
+	service.Join(game.ID, player_id_two)
+	updated_game := service.RollDice(4, 4, game.ID)
+
+	assert.Equal(t, []int{4, 4}, updated_game.LastRoll)
+}
+
+func TestRemoveCircle(t *testing.T) {
+	service := SetUp()
+
+	game := service.CreateGame(player_id_one)
+	service.Join(game.ID, player_id_two)
+
+	//updated_game := service.RemoveCircle(game.ID, 3, 4, player_id_one)
+}
+
+func TestUpdateBoard(t *testing.T) {
+	//service := SetUp()
+
+	// Check for win if three squares in a row
+	// Ensure player turn has changed
+	//
 }
