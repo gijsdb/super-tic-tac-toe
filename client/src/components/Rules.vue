@@ -2,8 +2,8 @@
   <div>
     <button
       @click="toggleRules"
-      :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Secondary }"
-      class="z-50 w-7 h-7 flex items-center justify-center rounded-full text-white font-bold shadow-2xl"
+      :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, color: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Highlight }"
+      class="z-50 w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-2xl border-2"
     >
       <span v-show="!showRules">?</span>
       <span v-show="showRules">X</span>

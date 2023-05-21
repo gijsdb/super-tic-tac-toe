@@ -4,7 +4,7 @@
     class="w-screen min-h-screen flex flex-col"
   >
     <theme-picker />
-    <div class="py-12 flex self-end px-12">
+    <div class="p-5 flex self-end">
       <player-info></player-info>
     </div>
     <router-view></router-view>
