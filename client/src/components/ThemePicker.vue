@@ -9,19 +9,34 @@
         >
             <button
                 @click="handleToggleThemePicker"
-                class="bg-red-500 flex mx-auto mb-4 px-2 py-1"
+                :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo, color: colorStoreRef.ActiveTheme.value.Primary }"
+                class="flex mx-auto mb-4 px-2 py-1 rounded-md font-bold"
             >Close</button>
 
             <ul class="flex flex-col gap-y-8">
                 <li v-for="color in  colorStoreRef.Themes.value ">
                     <button
-                        :class="{ 'border-2 rounded-3xl': color.Name === colorStoreRef.ActiveTheme.value.Name }"
-                        :style="{ borderColor: colorStoreRef.ActiveTheme.HighlightTwo }"
                         @click="handleChangeTheme(color.Name)"
                         class="flex w-full gap-y-2 justify-between items-center p-2"
                     >
-
-                        <p :style="{ color: colorStoreRef.ActiveTheme.value.Primary }">{{ color.Name }}</p>
+                        <div class="flex gap-x-2">
+                            <svg
+                                v-if="colorStoreRef.ActiveTheme.value.Name === color.Name"
+                                :style="{ stroke: colorStoreRef.ActiveTheme.value.Highlight }"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-check"
+                            >
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <p :style="{ color: colorStoreRef.ActiveTheme.value.Primary }">{{ color.Name }}</p>
+                        </div>
                         <div
                             class="flex gap-x-4 p-2 rounded-3xl"
                             :style="{ backgroundColor: color.Primary }"
