@@ -68,6 +68,10 @@ const APIClient = {
     return this.perform(GET, '/login');
   },
 
+  Logout() {
+    return this.perform(GET, '/logout')
+  },
+
   async perform(method, resource, data) {
     return client({
       method,

@@ -164,10 +164,16 @@ export const useGameStore = defineStore('game', {
         console.log("Erroring performing OAuth login in store", e)
       }
     },
+    async logOut() {
+      try {
+        await APIClient.Logout()
+      } catch (e) {
+        console.log("Erroring logging out player in store", e)
+      }
+    },
     async getPlayer() {
       try {
         let res = await APIClient.GetPlayer(this.Player.id)
-        console.log("res", res)
         this.Player.picture = res.picture
         this.Player.email = res.email
         this.Player.temporary = res.is_temp

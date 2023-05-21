@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
@@ -32,6 +33,15 @@ func (sc *SessionController) HandleCreateTempSession(c echo.Context) error {
 	token := sc.session_service.Create(player_id, session_expiry)
 	c.SetCookie(CreateCookie("session_token", token, session_expiry, true))
 	return nil
+}
+
+func (sc *SessionController) HandleLogout(c echo.Context) error {
+	cookie, _ := c.Cookie("session_token")
+	sc.session_service.Delete(cookie.Value)
+	c.SetCookie(&http.Cookie{Name: "session_token", Value: "", Path: "/", MaxAge: -1, Secure: true, HttpOnly: true})
+	c.SetCookie(&http.Cookie{Name: "temp_account", Value: "", Path: "/", MaxAge: -1, Secure: false, HttpOnly: true})
+
+	return c.Redirect(200, "http://localhost:3000")
 }
 
 // func (sc *SessionController) HandleRefreshSession(c echo.Context) error {
