@@ -4,7 +4,7 @@
         class="fixed w-screen h-screen flex items-center justify-center "
     >
         <div
-            class="px-28 py-8 rounded-xl w-[80vw]"
+            class="px-28 py-8 rounded-xl w-screen sm:w-[80vw]"
             :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary }"
         >
             <button

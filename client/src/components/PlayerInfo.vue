@@ -14,7 +14,10 @@
         </p>
         <div class="flex items-center gap-x-2">
           <rules />
-          <button @click="handleToggleThemePicker()">
+          <button
+            @click="handleToggleThemePicker()"
+            v-show="!gameStoreRef.Player.value.inGame"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

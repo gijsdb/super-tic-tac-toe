@@ -20,7 +20,7 @@ type InteractorI interface {
 func NewService(repo repository.SessionRepositoryI) InteractorI {
 	return &SessionService{
 		repo:                  repo,
-		temp_session_duration: 30 * time.Second, // TODO change to 5 minutes
+		temp_session_duration: 5 * time.Minute, // TODO make configurable?
 	}
 }
 

@@ -1,19 +1,28 @@
 <template>
   <div class="lds-default">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
+    <div :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo }"></div>
   </div>
 </template>
+
+<script setup>
+import { storeToRefs } from "pinia";
+import { useColorStore } from "../stores/color.js";
+
+const colorStore = useColorStore();
+let colorStoreRef = storeToRefs(colorStore);
+
+</script>
 
 <style scoped>
 .lds-default {

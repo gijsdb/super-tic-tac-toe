@@ -1,20 +1,25 @@
 <template>
-  <div class="bg-black bg-opacity-60 p-8 rounded-2xl flex flex-col items-center justify-center text-center">
+  <div
+    class=" p-8 rounded-2xl flex flex-col items-center justify-center text-center"
+    :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
+  >
     <p
-      class="text-sm text-white font-bold py-2 w-10/12"
+      class="text-sm font-bold py-2 w-10/12"
+      :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
       v-if="message != null"
     >{{ message }}</p>
-    <div v-if="!playerStore.Player.value.turn">
+    <div v-if="!gameStoreRef.Player.value.turn">
       <ul
-        v-if="!playerStore.Player.value.game.last_roll != '0,0'"
+        v-if="!gameStoreRef.Player.value.game.last_roll != '0,0'"
         class="flex text-red-500 text-6xl"
         id="lastroll"
       ></ul>
     </div>
     <button
-      :disabled="!playerStore.Player.value.turn || diceRolled"
+      :disabled="!gameStoreRef.Player.value.turn || diceRolled"
       @click="rollDiceHandler"
-      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
+      :style="diceButtonStyle"
+      class="rounded-md p-4 text-white font-bold "
     >
       Roll dice
     </button>
@@ -26,19 +31,43 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useGameStore } from "../stores/game.js";
+import { useColorStore } from "../stores/color.js";
+
 import { storeToRefs } from "pinia";
 
 const props = defineProps({
   rolled: Boolean,
 });
 
-const store = useGameStore();
-let playerStore = storeToRefs(store);
-const { rollDice } = store;
+const gameStore = useGameStore();
+const colorStore = useColorStore();
+
+let gameStoreRef = storeToRefs(gameStore);
+let colorStoreRef = storeToRefs(colorStore);
+
+
+const { rollDice } = gameStore;
 let diceRolled = ref(false);
 let message = ref(null);
+
+
+const diceButtonStyle = computed(() => {
+  console.log(gameStoreRef.Player.value.turn);
+  console.log(diceRolled.value);
+  if (!gameStoreRef.Player.value.turn && diceRolled) {
+    return {
+      backgroundColor: 'gray',
+      color: colorStoreRef.ActiveTheme.value.Primary
+    }
+  } else {
+    return {
+      backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo,
+      color: colorStoreRef.ActiveTheme.value.Primary
+    }
+  }
+})
 
 const rollDiceHandler = async () => {
   let values = createDice();
@@ -51,7 +80,7 @@ const rollDiceHandler = async () => {
   let totalAvailableCircles = 0;
 
   // Loop over each square on the board
-  store.Player.game.game_board.squares.forEach((square) => {
+  gameStore.Player.game.game_board.squares.forEach((square) => {
     // If a square is captured by a player, it is locked and no moves can be made on it so we ignore it from the count of circles left
     if (square.captured_by == "") {
       let circleCount = 0;
@@ -127,8 +156,8 @@ const showLastRoll = () => {
   const dice2 = document.createElement("li");
   dice1.className = "roll";
   dice2.className = "roll";
-  dice1.innerHTML = `&#x268${playerStore.Player.value.game.last_roll[0] - 1};`;
-  dice2.innerHTML = `&#x268${playerStore.Player.value.game.last_roll[1] - 1};`;
+  dice1.innerHTML = `&#x268${gameStoreRef.Player.value.game.last_roll[0] - 1};`;
+  dice2.innerHTML = `&#x268${gameStoreRef.Player.value.game.last_roll[1] - 1};`;
   document.getElementById("lastroll").appendChild(dice1);
   document.getElementById("lastroll").appendChild(dice2);
 };
@@ -143,9 +172,9 @@ const clearDice = () => {
 };
 
 watch(
-  () => store.Player.game.last_roll,
+  () => gameStore.Player.game.last_roll,
   (newRoll, oldRoll) => {
-    if (playerStore.Player.value.turn) {
+    if (gameStoreRef.Player.value.turn) {
       return;
     }
     if (newRoll[0] == 0 && newRoll[1] == 0) {
@@ -158,7 +187,7 @@ watch(
 );
 
 watch(
-  () => store.Player.turn,
+  () => gameStore.Player.turn,
   () => {
     diceRolled.value = false;
   }
