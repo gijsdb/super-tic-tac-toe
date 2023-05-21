@@ -16,31 +16,37 @@
       v-for="(circle, idx) in playerStore.Player.value.game.game_board.squares[squareIdx].circles"
       class="flex flex-col mx-auto items-center p-1.5 rounded-xl"
       :class="{
-        'border-red-500 border-2':
-          idx + 3 == 7 &&
-          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== playerStore.Player.value.id &&
-          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-        'border-blue-500 border-2':
-          idx + 3 == 7 &&
-          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == playerStore.Player.value.id &&
-          playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-        'border-white border-2':
-          idx + 3 == 7 && playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == '',
-      }"
+          'border-red-500 border-2':
+            idx + 3 == 7 &&
+            playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== playerStore.Player.value.id &&
+            playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
+          'border-blue-500 border-2':
+            idx + 3 == 7 &&
+            playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == playerStore.Player.value.id &&
+            playerStore.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
+          'border-white border-2':
+            idx + 3 == 7 && playerStore.Player.value.game.game_board.squares[squareIdx].captured_by == '',
+        }"
       @click="updateboard(idx)"
     >
-      <span v-if="idx + 3 != 7" class="text-sm text-white ml-1">{{ idx + 3 }}</span>
-      <span v-if="idx + 3 == 7" class="text-sm text-white ml-1">{{ squareIdx + 3 }}</span>
+      <span
+        v-if="idx + 3 != 7"
+        class="text-sm text-white ml-1"
+      >{{ idx + 3 }}</span>
+      <span
+        v-if="idx + 3 == 7"
+        class="text-sm text-white ml-1"
+      >{{ squareIdx + 3 }}</span>
       <div
         class="w-8 h-8 rounded-full"
         :class="{
           'bg-red-500':
             playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !==
-              playerStore.Player.value.id &&
+            playerStore.Player.value.id &&
             playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
           'bg-blue-500':
             playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by ==
-              playerStore.Player.value.id &&
+            playerStore.Player.value.id &&
             playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
           'bg-black': playerStore.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by == '',
         }"

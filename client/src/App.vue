@@ -1,7 +1,10 @@
 <template>
-  <div class="w-screen min-h-screen bg-gradient flex flex-col ">
-    <div class="flex justify-between p-2 ">
-      <rules></rules>
+  <div
+    :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Primary }"
+    class="w-screen min-h-screen flex flex-col"
+  >
+    <theme-picker />
+    <div class="py-12 flex self-end px-12">
       <player-info></player-info>
     </div>
     <router-view></router-view>
@@ -11,7 +14,12 @@
 <style></style>
 
 <script setup>
+import { storeToRefs } from "pinia";
 import { RouterView } from "vue-router";
 import PlayerInfo from "./components/PlayerInfo.vue";
-import Rules from "./components/Rules.vue";
+import ThemePicker from "./components/ThemePicker.vue";
+
+import { useColorStore } from "./stores/color.js";
+const colorStore = useColorStore();
+let colorStoreRef = storeToRefs(colorStore);
 </script>

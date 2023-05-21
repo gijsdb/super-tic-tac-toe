@@ -1,25 +1,35 @@
 <template>
   <div class="flex justify-center my-auto">
-    <!-- <div v-show="store.FlashMessage != ''" class="absolute bg-black text-white p-28 rounded-md text-xl">
-      <p>{{ store.FlashMessage }}</p>
-    </div> -->
     <div class="flex flex-col gap-y-4 text-white items-center bg-black bg-opacity-50 rounded-md p-8 shadow-2xl">
       <h1 class="text-4xl font-white font-bold">Super Tic Tac Toe</h1>
-      <div v-show="gamesAvailable"
-        class="p-8 my-4 text-white overflow-y-scroll space-y-4 max-h-40vh border-y custom-scroll-bar">
-        <div class="flex border-2 rounded-md" :key="game.ID" v-for="game in games" v-show="!game.game_over.over">
+      <div
+        v-show="gamesAvailable"
+        class="p-8 my-4 text-white overflow-y-scroll space-y-4 max-h-40vh border-y custom-scroll-bar"
+      >
+        <div
+          class="flex border-2 rounded-md"
+          :key="game.ID"
+          v-for="game in games"
+          v-show="!game.game_over.over"
+        >
           <div class="mx-2 flex flex-col justify-center text-xl px-4">
             <p>Game waiting for player</p>
           </div>
-          <button class="p-4 border-l-2 border-white font-bold text-xl px-6"
-            :class="{ 'bg-red-600': game.full, 'bg-green-500': !game.full }" @click="JoinGame(game.ID)"
-            :disabled="game.full">
+          <button
+            class="p-4 border-l-2 border-white font-bold text-xl px-6"
+            :class="{ 'bg-red-600': game.full, 'bg-green-500': !game.full }"
+            @click="JoinGame(game.ID)"
+            :disabled="game.full"
+          >
             <p v-if="!game.full">Join</p>
             <p v-if="game.full">Full</p>
           </button>
         </div>
       </div>
-      <button @click="createGameHandler()" class="bg-[#1fddff] p-4 rounded-md text-white font-bold">Create New
+      <button
+        @click="createGameHandler()"
+        class="bg-[#1fddff] p-4 rounded-md text-white font-bold"
+      >Create New
         Game</button>
     </div>
   </div>

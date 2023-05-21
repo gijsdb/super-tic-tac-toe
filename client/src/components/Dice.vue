@@ -1,14 +1,27 @@
 <template>
   <div class="bg-black bg-opacity-60 p-8 rounded-2xl flex flex-col items-center justify-center text-center">
-    <p class="text-sm text-white font-bold py-2 w-10/12" v-if="message != null">{{ message }}</p>
+    <p
+      class="text-sm text-white font-bold py-2 w-10/12"
+      v-if="message != null"
+    >{{ message }}</p>
     <div v-if="!playerStore.Player.value.turn">
-      <ul v-if="!playerStore.Player.value.game.last_roll != '0,0'" class="flex text-red-500 text-6xl" id="lastroll"></ul>
+      <ul
+        v-if="!playerStore.Player.value.game.last_roll != '0,0'"
+        class="flex text-red-500 text-6xl"
+        id="lastroll"
+      ></ul>
     </div>
-    <button :disabled="!playerStore.Player.value.turn || diceRolled" @click="rollDiceHandler"
-      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500">
+    <button
+      :disabled="!playerStore.Player.value.turn || diceRolled"
+      @click="rollDiceHandler"
+      class="bg-green-500 rounded-md p-4 text-white font-bold disabled:bg-gray-500"
+    >
       Roll dice
     </button>
-    <ul class="flex text-white text-6xl" id="rolls"></ul>
+    <ul
+      class="flex text-white text-6xl"
+      id="rolls"
+    ></ul>
   </div>
 </template>
 

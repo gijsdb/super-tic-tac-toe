@@ -5,18 +5,23 @@
 
       <div v-show="playerStore.Player.value.game.game_over.reason !== 'Player left the game'">
         <p v-show="playerStore.Player.value.game.winner == playerStore.Player.value.id">You win</p>
-        <p v-show="
-          playerStore.Player.value.game.winner !== playerStore.Player.value.id &&
+        <p v-show="playerStore.Player.value.game.winner !== playerStore.Player.value.id &&
           playerStore.Player.value.game.game_over.reason !== 'Player left the game'
-        ">
+          ">
           You lose
         </p>
       </div>
 
-      <p class="text-xl" v-show="playerStore.Player.value.game.game_over.reason === 'Player left the game'">
+      <p
+        class="text-xl"
+        v-show="playerStore.Player.value.game.game_over.reason === 'Player left the game'"
+      >
         Other player left!
       </p>
-      <button class="bg-[#1fddff] font-bold rounded-md text-2xl py-2 my-2" @click="returnToMenu">Menu</button>
+      <button
+        class="bg-[#1fddff] font-bold rounded-md text-2xl py-2 my-2"
+        @click="returnToMenu"
+      >Menu</button>
     </div>
   </div>
 </template>
