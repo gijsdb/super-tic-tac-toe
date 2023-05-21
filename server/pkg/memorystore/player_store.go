@@ -1,6 +1,7 @@
 package memorystore
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
@@ -8,7 +9,7 @@ import (
 
 type PlayerStore struct {
 	mutex   sync.Mutex
-	players map[string]*entity.Player
+	players map[string]*entity.Player // Indexed by ID
 }
 
 func NewPlayerMemoryStore() *PlayerStore {
@@ -28,6 +29,16 @@ func (ps *PlayerStore) Create(player *entity.Player) string {
 
 func (ps *PlayerStore) Get(playerId string) *entity.Player {
 	return ps.players[playerId]
+}
+
+func (ps *PlayerStore) GetByEmail(email string) (*entity.Player, error) {
+	for _, player := range ps.players {
+		if player.Email == email {
+			return player, nil
+		}
+	}
+
+	return nil, fmt.Errorf("can't find player by provided email %s", email)
 }
 
 func (ps *PlayerStore) Update(player *entity.Player) *entity.Player {

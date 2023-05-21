@@ -61,13 +61,25 @@ func (sm *SessionMiddleware) CheckSession(next echo.HandlerFunc) echo.HandlerFun
 			return c.JSON(http.StatusBadRequest, "bad request")
 		}
 
-		_, err = sm.session_service.Get(cookie.Value)
+		session, err := sm.session_service.Get(cookie.Value)
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized, "unauthorized: session does not exist")
 		}
 
 		expired := sm.session_service.IsSessionExpired(cookie.Value)
 		if expired {
+			// Check if the player is authenticated with google, if so set to false
+			// return a redirect to login
+			player, err := sm.player_service.Get(session.PlayerID)
+			if err != nil {
+				return c.JSON(http.StatusUnauthorized, "unauthorized: player not found for session")
+			}
+
+			if !player.IsTemp {
+				sm.session_service.Delete(cookie.Value)
+				return c.Redirect(302, "http://localhost:1323/login")
+			}
+
 			sm.session_service.Delete(cookie.Value)
 			return c.JSON(http.StatusUnauthorized, "unauthorized: session expired")
 		}

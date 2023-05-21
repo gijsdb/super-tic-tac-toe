@@ -11,7 +11,9 @@ import (
 
 type InteractorI interface {
 	Create() string
-	Get(id string) *entity.Player
+	Get(id string) (*entity.Player, error)
+	GetByEmail(email string) (*entity.Player, error)
+	Update(player *entity.Player) *entity.Player
 	OauthLogin(temp_player_id string) string
 	GoogleCallback(state, code string) (string, error)
 }

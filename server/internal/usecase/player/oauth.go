@@ -37,13 +37,14 @@ func generateStateString(charset string) string {
 	return string(b)
 }
 
+// TODO:
+// What if user loses their temp_account cookie and logs in with new temp account
 func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 	content, state_string, err := s.getUserInfo(state, code)
 	if err != nil {
 		fmt.Println(err.Error())
 		return "", err
 	}
-	fmt.Printf("Content: %s\n", content)
 
 	type oauthContent struct {
 		ID            string `json:"id"`
@@ -51,7 +52,6 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 		VerifiedEmail bool   `json:"verified_email"`
 		Picture       string `json:"picture"`
 	}
-
 	var temp oauthContent
 
 	err = json.Unmarshal(content, &temp)
@@ -59,13 +59,22 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 		return "", err
 	}
 
-	player := s.repo.Update(&entity.Player{
-		ID:       state_string.Temp_player_id,
-		GoogleID: temp.ID,
-		Email:    temp.Email,
-		Picture:  temp.Picture,
-	})
+	// check if player exists with email
+	player, err := s.repo.GetByEmail(temp.Email)
 
+	if err != nil {
+		player = s.repo.Update(&entity.Player{
+			ID:       state_string.Temp_player_id,
+			GoogleID: temp.ID,
+			Email:    temp.Email,
+			Picture:  temp.Picture,
+			IsTemp:   false,
+		})
+
+		return player.ID, nil
+	}
+
+	// player already exists, return player ID
 	return player.ID, nil
 }
 

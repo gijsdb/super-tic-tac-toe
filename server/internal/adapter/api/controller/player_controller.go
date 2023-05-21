@@ -7,7 +7,6 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
-	"github.com/inconshreveable/log15"
 	"github.com/labstack/echo/v4"
 )
 
@@ -36,6 +35,16 @@ func (pc *PlayerController) HandleCreateTempPlayer(c echo.Context) error {
 	return c.JSON(http.StatusOK, player_id)
 }
 
+func (pc *PlayerController) HandleGetPlayer(c echo.Context) error {
+	id := c.Param("id")
+	player, err := pc.player_service.Get(id)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(200, player)
+}
+
 // --------------- OAUTH -----------//
 
 func (pc *PlayerController) HandleOauthLogin(c echo.Context) error {
@@ -60,10 +69,8 @@ func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
 
 	session_expiry := pc.session_service.GetTempSessionExpiry()
 	session := pc.session_service.Create(player_id, session_expiry)
-	log15.Debug("PLAYER AUTHENTICATED", "p", pc.player_service.Get(player_id))
-	c.SetCookie(CreateCookie("authenticated", "true", session_expiry, true))
-	// Need to deal with the temp_account cookie from here. The client currently automatically makes a new one
-	c.SetCookie(&http.Cookie{Name: "temp_account", Value: "", MaxAge: -1, SameSite: http.SameSiteStrictMode, Path: "/", Secure: true, HttpOnly: true})
+
+	c.SetCookie(CreateCookie("temp_account", player_id, session_expiry, false))
 	c.SetCookie(CreateCookie("session_token", session, session_expiry, true))
 	return c.Redirect(http.StatusTemporaryRedirect, "http://localhost:3000/")
 }

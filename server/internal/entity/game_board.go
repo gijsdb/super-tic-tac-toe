@@ -1,7 +1,5 @@
 package entity
 
-import "github.com/inconshreveable/log15"
-
 type GameBoard struct {
 	Player1 string   `json:"player_1"`
 	Player2 string   `json:"player_2"`
@@ -54,11 +52,9 @@ func (gb *GameBoard) CheckCirclesCondition(s Square) Square {
 	)
 	switch {
 	case x && !o:
-		log15.Debug("Player 1 has captured a square")
 		s.CapturedBy = gb.Player1
 		return s
 	case o && !x:
-		log15.Debug("Player 2 has captured a square")
 		s.CapturedBy = gb.Player2
 		return s
 	case !freeCellsLeft:

@@ -24,6 +24,10 @@ const APIClient = {
     return this.perform(GET, `/player/create`);
   },
 
+  GetPlayer(playerId) {
+    return this.perform(GET, `/player/${playerId}`)
+  },
+
   CreateSession(playerId) {
     return this.perform(GET, `/session/create?player=${playerId}`);
   },

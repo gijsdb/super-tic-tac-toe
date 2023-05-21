@@ -3,7 +3,8 @@
     <div class="flex justify-end items-center">
       <div class="flex-col mr-4 text-sm text-white">
         <p>
-          <span class="font-bold mr-2">{{ generateName(playerStore.Player.value.id) }}</span>
+          <span class="font-bold mr-2">{{ generateName(playerStore.Player.value.id) }} {{
+            playerStore.Player.value.temporary }}</span>
         </p>
         <p class="font-bold" :class="{
           'text-red-500': !playerStore.Player.value.inGame,

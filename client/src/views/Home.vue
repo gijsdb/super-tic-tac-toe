@@ -58,7 +58,7 @@ import { useGameStore } from "../stores/game.js";
 
 const router = useRouter();
 const store = useGameStore();
-const { registerClient, createGame, joinGame } = store;
+const { registerClient, createGame, joinGame, getPlayer } = store;
 let playerStore = storeToRefs(store);
 
 let getGamesLoop;
@@ -107,6 +107,7 @@ const createGameHandler = async () => {
 
 onMounted(async () => {
   await registerClient();
+  await getPlayer();
   await listGames();
 
   getGamesLoop = setInterval(async () => {

@@ -10,6 +10,7 @@ import (
 func NewPlayerRouter(e *echo.Echo, player_service player.InteractorI, session_service session.InteractorI) {
 	var pc = controller.NewPlayerController(player_service, session_service)
 	e.GET("/player/create", pc.HandleCreateTempPlayer)
+	e.GET("/player/:id", pc.HandleGetPlayer)
 	e.GET("/login", pc.HandleOauthLogin)
 	e.GET("/callback", pc.HandleGoogleCallback)
 }

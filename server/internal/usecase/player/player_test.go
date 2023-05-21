@@ -15,7 +15,8 @@ func TestGet(t *testing.T) {
 	service := SetUp()
 
 	expected := service.Create()
-	actual := service.Get(expected)
+	actual, err := service.Get(expected)
+	assert.NoError(t, err)
 	assert.Equal(t, expected, actual.ID)
 }
 

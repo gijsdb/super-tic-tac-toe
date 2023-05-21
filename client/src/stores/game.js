@@ -7,6 +7,9 @@ export const useGameStore = defineStore('game', {
       Player: {
         id: '',
         name: 'Player',
+        temporary: true,
+        email: '',
+        picture: '',
         inGame: false,
         turn: false,
         diceRolled: false,
@@ -57,7 +60,6 @@ export const useGameStore = defineStore('game', {
       try {
         const id = await APIClient.CreatePlayer()
         this.Player.id = id
-        console.log("THIS PLAYER ID NOT RETURNING", this.Player.id)
       } catch (e) {
         console.log("Error creating player in store", e)
       }
@@ -159,12 +161,20 @@ export const useGameStore = defineStore('game', {
       try {
         await APIClient.OAuthLogin()
       } catch (e) {
-        console.log("Erroring performing OAuth login", e)
+        console.log("Erroring performing OAuth login in store", e)
       }
     },
-    // resetFlashMessage() {
-    //   this.FlashMessage = ''
-    // }
+    async getPlayer() {
+      try {
+        let res = await APIClient.GetPlayer(this.Player.id)
+        console.log("res", res)
+        this.Player.picture = res.picture
+        this.Player.email = res.email
+        this.Player.temporary = res.is_temp
+      } catch (e) {
+        console.log("Erroring getting player in store", e)
+      }
+    }
   }
 })
 

@@ -23,8 +23,8 @@ func NewSessionController(session_service session.InteractorI, player_service pl
 func (sc *SessionController) HandleCreateTempSession(c echo.Context) error {
 	player_id := c.QueryParam("player")
 
-	player := sc.player_service.Get(player_id)
-	if player == nil {
+	_, err := sc.player_service.Get(player_id)
+	if err != nil {
 		return fmt.Errorf("no player found for provided id")
 	}
 
