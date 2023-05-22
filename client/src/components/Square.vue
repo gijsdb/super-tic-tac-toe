@@ -1,13 +1,13 @@
 <template>
   <div
     :class="{
-      'capturedByOppositionBorder border-2':
+      'border-red-500 border-2':
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== gameStoreRef.Player.value.id &&
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-      'capturedByYouBorder border-2':
+      'border-blue-500 border-2':
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == gameStoreRef.Player.value.id &&
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-      'unCapturedBorder border-2': gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == '',
+      'border-white border-2': gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == '',
     }"
     class="lg:m-2 m-1 grid grid-cols-3 items-center"
   >
@@ -16,15 +16,15 @@
       v-for="(circle, idx) in gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles"
       class="flex flex-col mx-auto items-center p-1.5 rounded-xl"
       :class="{
-          'capturedByOppositionBorder border-2':
+          'border-red-500 border-2':
             idx + 3 == 7 &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-          'capturedByYouBorder border-2':
+          'border-blue-500 border-2':
             idx + 3 == 7 &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-          'unCapturedBorder border-2':
+          'border-white border-2':
             idx + 3 == 7 && gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == '',
         }"
       @click="updateboard(idx)"
@@ -39,14 +39,15 @@
         :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
         class="text-sm ml-1"
       >{{ squareIdx + 3 }}</span>
+      <!-- The unCaptured class on this div does not automatically update when the theme changes in store -->
       <div
-        class="w-8 h-8 rounded-full"
+        class="w-6 h-6 rounded-full"
         :class="{
-          'capturedByOpposition':
+          'bg-red-500':
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !==
             gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
-          'capturedByYou':
+          'bg-blue-500':
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by ==
             gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',

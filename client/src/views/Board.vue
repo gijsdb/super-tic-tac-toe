@@ -51,7 +51,7 @@
         class="flex flex-col space-y-8"
       >
         <div
-          :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight }"
+          :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Primary }"
           class="text-center rounded-2xl shadow-2xl p-2  font-bold py-6 flex flex-col"
         >
           <p
