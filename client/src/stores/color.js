@@ -45,17 +45,43 @@ export const useColorStore = defineStore('color', {
                     colorful_error_extra_color: '#7e2a33',
                 },
                 {
-                    name: 'next',
-                    bg_color: '',
-                    main_color: '',
-                    caret_color: '',
-                    sub_color: '',
-                    sub_alt_color: '',
-                    text_color: '',
-                    error_color: '',
-                    error_extra_color: '',
-                    colorful_error_color: '',
-                    colorful_error_extra_color: '',
+                    name: 'earthly',
+                    bg_color: '#292521',
+                    main_color: '#509452',
+                    caret_color: '#1298ba',
+                    sub_color: '#f5ae2d',
+                    sub_alt_color: '#1d1b18',
+                    text_color: '#e6c7a8',
+                    error_color: '#7e2a33',
+                    error_extra_color: '#ff645a',
+                    colorful_error_color: '#7e2a33',
+                    colorful_error_extra_color: '#ff645a',
+                },
+                {
+                    name: 'luna',
+                    bg_color: '#221c35',
+                    main_color: '#f67599',
+                    caret_color: '#f67599',
+                    sub_color: '#5a3a7e',
+                    sub_alt_color: '#2f2346',
+                    text_color: '#ffe3eb',
+                    error_color: '#efc050',
+                    error_extra_color: '#c5972c',
+                    colorful_error_color: '#efc050',
+                    colorful_error_extra_color: '#c5972c',
+                },
+                {
+                    name: 'roboto',
+                    bg_color: '#0c0d11',
+                    main_color: '#7ebab5',
+                    caret_color: '#7ebab5',
+                    sub_color: '#454864',
+                    sub_alt_color: '#171a25',
+                    text_color: '#f6f5f5',
+                    error_color: '#ff4754',
+                    error_extra_color: '#b02a33',
+                    colorful_error_color: '#ff4754',
+                    colorful_error_extra_color: '#b02a33',
                 }
             ],
         }
@@ -80,7 +106,7 @@ export const useColorStore = defineStore('color', {
                     document.documentElement.style.setProperty('--colorful-error-extra-color', t.colorful_error_extra_color);
                 }
             })
-        }
+        },
     }
 })
 

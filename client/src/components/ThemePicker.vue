@@ -3,10 +3,10 @@
         v-if="colorStoreRef.Show.value"
         class="fixed w-screen h-screen flex items-center justify-center shadow-2xl"
     >
-        <div class="p-2 rounded-xl w-screen sm:w-[80vw] flex flex-col bg-sub_color">
+        <div class="p-2 rounded-xl w-screen sm:w-[80vw] flex flex-col bg-sub_alt_color">
             <button
                 @click="handleToggleThemePicker"
-                class="mb-2 rounded-full h-8 w-8 font-bold self-start text-sm bg-main_color text-text_color"
+                class="mb-2 rounded-full h-8 w-8 font-bold self-start text-sm bg-bg_color text-text_color"
             >X</button>
 
             <ul class="flex flex-col gap-y-8">
@@ -72,5 +72,4 @@ const handleChangeTheme = (theme) => {
 const handleToggleThemePicker = () => {
     toggleThemePicker()
 }
-
 </script>

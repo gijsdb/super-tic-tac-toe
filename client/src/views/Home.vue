@@ -27,35 +27,12 @@
       </div>
       <button
         @click="createGameHandler()"
-        class="p-4 rounded-md font-bold text-text_color bg-sub_color"
+        class="p-4 rounded-md font-bold text-text_color bg-caret_color"
       >Create New
         Game</button>
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Firefox */
-.custom-scroll-bar {
-  scrollbar-width: thin;
-  scrollbar-color: #ffffff #000000;
-}
-
-/* Chrome, Edge, and Safari */
-.custom-scroll-bar::-webkit-scrollbar {
-  width: 10px;
-}
-
-.custom-scroll-bar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scroll-bar::-webkit-scrollbar-thumb {
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 3px solid #ffffff;
-}
-</style>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from "vue";
@@ -138,3 +115,26 @@ window.onbeforeunload = async () => {
   // removeClient();
 };
 </script>
+
+<style scoped>
+/* Firefox */
+.custom-scroll-bar {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #000000;
+}
+
+/* Chrome, Edge, and Safari */
+.custom-scroll-bar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll-bar::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 3px solid #ffffff;
+}
+</style>

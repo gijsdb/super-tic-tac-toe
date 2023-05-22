@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl p-2 bg-sub_color">
+  <div class="rounded-xl p-2 bg-sub_alt_color">
     <div class="flex justify-end items-center">
       <div class="flex flex-col mr-4 text-sm gap-y-2">
         <p>
@@ -9,7 +9,7 @@
         <div class="flex items-center gap-x-2 stroke-main_color">
           <button
             @click="handleToggleRules()"
-            class="w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-2xl border-2 bg-sub_color text-main_color border-main_color"
+            class="w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-2xl border-2 bg-sub_alt_color text-main_color border-main_color"
           >?</button>
           <button @click="handleToggleThemePicker()">
             <svg
@@ -104,15 +104,15 @@
       <div class="flex flex-col items-center gap-y-1">
         <img
           v-if="gameStoreRef.Player.value.picture == null"
-          class="rounded-full w-14 h-14 border-4 border-main_color"
+          class="rounded-full w-14 h-14 border-4 border-caret_color"
           src="../assets/avatar.png"
         />
         <img
           v-if="gameStoreRef.Player.value.picture != null"
-          class="rounded-full w-14 h-14 border-4 border-main_color"
+          class="rounded-full w-14 h-14 border-4 border-caret_color"
           :src="gameStoreRef.Player.value.picture"
         />
-        <p class=" font-bold text-sm text-text_color">
+        <p class=" font-bold text-sm text-caret_color">
           <span v-if="gameStoreRef.Player.value.inGame">In Game</span>
           <span v-if="!gameStoreRef.Player.value.inGame">Idle</span>
         </p>
