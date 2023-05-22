@@ -4,6 +4,7 @@ super-tic-tac-toe.db
 edgecases.txt
 /server/todo.txt
 /server/.env
+/server/cover.out
 todo.txt
 ideas.txt
 classDiagram.png

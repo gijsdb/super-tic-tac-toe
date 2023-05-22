@@ -9,7 +9,7 @@ import (
 func (s *GameService) Join(gameId int64, joiningPlayer string) (*entity.Game, error) {
 	game := s.repo.Get(gameId)
 	noOfPlayers := len(game.Players)
-	if noOfPlayers >= 3 {
+	if noOfPlayers == 2 {
 		return nil, fmt.Errorf("game is full")
 	}
 	game.Players = append(game.Players, joiningPlayer)

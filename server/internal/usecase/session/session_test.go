@@ -17,11 +17,18 @@ func SetUp() InteractorI {
 
 func TestIsSessionExpired(t *testing.T) {
 	service := SetUp()
+
+	// expired session
 	token := service.Create(player_id, time.Now())
 	assert.Equal(t, true, service.IsSessionExpired(token))
 
+	// Not expired
 	token = service.Create(player_id, time.Now().Add(time.Minute*2))
 	assert.Equal(t, false, service.IsSessionExpired(token))
+
+	// Session not found
+	service.Delete(token)
+	assert.Equal(t, true, service.IsSessionExpired(token))
 }
 
 func TestCreate(t *testing.T) {

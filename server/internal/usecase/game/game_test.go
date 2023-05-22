@@ -10,6 +10,7 @@ import (
 
 var player_id_one = "1234"
 var player_id_two = "12345"
+var player_id_three = "123456"
 
 func SetUp() InteractorI {
 	return NewService(repository.NewGameRepository())
@@ -75,8 +76,10 @@ func TestJoin(t *testing.T) {
 	assert.Equal(t, updated_game.GameBoard.Player2, player_id_two)
 
 	// a player joins a game that is full
+	_, err = service.Join(game.ID, player_id_three)
+	assert.Error(t, err)
 
-	// a player tries to join a game that does not exist
+	// TODO: a player tries to join a game that does not exist
 }
 
 func TestLeave(t *testing.T) {
@@ -97,7 +100,9 @@ func TestLeave(t *testing.T) {
 	}, expected.GameOver)
 	assert.Equal(t, []string{player_id_two}, expected.Players)
 
-	// one player creates a game and leaves before another player joins
+	// Player joins game that doesn't exist
+	err = service.Leave(10, player_id_three)
+	assert.Error(t, err)
 }
 
 func TestRollDice(t *testing.T) {
@@ -113,16 +118,36 @@ func TestRollDice(t *testing.T) {
 func TestRemoveCircle(t *testing.T) {
 	service := SetUp()
 
+	// Create a full game
 	game := service.CreateGame(player_id_one)
-	service.Join(game.ID, player_id_two)
+	game, _ = service.Join(game.ID, player_id_two)
 
-	//updated_game := service.RemoveCircle(game.ID, 3, 4, player_id_one)
+	game = service.UpdateBoard(game.ID, 0, 0, player_id_one)
+
+	game = service.RemoveCircle(game.ID, 0, 0, player_id_one)
+	assert.Equal(t, "", game.GameBoard.Squares[0].Circles[0].SelectedBy) // Assert the circle was unset
+	assert.Equal(t, player_id_two, game.PlayerTurn)                      // Assert the turn is set to the other player
 }
 
 func TestUpdateBoard(t *testing.T) {
-	//service := SetUp()
+	service := SetUp()
 
+	// Create a full game
+	game := service.CreateGame(player_id_one)
+	game, _ = service.Join(game.ID, player_id_two)
+
+	game = service.UpdateBoard(game.ID, 0, 0, player_id_one)
+	assert.Equal(t, player_id_one, game.GameBoard.Squares[0].Circles[0].SelectedBy) // Assert the circle was set
+	assert.Equal(t, player_id_two, game.PlayerTurn)                                 // Assert turn has changed
 	// Check for win if three squares in a row
-	// Ensure player turn has changed
-	//
+	service.UpdateBoard(game.ID, 0, 1, player_id_one)
+	service.UpdateBoard(game.ID, 0, 2, player_id_one)
+	service.UpdateBoard(game.ID, 1, 0, player_id_one)
+	service.UpdateBoard(game.ID, 1, 1, player_id_one)
+	service.UpdateBoard(game.ID, 1, 2, player_id_one)
+	service.UpdateBoard(game.ID, 2, 0, player_id_one)
+	service.UpdateBoard(game.ID, 2, 1, player_id_one)
+	service.UpdateBoard(game.ID, 2, 2, player_id_one)
+	assert.Equal(t, player_id_one, game.Winner)
+
 }

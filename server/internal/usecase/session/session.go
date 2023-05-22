@@ -53,12 +53,3 @@ func (s *SessionService) Refresh(token string) (*entity.Session, string, error) 
 func (s *SessionService) GetTempSessionExpiry() time.Time {
 	return time.Now().Add(s.temp_session_duration)
 }
-
-// func (s *SessionService) GetPlayerIdFromSession(token string) (string, error) {
-// 	session, err := s.repo.Get(token)
-// 	if err != nil {
-// 		return "", fmt.Errorf("session not found for token")
-// 	}
-
-// 	return session.PlayerID, nil
-// }
