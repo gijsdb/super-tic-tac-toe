@@ -60,6 +60,7 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 	}
 
 	// check if player exists with email
+	// TODO: check database instead?
 	player, err := s.repo.GetByEmail(temp.Email)
 
 	if err != nil {
@@ -71,8 +72,13 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 			IsTemp:   false,
 		})
 
+		// Save player in database
+		s.repo.DBCreatePlayer(player)
+
 		return player.ID, nil
 	}
+
+	// TODO: Update player in database?
 
 	// player already exists, return player ID
 	return player.ID, nil

@@ -48,7 +48,9 @@
         v-show="gameStoreRef.Player.value.game.full"
         class="flex flex-col space-y-8"
       >
-        <div class="bg-sub_color border-main_color text-center rounded-2xl shadow-2xl p-2  font-bold py-6 flex flex-col">
+        <div
+          class="bg-sub_alt_color border-main_color text-center rounded-2xl shadow-2xl p-2  font-bold py-6 flex flex-col"
+        >
           <p
             v-show="gameStoreRef.Player.value.turn"
             class="text-caret_color"

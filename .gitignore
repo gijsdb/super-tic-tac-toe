@@ -1,5 +1,5 @@
 nuxt
-super-tic-tac-toe.db
+server/super_tic_tac_toe.db
 .editorconfig
 edgecases.txt
 /server/todo.txt

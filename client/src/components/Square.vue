@@ -57,17 +57,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
 import { storeToRefs } from "pinia";
 import { useGameStore } from "../stores/game.js";
-import { useColorStore } from "../stores/color.js";
 import { CheckRules } from "../game/rules.js";
 
 const gameStore = useGameStore();
-const colorStore = useColorStore();
 
 let gameStoreRef = storeToRefs(gameStore);
-let colorStoreRef = storeToRefs(colorStore);
 
 const { updateGameBoard, rollDice, removeCircle } = gameStore;
 
@@ -76,10 +72,6 @@ const emit = defineEmits(["ruleVerdict", "clearDice"]);
 const props = defineProps({
   squareIdx: Number,
 });
-
-let highlightTwo = ref(colorStoreRef.ActiveTheme.value.HighlightTwo)
-let highlight = ref(colorStoreRef.ActiveTheme.value.Highlight)
-let primary = ref(colorStoreRef.ActiveTheme.value.Primary)
 
 const updateboard = async (circleIdx) => {
   if (gameStoreRef.Player.value.turn) {
