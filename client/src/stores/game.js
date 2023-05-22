@@ -27,7 +27,7 @@ export const useGameStore = defineStore('game', {
           last_roll: [0, 0]
         },
       },
-      FlashMessage: ''
+      ShowRules: false,
     }
   },
   getters: {
@@ -180,6 +180,9 @@ export const useGameStore = defineStore('game', {
       } catch (e) {
         console.log("Erroring getting player in store", e)
       }
+    },
+    toggleShowRules() {
+      this.ShowRules = !this.ShowRules
     }
   }
 })

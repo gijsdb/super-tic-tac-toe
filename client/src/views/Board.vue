@@ -2,12 +2,12 @@
   <div class=" w-screen my-auto flex flex-col lg:flex-row items-center justify-center gap-x-12 gap-y-4">
     <GameOver v-show="gameStoreRef.Player.value.game.game_over.over" />
     <div
-      :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, color: colorStoreRef.ActiveTheme.value.Primary }"
       v-show="!gameStoreRef.Player.value.game.full"
-      class="p-12 rounded-2xl shadow-2xl  font-bold text-center"
+      class="p-8 rounded-2xl shadow-2xl  font-bold text-center flex flex-col items-center gap-y-2 bg-main_color text-sub_alt_color"
     >
-      <p class="text-4xl py-4">Waiting for player...</p>
+      <p class="text-4xl">Waiting for player...</p>
       <Loader />
+      <button class="pt-2">Abandon</button>
     </div>
 
     <div
@@ -15,17 +15,16 @@
       class="flex flex-col"
     >
       <div
-        :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight }"
-        class="bg-opacity-80 px-8 rounded-lg rounded-b-none  border-2 border-b-0 text-center py-2 font-bold text-sm"
+        class="bg-sub_alt_color border-main_color px-8 rounded-lg rounded-b-none  border-2 border-b-0 text-center py-2 font-bold text-sm"
       >
-        <p :class="{ 'text-red-600': !message.allowed, 'text-white': message.allowed }">
+        <p :class="{ 'text-error_color': !message.allowed, 'text-text_color': message.allowed }">
           {{ message.reason }}
         </p>
       </div>
 
-      <div
-        :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight }"
-        class="
+      <div class="
+        border-main_color
+        bg-sub_alt_color
         border-2
         border-t-0
         shadow-2xl
@@ -34,11 +33,10 @@
         rounded-lg
         rounded-t-none
         grid
-        grid-cols-3"
-      >
+        grid-cols-3">
         <Square
           @clearDice="clearDiceHandler"
-          v-for="( square, idx ) in  gameStoreRef.Player.value.game.game_board.squares "
+          v-for="(square, idx) in gameStoreRef.Player.value.game.game_board.squares"
           :key="idx"
           :squareIdx="idx"
           @ruleVerdict="updateMessage"
@@ -50,21 +48,19 @@
         v-show="gameStoreRef.Player.value.game.full"
         class="flex flex-col space-y-8"
       >
-        <div
-          :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Primary }"
-          class="text-center rounded-2xl shadow-2xl p-2  font-bold py-6 flex flex-col"
-        >
+        <div class="bg-sub_color border-main_color text-center rounded-2xl shadow-2xl p-2  font-bold py-6 flex flex-col">
           <p
             v-show="gameStoreRef.Player.value.turn"
-            class="text-green-500"
+            class="text-caret_color"
           >Your turn</p>
           <p
             v-show="!gameStoreRef.Player.value.turn"
-            class="text-red-500"
+            class="text-error_color"
           >Not your turn</p>
-          <p>Game {{ gameStoreRef.Player.value.game.ID }}</p>
+          <p class="text-text_color">Game {{ gameStoreRef.Player.value.game.ID }}</p>
           <p
-            v-for="( player, idx ) in  gameStoreRef.Player.value.game.players "
+            class="text-text_color"
+            v-for="(player, idx) in gameStoreRef.Player.value.game.players"
             :key="idx"
           >
             <span v-show="player != gameStoreRef.Player.value.id">VS {{ generateName(player) }}</span>
@@ -83,7 +79,6 @@
 <script setup>
 import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useGameStore } from "../stores/game.js";
-import { useColorStore } from "../stores/color.js";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { generateName } from "../game/nameGenerator.js";
@@ -95,11 +90,9 @@ import Loader from "../components/Loader.vue";
 
 const router = useRouter();
 const gameStore = useGameStore();
-const colorStore = useColorStore();
 
 const { refreshGame, leaveGame } = gameStore;
 let gameStoreRef = storeToRefs(gameStore);
-let colorStoreRef = storeToRefs(colorStore);
 
 let message = ref({ allowed: true, reason: "" });
 let rolled = ref(false);

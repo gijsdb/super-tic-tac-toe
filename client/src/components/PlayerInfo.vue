@@ -1,19 +1,16 @@
 <template>
-  <div
-    :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary }"
-    class="rounded-xl p-2"
-  >
+  <div class="rounded-xl p-2 bg-sub_color">
     <div class="flex justify-end items-center">
       <div class="flex flex-col mr-4 text-sm gap-y-2">
         <p>
-          <span
-            :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
-            class="font-bold mr-2 text-lg"
-          >{{
+          <span class="font-bold mr-2 text-lg text-text_color">{{
             generateName(gameStoreRef.Player.value.id) }} </span>
         </p>
-        <div class="flex items-center gap-x-2">
-          <rules />
+        <div class="flex items-center gap-x-2 stroke-main_color">
+          <button
+            @click="handleToggleRules()"
+            class="w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-2xl border-2 bg-sub_color text-main_color border-main_color"
+          >?</button>
           <button @click="handleToggleThemePicker()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -21,8 +18,7 @@
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
-              :style="{ stroke: colorStoreRef.ActiveTheme.value.Highlight }"
+              stroke="current"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -63,12 +59,11 @@
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
+              stroke="current"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
               class="lucide lucide-log-in"
-              :style="{ stroke: colorStoreRef.ActiveTheme.value.Highlight }"
             >
               <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
               <polyline points="10 17 15 12 10 7"></polyline>
@@ -93,7 +88,6 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               class="lucide lucide-log-out"
-              :style="{ stroke: colorStoreRef.ActiveTheme.value.HighlightTwo }"
             >
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
@@ -110,20 +104,15 @@
       <div class="flex flex-col items-center gap-y-1">
         <img
           v-if="gameStoreRef.Player.value.picture == null"
-          class="rounded-full w-14 h-14 border-4"
-          :style="{ borderColor: colorStoreRef.ActiveTheme.value.Highlight }"
+          class="rounded-full w-14 h-14 border-4 border-main_color"
           src="../assets/avatar.png"
         />
         <img
           v-if="gameStoreRef.Player.value.picture != null"
-          class="rounded-full w-14 h-14 border-4"
-          :style="{ borderColor: colorStoreRef.ActiveTheme.value.Highlight }"
+          class="rounded-full w-14 h-14 border-4 border-main_color"
           :src="gameStoreRef.Player.value.picture"
         />
-        <p
-          :style="{ color: colorStoreRef.ActiveTheme.value.Highlight }"
-          class=" font-bold text-sm"
-        >
+        <p class=" font-bold text-sm text-text_color">
           <span v-if="gameStoreRef.Player.value.inGame">In Game</span>
           <span v-if="!gameStoreRef.Player.value.inGame">Idle</span>
         </p>
@@ -138,22 +127,24 @@ import { useGameStore } from "../stores/game.js";
 import { useColorStore } from "../stores/color.js";
 import { storeToRefs } from "pinia";
 import { generateName } from "../game/nameGenerator.js";
-import Rules from "../components/Rules.vue";
-import ThemePicker from "./ThemePicker.vue";
 
 const router = useRouter();
 
 const gameStore = useGameStore();
 const colorStore = useColorStore();
 
-const { logOut } = gameStore;
+const { logOut, toggleShowRules } = gameStore;
 const { toggleThemePicker } = colorStore;
 
 let gameStoreRef = storeToRefs(gameStore);
 let colorStoreRef = storeToRefs(colorStore);
 
-const handleToggleThemePicker = async () => {
+const handleToggleThemePicker = () => {
   toggleThemePicker()
+}
+
+const handleToggleRules = () => {
+  toggleShowRules()
 }
 
 const handleLogout = async () => {

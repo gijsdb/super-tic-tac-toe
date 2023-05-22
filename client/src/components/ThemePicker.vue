@@ -1,28 +1,23 @@
 <template>
     <div
         v-if="colorStoreRef.Show.value"
-        class="fixed w-screen h-screen flex items-center justify-center "
+        class="fixed w-screen h-screen flex items-center justify-center shadow-2xl"
     >
-        <div
-            class="px-28 py-8 rounded-xl w-screen sm:w-[80vw]"
-            :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary }"
-        >
+        <div class="p-2 rounded-xl w-screen sm:w-[80vw] flex flex-col bg-sub_color">
             <button
                 @click="handleToggleThemePicker"
-                :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo, color: colorStoreRef.ActiveTheme.value.Primary }"
-                class="flex mx-auto mb-4 px-2 py-1 rounded-md font-bold"
-            >Close</button>
+                class="mb-2 rounded-full h-8 w-8 font-bold self-start text-sm bg-main_color text-text_color"
+            >X</button>
 
             <ul class="flex flex-col gap-y-8">
-                <li v-for="color in  colorStoreRef.Themes.value ">
+                <li v-for="color in colorStoreRef.Themes.value ">
                     <button
-                        @click="handleChangeTheme(color.Name)"
-                        class="flex w-full gap-y-2 justify-between items-center p-2"
+                        @click="handleChangeTheme(color.name)"
+                        class="flex w-full gap-y-2 justify-between items-center p-2 "
                     >
-                        <div class="flex gap-x-2">
+                        <div class="flex gap-x-2 text-main_color">
                             <svg
-                                v-if="colorStoreRef.ActiveTheme.value.Name === color.Name"
-                                :style="{ stroke: colorStoreRef.ActiveTheme.value.Highlight }"
+                                v-if="colorStoreRef.ActiveTheme.value.name === color.name"
                                 width="24"
                                 height="24"
                                 viewBox="0 0 24 24"
@@ -35,23 +30,23 @@
                             >
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
-                            <p :style="{ color: colorStoreRef.ActiveTheme.value.Primary }">{{ color.Name }}</p>
+                            <p class="text-sm text-text_color">{{ color.name }}</p>
                         </div>
                         <div
-                            class="flex gap-x-4 p-2 rounded-3xl"
-                            :style="{ backgroundColor: color.Primary }"
+                            class="flex gap-x-4 px-2 py-1 rounded-3xl"
+                            :style="{ backgroundColor: color.bg_color }"
                         >
                             <div
-                                class="w-6 h-6 rounded-full"
-                                :style="{ backgroundColor: color.Secondary }"
+                                class="w-4 h-4 rounded-full"
+                                :style="{ backgroundColor: color.main_color }"
                             ></div>
                             <div
-                                class="w-6 h-6 rounded-full"
-                                :style="{ backgroundColor: color.Highlight }"
+                                class="w-4 h-4 rounded-full"
+                                :style="{ backgroundColor: color.caret_color }"
                             ></div>
                             <div
-                                class="w-6 h-6 rounded-full"
-                                :style="{ backgroundColor: color.HighlightTwo }"
+                                class="w-4 h-4 rounded-full"
+                                :style="{ backgroundColor: color.sub_color }"
                             ></div>
                         </div>
                     </button>

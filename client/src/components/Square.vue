@@ -1,13 +1,13 @@
 <template>
   <div
     :class="{
-      'border-red-500 border-2':
+      'border-error_color border-2':
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== gameStoreRef.Player.value.id &&
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-      'border-blue-500 border-2':
+      'border-main_color border-2':
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == gameStoreRef.Player.value.id &&
         gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-      'border-white border-2': gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == '',
+      'border-main_color border-2': gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == '',
     }"
     class="lg:m-2 m-1 grid grid-cols-3 items-center"
   >
@@ -16,73 +16,45 @@
       v-for="(circle, idx) in gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles"
       class="flex flex-col mx-auto items-center p-1.5 rounded-xl"
       :class="{
-          'border-red-500 border-2':
+          'border-error_color border-2':
             idx + 3 == 7 &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-          'border-blue-500 border-2':
+          'border-main_color border-2':
             idx + 3 == 7 &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by !== '',
-          'border-white border-2':
+          'border-main_color border-2':
             idx + 3 == 7 && gameStoreRef.Player.value.game.game_board.squares[squareIdx].captured_by == '',
         }"
       @click="updateboard(idx)"
     >
       <span
         v-if="idx + 3 != 7"
-        :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
-        class="text-sm ml-1"
+        class="text-sm ml-1 text-text_color"
       >{{ idx + 3 }}</span>
       <span
         v-if="idx + 3 == 7"
-        :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
-        class="text-sm ml-1"
+        class="text-sm ml-1 text-text_color"
       >{{ squareIdx + 3 }}</span>
       <!-- The unCaptured class on this div does not automatically update when the theme changes in store -->
       <div
         class="w-6 h-6 rounded-full"
         :class="{
-          'bg-red-500':
+          'bg-colorful_error_color':
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !==
             gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
-          'bg-blue-500':
+          'bg-main_color':
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by ==
             gameStoreRef.Player.value.id &&
             gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by !== '',
-          'unCaptured': gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by == '',
+          'bg-sub_color': gameStoreRef.Player.value.game.game_board.squares[squareIdx].circles[idx].selected_by == '',
         }"
       ></div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.capturedByOpposition {
-  background-color: v-bind(highlight);
-}
-
-.capturedByOppositionBorder {
-  border-color: v-bind(highlight);
-}
-
-.capturedByYou {
-  background-color: v-bind(highlightTwo);
-}
-
-.capturedByYouBorder {
-  border-color: v-bind(highlightTwo);
-}
-
-.unCaptured {
-  background-color: v-bind(primary);
-}
-
-.unCapturedBorder {
-  border-color: v-bind(primary);
-}
-</style>
 
 <script setup>
 import { ref } from "vue"

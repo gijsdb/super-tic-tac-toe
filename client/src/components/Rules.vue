@@ -1,17 +1,13 @@
 <template>
   <div>
-    <button
-      @click="toggleRules"
-      :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Secondary, color: colorStoreRef.ActiveTheme.value.Secondary, borderColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Highlight }"
-      class="z-50 w-6 h-6 flex items-center justify-center rounded-full font-bold shadow-2xl border-2"
-    >
-      <span v-show="!showRules">?</span>
-      <span v-show="showRules">X</span>
-    </button>
     <div
-      v-show="showRules"
+      v-show="gameStoreRef.ShowRules.value"
       class="z-40 w-screen absolute bg-black bg-opacity-95 flex flex-col items-center justify-center text-gray-200 p-12 min-h-[100vh]"
     >
+      <button
+        @click="handleCloseRules()"
+        class="absolute text-white top-5 left-5"
+      >X</button>
       <div class="flex flex-col items-center text-center lg:mx-24 gap-y-4">
         <h1 class="text-4xl font-bold underline">Super Tic Tac Toe Rules</h1>
         <p class="text-2xl leading-10">Super Tic Tac Toe is a variation of regular tic tac toe or 'three in a row'.</p>
@@ -37,16 +33,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
-
 import { useColorStore } from "../stores/color.js";
+import { useGameStore } from "../stores/game.js";
+
 const colorStore = useColorStore();
+const gameStore = useGameStore();
 let colorStoreRef = storeToRefs(colorStore);
+let gameStoreRef = storeToRefs(gameStore);
 
-let showRules = ref(false);
+const { toggleShowRules } = gameStore;
 
-const toggleRules = () => {
-  showRules.value = !showRules.value;
-};
+const handleCloseRules = () => {
+  toggleShowRules()
+}
 </script>

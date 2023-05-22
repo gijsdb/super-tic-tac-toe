@@ -1,31 +1,22 @@
 <template>
   <div class="flex justify-center my-auto">
     <div class="flex flex-col gap-y-4 items-center bg-opacity-50 rounded-md p-8 mt-[-3em]">
-      <h1
-        class="text-4xl font-white font-bold"
-        :style="{ color: colorStoreRef.ActiveTheme.value.HighlightTwo }"
-      >Super Tic Tac Toe</h1>
+      <h1 class="text-4xl font-white font-bold text-main_color">Super Tic Tac Toe</h1>
       <div
         v-show="gamesAvailable"
-        :style="{ borderColor: colorStoreRef.ActiveTheme.value.Secondary }"
-        class="p-8 my-4 overflow-y-scroll space-y-4 max-h-40vh border-y custom-scroll-bar"
+        class="p-8 my-4 overflow-y-scroll space-y-4 max-h-40vh border-y border-caret_color custom-scroll-bar"
       >
         <div
-          class="flex border-2 rounded-md"
-          :style="{ borderColor: colorStoreRef.ActiveTheme.value.Secondary }"
+          class="flex border-2 border-text_color rounded-md"
           :key="game.ID"
           v-for="game in games"
           v-show="!game.game_over.over"
         >
-          <div
-            class="mx-2 flex flex-col justify-center text-xl px-4"
-            :style="{ color: colorStoreRef.ActiveTheme.value.HighlightTwo }"
-          >
+          <div class="mx-2 flex flex-col justify-center text-xl px-4 text-main_color">
             <p>Game waiting for player</p>
           </div>
           <button
-            class="p-4 border-l-2 border font-bold text-xl px-6"
-            :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Primary, borderColor: colorStoreRef.ActiveTheme.value.Secondary }"
+            class="p-4 border-l-2 border border-text_color font-bold text-xl px-6 bg-sub_color text-text_color"
             @click="JoinGame(game.ID)"
             :disabled="game.full"
           >
@@ -36,8 +27,7 @@
       </div>
       <button
         @click="createGameHandler()"
-        :style="{ backgroundColor: colorStoreRef.ActiveTheme.value.Highlight, color: colorStoreRef.ActiveTheme.value.Primary }"
-        class="p-4 rounded-md text-white font-bold"
+        class="p-4 rounded-md font-bold text-text_color bg-sub_color"
       >Create New
         Game</button>
     </div>
@@ -74,16 +64,13 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import APIClient from "../APIClient";
 import { useGameStore } from "../stores/game.js";
-import { useColorStore } from "../stores/color.js";
 
 
 const router = useRouter();
 const gameStore = useGameStore();
-const colorStore = useColorStore();
 
 const { registerClient, createGame, joinGame, getPlayer } = gameStore;
 let gameStoreRef = storeToRefs(gameStore);
-let colorStoreRef = storeToRefs(colorStore);
 
 let getGamesLoop;
 let games = ref([]);

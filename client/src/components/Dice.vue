@@ -1,11 +1,7 @@
 <template>
-  <div
-    class=" p-8 rounded-2xl flex flex-col items-center justify-center text-center"
-    :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
-  >
+  <div class=" p-8 rounded-2xl flex flex-col items-center justify-center text-center color-text_color">
     <p
-      class="text-sm font-bold py-2 w-10/12"
-      :style="{ color: colorStoreRef.ActiveTheme.value.Primary }"
+      class="text-sm font-bold py-2 w-10/12 color-error_color"
       v-if="message != null"
     >{{ message }}</p>
     <div v-if="!gameStoreRef.Player.value.turn">
@@ -18,8 +14,7 @@
     <button
       :disabled="!gameStoreRef.Player.value.turn || diceRolled"
       @click="rollDiceHandler"
-      :style="diceButtonStyle"
-      class="rounded-md p-4 text-white font-bold "
+      class="rounded-md p-4 text-text_color bg-caret_color font-bold disabled:bg-sub_alt_color"
     >
       Roll dice
     </button>
@@ -31,43 +26,20 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import { useGameStore } from "../stores/game.js";
-import { useColorStore } from "../stores/color.js";
-
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
+import { useGameStore } from "../stores/game.js";
 
 const props = defineProps({
   rolled: Boolean,
 });
 
 const gameStore = useGameStore();
-const colorStore = useColorStore();
-
 let gameStoreRef = storeToRefs(gameStore);
-let colorStoreRef = storeToRefs(colorStore);
-
 
 const { rollDice } = gameStore;
 let diceRolled = ref(false);
 let message = ref(null);
-
-
-const diceButtonStyle = computed(() => {
-  console.log(gameStoreRef.Player.value.turn);
-  console.log(diceRolled.value);
-  if (!gameStoreRef.Player.value.turn && diceRolled) {
-    return {
-      backgroundColor: 'gray',
-      color: colorStoreRef.ActiveTheme.value.Primary
-    }
-  } else {
-    return {
-      backgroundColor: colorStoreRef.ActiveTheme.value.HighlightTwo,
-      color: colorStoreRef.ActiveTheme.value.Primary
-    }
-  }
-})
 
 const rollDiceHandler = async () => {
   let values = createDice();
