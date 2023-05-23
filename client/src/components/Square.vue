@@ -35,9 +35,8 @@
       >{{ idx + 3 }}</span>
       <span
         v-if="idx + 3 == 7"
-        class="text-sm ml-1 text-text_color"
+        class="text-md ml-1 text-text_color font-bold"
       >{{ squareIdx + 3 }}</span>
-      <!-- The unCaptured class on this div does not automatically update when the theme changes in store -->
       <div
         class="w-6 h-6 rounded-full"
         :class="{

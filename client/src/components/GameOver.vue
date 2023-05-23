@@ -1,6 +1,6 @@
 <template>
-  <div class="w-screen h-screen absolute top-0 bg-black bg-opacity-90 flex items-center justify-center">
-    <div class="border-white rounded-md p-12 text-white flex flex-col text-center gap-y-2">
+  <div class="w-screen h-screen absolute top-0 bg-bg_color bg-opacity-90 flex items-center justify-center">
+    <div class="rounded-md p-12 text-text_color flex flex-col text-center gap-y-2">
       <p class="text-4xl font-bold">Game over</p>
 
       <div v-show="playerStore.Player.value.game.game_over.reason !== 'Player left the game'">
@@ -19,7 +19,7 @@
         Other player left!
       </p>
       <button
-        class="bg-[#1fddff] font-bold rounded-md text-2xl py-2 my-2"
+        class="bg-main_color font-bold rounded-md text-2xl py-2 my-2"
         @click="returnToMenu"
       >Menu</button>
     </div>

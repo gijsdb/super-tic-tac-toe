@@ -1,5 +1,5 @@
 <template>
-  <div class=" w-screen my-auto flex flex-col lg:flex-row items-center justify-center gap-x-12 gap-y-4">
+  <div class="w-screen my-auto flex flex-col lg:flex-row items-center justify-center gap-x-12 gap-y-4">
     <GameOver v-show="gameStoreRef.Player.value.game.game_over.over" />
     <div
       v-show="!gameStoreRef.Player.value.game.full"
@@ -102,10 +102,11 @@ let feedbackLoop = null;
 let waitForPlayerInterval = null;
 let refreshInterval = null;
 
-// const beforeWindowUnload = (e) => {
-//   leaveGame();
-//   router.push("/");
-// };
+const beforeWindowUnload = (e) => {
+  alert("Are you sure you want to leave the game?")
+  leaveGame();
+  router.push("/");
+};
 
 const clearDiceHandler = () => {
   rolled.value = true;
@@ -129,10 +130,16 @@ const checkMessage = () => {
       reason: "Waiting for other player",
     };
   }
-  if (gameStoreRef.Player.value.turn) {
+  if (gameStoreRef.Player.value.turn && !gameStoreRef.Player.value.diceRolled) {
     message.value = {
       allowed: true,
       reason: "Your turn, roll the dice",
+    };
+  }
+  if (gameStoreRef.Player.value.turn && gameStoreRef.Player.value.diceRolled) {
+    message.value = {
+      allowed: true,
+      reason: "Make your move",
     };
   }
 };
@@ -150,7 +157,13 @@ const updateMessage = async (verdict) => {
 
 onMounted(() => {
   // prevents popup "Changes you made may not be saved" 
-  //window.onbeforeunload = null
+  window.onbeforeunload = null
+  window.addEventListener("beforeunload", function (e) {
+    console.log(e);
+    beforeWindowUnload(e);
+  });
+
+
   if (!gameStoreRef.Player.value.game.full) {
     waitForPlayerInterval = setInterval(async () => {
       await refreshGame();

@@ -111,7 +111,6 @@ export const useGameStore = defineStore('game', {
       } catch (e) {
         // Cookie has expired meaning the player has not interacted with the game
         if (e.message === "Unauthorized") {
-          this.FlashMessage = "Game abandoned by player"
           return "game abandoned"
         } else {
           console.log("Error refreshing game in store", e.message)
