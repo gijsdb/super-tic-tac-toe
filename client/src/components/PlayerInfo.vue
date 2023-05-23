@@ -3,7 +3,10 @@
     <div class="flex justify-end items-center">
       <div class="flex flex-col mr-4 text-sm gap-y-2">
         <p>
-          <span class="font-bold mr-2 text-lg text-text_color">{{
+          <span
+            id="username"
+            class="font-bold mr-2 text-lg text-text_color"
+          >{{
             generateName(gameStoreRef.Player.value.id) }} </span>
         </p>
         <div class="flex items-center gap-x-2 stroke-main_color">
