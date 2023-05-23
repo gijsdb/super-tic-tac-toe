@@ -59,7 +59,6 @@ func (pc *PlayerController) HandleOauthLogin(c echo.Context) error {
 }
 
 // End point used by google servers
-// How do we figure out the current temp id for the user here? We don't receive cookies from google
 func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
 	player_id, err := pc.player_service.GoogleCallback(c.FormValue("state"), c.FormValue("code"))
 	if err != nil {

@@ -38,5 +38,9 @@ func main() {
 	route.NewGameRouter(e, game_interactor, session_interactor, player_interactor)
 	route.NewSessionRouter(e, session_interactor, player_interactor)
 
+	// Load players from database into memorystore
+	// Not sure if this is a good idea?
+	player_interactor.LoadDBPlayersIntoMemory()
+
 	e.Logger.Fatal(e.Start(":1323"))
 }

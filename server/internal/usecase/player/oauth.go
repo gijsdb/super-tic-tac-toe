@@ -59,10 +59,7 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 		return "", err
 	}
 
-	// check if player exists with email
-	// TODO: check database instead?
-	player, err := s.repo.GetByEmail(temp.Email)
-
+	player, err := s.repo.DBGetWhere(temp.Email, "email")
 	if err != nil {
 		player = s.repo.Update(&entity.Player{
 			ID:       state_string.Temp_player_id,

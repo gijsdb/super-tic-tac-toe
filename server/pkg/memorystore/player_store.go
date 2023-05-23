@@ -21,7 +21,9 @@ func NewPlayerMemoryStore() *PlayerStore {
 func (ps *PlayerStore) Create(player *entity.Player) string {
 	ps.mutex.Lock()
 	defer ps.mutex.Unlock()
-	player.ID = NewUUID()
+	if player.ID == "" {
+		player.ID = NewUUID()
+	}
 	ps.players[player.ID] = player
 
 	return player.ID
