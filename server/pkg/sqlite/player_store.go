@@ -28,13 +28,13 @@ func NewSQLiteStore(db_path string) *SQLiteStore {
 	}
 }
 
-func (ss *SQLiteStore) Create(player *Player) uint {
+func (ss *SQLiteStore) Create(player *Player) string {
 	ss.db.Create(player)
 
 	return player.ID
 }
 
-// Can make more generic by passing the entity we want to retrieve
+// Rename to GetPlayerWhere ?
 func (ss *SQLiteStore) GetWhere(value string, column string) (Player, error) {
 	player := &Player{}
 	if err := ss.db.Where(fmt.Sprintf("%s = ?", column), value).First(player).Error; err != nil {
@@ -57,4 +57,8 @@ func (ss *SQLiteStore) GetAllPlayers() ([]Player, error) {
 	}
 
 	return players, nil
+}
+
+func (ss *SQLiteStore) UpdatePlayer(player Player) {
+	ss.db.Save(&player)
 }

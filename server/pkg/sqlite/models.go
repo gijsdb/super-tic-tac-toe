@@ -1,11 +1,19 @@
 package sqlite
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Player struct {
-	gorm.Model
-	OriginalID string // Represents the ID set in memory by the game when the account was created
-	GoogleID   string
-	Email      string
-	Picture    string
+	ID        string `gorm:"primaryKey"` // Represents the ID set in memory by the game when the account was created
+	GoogleID  string
+	Email     string
+	Picture   string
+	Wins      int
+	Losses    int
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }

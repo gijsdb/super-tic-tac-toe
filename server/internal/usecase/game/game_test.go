@@ -13,7 +13,7 @@ var player_id_two = "12345"
 var player_id_three = "123456"
 
 func SetUp() InteractorI {
-	return NewService(repository.NewGameRepository())
+	return NewService(repository.NewGameRepository(), repository.NewPlayerRepository(":memory:"))
 }
 
 func TestCreate(t *testing.T) {
@@ -149,5 +149,54 @@ func TestUpdateBoard(t *testing.T) {
 	service.UpdateBoard(game.ID, 2, 1, player_id_one)
 	service.UpdateBoard(game.ID, 2, 2, player_id_one)
 	assert.Equal(t, player_id_one, game.Winner)
+}
 
+// Starting to get messy here.,
+func TestPlayerWinIncrementsOnWin(t *testing.T) {
+	player_repo := repository.NewPlayerRepository(":memory:")
+	game_repo := repository.NewGameRepository()
+	service := NewService(game_repo, player_repo)
+
+	player_one := &entity.Player{
+		ID:       "p1",
+		GoogleID: "gp1",
+		Email:    "p1@p1.com",
+		Picture:  "pic",
+		IsTemp:   false,
+		Wins:     0,
+		Losses:   0,
+	}
+
+	player_two := &entity.Player{
+		ID:       "p2",
+		GoogleID: "gp2",
+		Email:    "p2@p2.com",
+		Picture:  "pic",
+		IsTemp:   false,
+		Wins:     0,
+		Losses:   0,
+	}
+
+	player_repo.Create(player_one)
+	player_repo.Create(player_two)
+	player_repo.DBCreatePlayer(player_one)
+	player_repo.DBCreatePlayer(player_two)
+	game := service.CreateGame(player_one.ID)
+	service.Join(game.ID, player_two.ID)
+	service.UpdateBoard(game.ID, 0, 0, player_one.ID)
+	service.UpdateBoard(game.ID, 0, 1, player_one.ID)
+	service.UpdateBoard(game.ID, 0, 2, player_one.ID)
+	service.UpdateBoard(game.ID, 1, 0, player_one.ID)
+	service.UpdateBoard(game.ID, 1, 1, player_one.ID)
+	service.UpdateBoard(game.ID, 1, 2, player_one.ID)
+	service.UpdateBoard(game.ID, 2, 0, player_one.ID)
+	service.UpdateBoard(game.ID, 2, 1, player_one.ID)
+	service.UpdateBoard(game.ID, 2, 2, player_one.ID)
+
+	player_one, _ = player_repo.Get(player_one.ID)
+	player_two, _ = player_repo.Get(player_two.ID)
+
+	assert.Equal(t, player_one.ID, game.Winner)
+	assert.Equal(t, 1, player_one.Wins)
+	assert.Equal(t, 1, player_two.Losses)
 }

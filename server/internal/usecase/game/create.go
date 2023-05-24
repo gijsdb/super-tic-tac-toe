@@ -19,7 +19,7 @@ func (s *GameService) CreateGame(creatingPlayer string) *entity.Game {
 		Full:     false,
 		LastRoll: []int{0, 0},
 	}
-	return s.repo.Create(&game)
+	return s.game_repo.Create(&game)
 }
 
 func newGameboard(creatingPlayer string) entity.GameBoard {

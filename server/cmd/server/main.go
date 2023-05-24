@@ -22,8 +22,10 @@ func main() {
 		panic(1)
 	}
 
-	game_interactor := game.NewService(repository.NewGameRepository())
-	player_interactor := player.NewService(repository.NewPlayerRepository())
+	player_repo := repository.NewPlayerRepository("../../super_tic_tac_toe.db")
+
+	game_interactor := game.NewService(repository.NewGameRepository(), player_repo)
+	player_interactor := player.NewService(player_repo)
 	session_interactor := session.NewService(repository.NewSessionRepository())
 
 	e := echo.New()

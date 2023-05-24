@@ -28,6 +28,7 @@ export const useGameStore = defineStore('game', {
         },
       },
       ShowRules: false,
+      ShowHighscores: false,
     }
   },
   getters: {
@@ -182,6 +183,9 @@ export const useGameStore = defineStore('game', {
     },
     toggleShowRules() {
       this.ShowRules = !this.ShowRules
+    },
+    toggleHighscores() {
+      this.ShowHighscores = !this.ShowHighscores
     }
   }
 })

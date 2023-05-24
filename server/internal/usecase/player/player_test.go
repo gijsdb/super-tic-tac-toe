@@ -9,7 +9,7 @@ import (
 )
 
 func SetUp() InteractorI {
-	return NewService(repository.NewPlayerRepository())
+	return NewService(repository.NewPlayerRepository(":memory:"))
 }
 
 func TestGet(t *testing.T) {
