@@ -6,15 +6,16 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
+
 	"github.com/labstack/echo/v4"
 )
 
 type SessionController struct {
-	session_service session.InteractorI
-	player_service  player.InteractorI
+	session_service session.ServiceI
+	player_service  player.ServiceI
 }
 
-func NewSessionController(session_service session.InteractorI, player_service player.InteractorI) SessionController {
+func NewSessionController(session_service session.ServiceI, player_service player.ServiceI) SessionController {
 	return SessionController{
 		session_service: session_service,
 		player_service:  player_service,

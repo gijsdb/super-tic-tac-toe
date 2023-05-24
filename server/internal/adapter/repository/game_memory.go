@@ -5,35 +5,35 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/pkg/memorystore"
 )
 
-type GameRepositoryI interface {
+type GameMemoryRepoI interface {
 	Create(game *entity.Game) *entity.Game
 	Get(id int64) *entity.Game
 	Index() []*entity.Game
 	Update(game *entity.Game) *entity.Game
 }
 
-type GameMemoryRepository struct {
+type GameMemoryRepo struct {
 	store *memorystore.GameStore
 }
 
-func NewGameRepository() GameRepositoryI {
-	return &GameMemoryRepository{
+func NewGameMemoryRepo() GameMemoryRepoI {
+	return &GameMemoryRepo{
 		store: memorystore.NewGameMemoryStore(),
 	}
 }
 
-func (g *GameMemoryRepository) Index() []*entity.Game {
+func (g *GameMemoryRepo) Index() []*entity.Game {
 	return g.store.IndexGames()
 }
 
-func (g *GameMemoryRepository) Get(id int64) *entity.Game {
+func (g *GameMemoryRepo) Get(id int64) *entity.Game {
 	return g.store.GetGame(id)
 }
 
-func (g *GameMemoryRepository) Create(game *entity.Game) *entity.Game {
+func (g *GameMemoryRepo) Create(game *entity.Game) *entity.Game {
 	return g.store.CreateGame(game)
 }
 
-func (g *GameMemoryRepository) Update(game *entity.Game) *entity.Game {
+func (g *GameMemoryRepo) Update(game *entity.Game) *entity.Game {
 	return g.store.UpdateGame(game)
 }

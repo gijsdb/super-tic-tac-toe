@@ -22,7 +22,6 @@ type Circle struct {
 
 // Check for three in a row for circles in a square
 func (gb *GameBoard) CheckCirclesCondition(s Square) Square {
-
 	var (
 		x = (s.Circles[0].SelectedBy == gb.Player1 && s.Circles[1].SelectedBy == gb.Player1 && s.Circles[2].SelectedBy == gb.Player1) || // Check all rows.
 			(s.Circles[3].SelectedBy == gb.Player1 && s.Circles[4].SelectedBy == gb.Player1 && s.Circles[5].SelectedBy == gb.Player1) ||

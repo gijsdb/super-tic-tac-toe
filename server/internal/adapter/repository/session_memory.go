@@ -5,30 +5,30 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/pkg/memorystore"
 )
 
-type SessionRepositoryI interface {
+type SessionMemoryRepoI interface {
 	Create(session *entity.Session) string
 	Get(token string) (*entity.Session, error)
 	Delete(token string)
 }
 
-type SessionMemoryRepository struct {
+type SessionMemoryRepo struct {
 	store *memorystore.SessionStore
 }
 
-func NewSessionRepository() SessionRepositoryI {
-	return &SessionMemoryRepository{
+func NewSessionRepo() SessionMemoryRepoI {
+	return &SessionMemoryRepo{
 		store: memorystore.NewSessionMemoryStore(),
 	}
 }
 
-func (p *SessionMemoryRepository) Get(token string) (*entity.Session, error) {
+func (p *SessionMemoryRepo) Get(token string) (*entity.Session, error) {
 	return p.store.Get(token)
 }
 
-func (p *SessionMemoryRepository) Create(session *entity.Session) string {
+func (p *SessionMemoryRepo) Create(session *entity.Session) string {
 	return p.store.Create(session)
 }
 
-func (p *SessionMemoryRepository) Delete(token string) {
+func (p *SessionMemoryRepo) Delete(token string) {
 	p.store.Delete(token)
 }

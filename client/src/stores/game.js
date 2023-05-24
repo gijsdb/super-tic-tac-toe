@@ -130,7 +130,7 @@ export const useGameStore = defineStore('game', {
         this.Player.turn = false
         this.Player.game = res
       } catch (e) {
-        console.log("Erroring updating game in store", e)
+        console.log("Erroring updating game in store", e.message)
       }
     },
     async removeCircle(square, circle) {
@@ -146,7 +146,7 @@ export const useGameStore = defineStore('game', {
         this.Player.game = res
 
       } catch (e) {
-        console.log("Erroring updating game in store", e)
+        console.log("Erroring updating game in store", e.message)
       }
     },
     async rollDice(dice1, dice2) {
@@ -154,21 +154,21 @@ export const useGameStore = defineStore('game', {
         let res = await APIClient.RollDice(dice1, dice2, this.Player.game.ID);
         this.Player.game = res
       } catch (e) {
-        console.log("Erroring rolling dice in store", e)
+        console.log("Erroring rolling dice in store", e.message)
       }
     },
     async OAuthLogin() {
       try {
         await APIClient.OAuthLogin()
       } catch (e) {
-        console.log("Erroring performing OAuth login in store", e)
+        console.log("Erroring performing OAuth login in store", e.message)
       }
     },
     async logOut() {
       try {
         await APIClient.Logout()
       } catch (e) {
-        console.log("Erroring logging out player in store", e)
+        console.log("Erroring logging out player in store", e.message)
       }
     },
     async getPlayer() {
@@ -178,7 +178,7 @@ export const useGameStore = defineStore('game', {
         this.Player.email = res.email
         this.Player.temporary = res.is_temp
       } catch (e) {
-        console.log("Erroring getting player in store", e)
+        console.log("Erroring getting player in store", e.message)
       }
     },
     toggleShowRules() {
@@ -188,7 +188,11 @@ export const useGameStore = defineStore('game', {
       this.ShowHighscores = !this.ShowHighscores
     },
     async getHighscores() {
-      return await APIClient.GetHighscores()
+      try {
+        return await APIClient.GetHighscores()
+      } catch (e) {
+        console.log("Erroring getting highscores in store", e.message)
+      }
     },
   }
 })

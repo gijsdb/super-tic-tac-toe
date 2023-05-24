@@ -3,13 +3,13 @@ package player
 import (
 	"os"
 
-	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
 
-type InteractorI interface {
+type ServiceI interface {
 	Create() string
 	Get(id string) (*entity.Player, error)
 	GetByEmail(email string) (*entity.Player, error)
@@ -18,11 +18,25 @@ type InteractorI interface {
 	GoogleCallback(state, code string) (string, error)
 	LoadDBPlayersIntoMemory()
 	GetHighscores() ([]*entity.Player, error)
+	SeedPlayers()
 }
 
-func NewService(repo repository.PlayerRepositoryI) InteractorI {
+type PlayerService struct {
+	memorystore       repository.PlayerMemoryRepoI
+	database          repository.PlayerDatabaseRepoI
+	googleOauthConfig *oauth2.Config
+	oauthStateStrings map[string]*OauthStateString
+}
+
+type OauthStateString struct {
+	Active         bool
+	Temp_player_id string
+}
+
+func NewPlayerService(ms repository.PlayerMemoryRepoI, db repository.PlayerDatabaseRepoI) ServiceI {
 	return &PlayerService{
-		repo: repo,
+		memorystore: ms,
+		database:    db,
 		googleOauthConfig: &oauth2.Config{
 			RedirectURL:  "http://localhost:1323/callback",
 			ClientID:     os.Getenv("OAUTH_CLIENT_ID"),
@@ -32,16 +46,4 @@ func NewService(repo repository.PlayerRepositoryI) InteractorI {
 		},
 		oauthStateStrings: make(map[string]*OauthStateString),
 	}
-}
-
-type PlayerService struct {
-	repo              repository.PlayerRepositoryI
-	googleOauthConfig *oauth2.Config
-	oauthStateStrings map[string]*OauthStateString
-}
-
-// Todo move to entities?
-type OauthStateString struct {
-	Active         bool
-	Temp_player_id string
 }

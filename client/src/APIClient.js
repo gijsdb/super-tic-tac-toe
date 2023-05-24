@@ -1,14 +1,12 @@
 import axios from "axios"
 
-const POST = "post"
 const GET = "get"
-
 
 const client = axios.create({
   baseURL: "http://localhost:1323/", // If empty, uses the current origin. If developing locally point to API running locally
   json: true,
   validateStatus: function (status) {
-    return status < 600; // Reject only if the status code is greater than or equal to 500
+    return status < 600;
   },
   withCredentials: true,
 });
@@ -30,10 +28,6 @@ const APIClient = {
 
   CreateSession(playerId) {
     return this.perform(GET, `/session/create?player=${playerId}`);
-  },
-
-  RemovePlayer(playerId) {
-    return this.perform(GET, `/player/${playerId}/setinactive`);
   },
 
   ListGames() {

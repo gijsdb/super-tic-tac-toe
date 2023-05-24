@@ -3,13 +3,13 @@ package player
 import (
 	"testing"
 
-	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 	"github.com/stretchr/testify/assert"
 )
 
-func SetUp() InteractorI {
-	return NewService(repository.NewPlayerRepository(":memory:"))
+func SetUp() ServiceI {
+	return NewPlayerService(repository.NewPlayerMemoryRepo(), repository.NewPlayerDatabaseRepo(":memory:"))
 }
 
 func TestGet(t *testing.T) {

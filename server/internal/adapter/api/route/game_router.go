@@ -3,14 +3,14 @@ package route
 import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/api/controller"
 	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/api/middleware"
-
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/game"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
+
 	"github.com/labstack/echo/v4"
 )
 
-func NewGameRouter(e *echo.Echo, game_service game.InteractorI, session_service session.InteractorI, player_service player.InteractorI) {
+func NewGameRouter(e *echo.Echo, game_service game.ServiceI, session_service session.ServiceI, player_service player.ServiceI) {
 	var gc = controller.NewGameController(game_service)
 	var sm = middleware.NewSessionMiddleware(session_service, player_service)
 

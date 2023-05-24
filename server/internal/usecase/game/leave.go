@@ -6,7 +6,7 @@ import (
 )
 
 func (s *GameService) Leave(gameId int64, leavingPlayer string) error {
-	game := s.game_repo.Get(gameId)
+	game := s.g_mem_store.Get(gameId)
 	if game == nil {
 		return fmt.Errorf("game being left does not exist")
 	}
@@ -21,7 +21,7 @@ func (s *GameService) Leave(gameId int64, leavingPlayer string) error {
 	game.GameOver.Over = true
 	game.GameOver.Reason = "Player left the game"
 	game.GameOver.EndTime = time.Now().Unix()
-	s.game_repo.Update(game)
+	s.g_mem_store.Update(game)
 
 	return nil
 }

@@ -18,6 +18,4 @@ import HighScores from "./components/HighScores.vue";
 import PlayerInfo from "./components/PlayerInfo.vue";
 import Rules from "./components/Rules.vue";
 import ThemePicker from "./components/ThemePicker.vue";
-
-
 </script>

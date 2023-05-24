@@ -3,7 +3,7 @@ package game
 import "github.com/gijsdb/super-tic-tac-toe/internal/entity"
 
 func (s *GameService) RemoveCircle(gameId, square, circle int64, playerId string) *entity.Game {
-	game := s.game_repo.Get(gameId)
+	game := s.g_mem_store.Get(gameId)
 
 	game.GameBoard.Squares[square].Circles[circle].SelectedBy = ""
 
@@ -13,5 +13,5 @@ func (s *GameService) RemoveCircle(gameId, square, circle int64, playerId string
 		game.PlayerTurn = game.Players[0]
 	}
 
-	return s.game_repo.Update(game)
+	return s.g_mem_store.Update(game)
 }

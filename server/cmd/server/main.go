@@ -1,11 +1,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/api/route"
-
-	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/game"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
@@ -16,17 +16,20 @@ import (
 )
 
 func main() {
+	flag_seed_db := flag.Bool("seed", false, "Seeds the database with users")
+	flag.Parse()
+
 	err := godotenv.Load("../../.env")
 	if err != nil {
 		fmt.Println(err.Error())
 		panic(1)
 	}
 
-	player_repo := repository.NewPlayerRepository("../../super_tic_tac_toe.db")
-
-	game_interactor := game.NewService(repository.NewGameRepository(), player_repo)
-	player_interactor := player.NewService(player_repo)
-	session_interactor := session.NewService(repository.NewSessionRepository())
+	p_mem_store := repository.NewPlayerMemoryRepo()
+	p_db := repository.NewPlayerDatabaseRepo("../../super_tic_tac_toe.db")
+	g_service := game.NewGameService(repository.NewGameMemoryRepo(), p_mem_store, p_db)
+	p_service := player.NewPlayerService(p_mem_store, p_db)
+	s_service := session.NewSessionService(repository.NewSessionRepo())
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -36,13 +39,15 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	route.NewPlayerRouter(e, player_interactor, session_interactor)
-	route.NewGameRouter(e, game_interactor, session_interactor, player_interactor)
-	route.NewSessionRouter(e, session_interactor, player_interactor)
+	route.NewPlayerRouter(e, p_service, s_service)
+	route.NewGameRouter(e, g_service, s_service, p_service)
+	route.NewSessionRouter(e, s_service, p_service)
 
-	// Load players from database into memorystore
-	// Not sure if this is a good idea?
-	player_interactor.LoadDBPlayersIntoMemory()
+	if *flag_seed_db {
+		p_service.SeedPlayers()
+	}
+
+	p_service.LoadDBPlayersIntoMemory()
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

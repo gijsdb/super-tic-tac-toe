@@ -7,7 +7,7 @@ import (
 )
 
 func (s *GameService) Join(gameId int64, joiningPlayer string) (*entity.Game, error) {
-	game := s.game_repo.Get(gameId)
+	game := s.g_mem_store.Get(gameId)
 	noOfPlayers := len(game.Players)
 	if noOfPlayers == 2 {
 		return nil, fmt.Errorf("game is full")
@@ -16,5 +16,5 @@ func (s *GameService) Join(gameId int64, joiningPlayer string) (*entity.Game, er
 	game.GameBoard.Player2 = joiningPlayer
 	game.Full = true
 
-	return s.game_repo.Update(game), nil
+	return s.g_mem_store.Update(game), nil
 }

@@ -3,7 +3,7 @@ package game
 import (
 	"testing"
 
-	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,8 +12,8 @@ var player_id_one = "1234"
 var player_id_two = "12345"
 var player_id_three = "123456"
 
-func SetUp() InteractorI {
-	return NewService(repository.NewGameRepository(), repository.NewPlayerRepository(":memory:"))
+func SetUp() ServiceI {
+	return NewGameService(repository.NewGameMemoryRepo(), repository.NewPlayerMemoryRepo(), repository.NewPlayerDatabaseRepo(":memory:"))
 }
 
 func TestCreate(t *testing.T) {
@@ -153,9 +153,10 @@ func TestUpdateBoard(t *testing.T) {
 
 // Starting to get messy here.,
 func TestPlayerWinIncrementsOnWin(t *testing.T) {
-	player_repo := repository.NewPlayerRepository(":memory:")
-	game_repo := repository.NewGameRepository()
-	service := NewService(game_repo, player_repo)
+	player_db := repository.NewPlayerDatabaseRepo(":memory:")
+	player_memorystore := repository.NewPlayerMemoryRepo()
+	game_repo := repository.NewGameMemoryRepo()
+	game_service := NewGameService(game_repo, player_memorystore, player_db)
 
 	player_one := &entity.Player{
 		ID:       "p1",
@@ -177,24 +178,24 @@ func TestPlayerWinIncrementsOnWin(t *testing.T) {
 		Losses:   0,
 	}
 
-	player_repo.Create(player_one)
-	player_repo.Create(player_two)
-	player_repo.DBCreatePlayer(player_one)
-	player_repo.DBCreatePlayer(player_two)
-	game := service.CreateGame(player_one.ID)
-	service.Join(game.ID, player_two.ID)
-	service.UpdateBoard(game.ID, 0, 0, player_one.ID)
-	service.UpdateBoard(game.ID, 0, 1, player_one.ID)
-	service.UpdateBoard(game.ID, 0, 2, player_one.ID)
-	service.UpdateBoard(game.ID, 1, 0, player_one.ID)
-	service.UpdateBoard(game.ID, 1, 1, player_one.ID)
-	service.UpdateBoard(game.ID, 1, 2, player_one.ID)
-	service.UpdateBoard(game.ID, 2, 0, player_one.ID)
-	service.UpdateBoard(game.ID, 2, 1, player_one.ID)
-	service.UpdateBoard(game.ID, 2, 2, player_one.ID)
+	player_db.Create(player_one)
+	player_db.Create(player_two)
+	player_db.Create(player_one)
+	player_db.Create(player_two)
+	game := game_service.CreateGame(player_one.ID)
+	game_service.Join(game.ID, player_two.ID)
+	game_service.UpdateBoard(game.ID, 0, 0, player_one.ID)
+	game_service.UpdateBoard(game.ID, 0, 1, player_one.ID)
+	game_service.UpdateBoard(game.ID, 0, 2, player_one.ID)
+	game_service.UpdateBoard(game.ID, 1, 0, player_one.ID)
+	game_service.UpdateBoard(game.ID, 1, 1, player_one.ID)
+	game_service.UpdateBoard(game.ID, 1, 2, player_one.ID)
+	game_service.UpdateBoard(game.ID, 2, 0, player_one.ID)
+	game_service.UpdateBoard(game.ID, 2, 1, player_one.ID)
+	game_service.UpdateBoard(game.ID, 2, 2, player_one.ID)
 
-	player_one, _ = player_repo.Get(player_one.ID)
-	player_two, _ = player_repo.Get(player_two.ID)
+	player_one, _ = player_db.GetWhere(player_one.ID, "id")
+	player_two, _ = player_db.GetWhere(player_two.ID, "id")
 
 	assert.Equal(t, player_one.ID, game.Winner)
 	assert.Equal(t, 1, player_one.Wins)

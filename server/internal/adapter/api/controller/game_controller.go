@@ -5,14 +5,15 @@ import (
 	"strconv"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/game"
+
 	"github.com/labstack/echo/v4"
 )
 
 type GameController struct {
-	service game.InteractorI
+	service game.ServiceI
 }
 
-func NewGameController(service game.InteractorI) GameController {
+func NewGameController(service game.ServiceI) GameController {
 	return GameController{
 		service: service,
 	}

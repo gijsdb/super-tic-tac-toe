@@ -103,7 +103,7 @@ let waitForPlayerInterval = null;
 let refreshInterval = null;
 
 const beforeWindowUnload = (e) => {
-  alert("Are you sure you want to leave the game?")
+  alert("Are you sure you want to abandon the game?")
   leaveGame();
   router.push("/");
 };
@@ -162,7 +162,6 @@ onMounted(() => {
     console.log(e);
     beforeWindowUnload(e);
   });
-
 
   if (!gameStoreRef.Player.value.game.full) {
     waitForPlayerInterval = setInterval(async () => {

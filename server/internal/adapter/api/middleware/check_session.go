@@ -5,6 +5,7 @@ import (
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,14 +15,14 @@ type SessionMiddlewareI interface {
 }
 
 type SessionMiddleware struct {
-	session_service session.InteractorI
-	player_service  player.InteractorI
+	session_service session.ServiceI
+	player_service  player.ServiceI
 }
 
-func NewSessionMiddleware(session_service session.InteractorI, player_service player.InteractorI) SessionMiddlewareI {
+func NewSessionMiddleware(s session.ServiceI, p player.ServiceI) SessionMiddlewareI {
 	return &SessionMiddleware{
-		session_service: session_service,
-		player_service:  player_service,
+		session_service: s,
+		player_service:  p,
 	}
 }
 

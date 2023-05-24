@@ -59,9 +59,9 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 		return "", err
 	}
 
-	player, err := s.repo.DBGetWhere(temp.Email, "email")
+	player, err := s.database.GetWhere(temp.Email, "email")
 	if err != nil {
-		player = s.repo.Update(&entity.Player{
+		player = s.memorystore.Update(&entity.Player{
 			ID:       state_string.Temp_player_id,
 			GoogleID: temp.ID,
 			Email:    temp.Email,
@@ -70,7 +70,7 @@ func (s *PlayerService) GoogleCallback(state, code string) (string, error) {
 		})
 
 		// Save player in database
-		s.repo.DBCreatePlayer(player)
+		s.database.Create(player)
 
 		return player.ID, nil
 	}

@@ -5,8 +5,8 @@ import (
 )
 
 func (s *GameService) RollDice(dice1, dice2 int, gameId int64) *entity.Game {
-	game := s.game_repo.Get(gameId)
+	game := s.g_mem_store.Get(gameId)
 	game.LastRoll = []int{dice1, dice2}
 
-	return s.game_repo.Update(game)
+	return s.g_mem_store.Update(game)
 }

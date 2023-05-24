@@ -9,7 +9,7 @@ import (
 )
 
 func (s *GameService) UpdateBoard(gameId, square, circle int64, playerId string) *entity.Game {
-	game := s.game_repo.Get(gameId)
+	game := s.g_mem_store.Get(gameId)
 
 	game.GameBoard.Squares[square].Circles[circle].SelectedBy = playerId
 	updatedSquare := game.GameBoard.CheckCirclesCondition(game.GameBoard.Squares[square])
@@ -23,30 +23,30 @@ func (s *GameService) UpdateBoard(gameId, square, circle int64, playerId string)
 		game.GameOver.Over = true
 		game.GameOver.EndTime = time.Now().Unix()
 
-		player, err := s.player_repo.DBGetWhere(game.Winner, "id")
+		player, err := s.p_db.GetWhere(game.Winner, "id")
 		if err != nil {
 			log15.Error("Could not find winner in db")
 			// player not found in database, must be temporary player who's stats we don't track
-			return s.game_repo.Update(game)
+			return s.g_mem_store.Update(game)
 		}
 		// Increment player wins count
 		player.Wins++
-		s.player_repo.Update(player)
-		s.player_repo.DBUpdate(player)
+		s.p_mem_store.Update(player)
+		s.p_db.Update(player)
 
 		// Find loser and increment losses if they're not a temporary account
 		for _, player_id := range game.Players {
 			if player_id != game.Winner {
-				losing_player, err := s.player_repo.DBGetWhere(player_id, "id")
+				losing_player, err := s.p_db.GetWhere(player_id, "id")
 				if err != nil {
 					log15.Error("Could not find loser in db")
 
 					// player not found in database, must be temporary player who's stats we don't track
-					return s.game_repo.Update(game)
+					return s.g_mem_store.Update(game)
 				}
 				losing_player.Losses++
-				s.player_repo.Update(losing_player)
-				s.player_repo.DBUpdate(losing_player)
+				s.p_mem_store.Update(losing_player)
+				s.p_db.Update(losing_player)
 			}
 		}
 	}
@@ -58,5 +58,5 @@ func (s *GameService) UpdateBoard(gameId, square, circle int64, playerId string)
 		game.PlayerTurn = game.Players[0]
 	}
 
-	return s.game_repo.Update(game)
+	return s.g_mem_store.Update(game)
 }

@@ -1,13 +1,11 @@
 package game
 
 import (
-	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+	repo "github.com/gijsdb/super-tic-tac-toe/internal/adapter/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 )
 
-// TODO
-// Seperate game board related stuff
-type InteractorI interface {
+type ServiceI interface {
 	Index() []*entity.Game
 	Get(id int64) *entity.Game
 	CreateGame(creatingPlayer string) *entity.Game
@@ -18,14 +16,16 @@ type InteractorI interface {
 	RollDice(dice1, dice2 int, gameId int64) *entity.Game
 }
 
-func NewService(game_repo repository.GameRepositoryI, player_repo repository.PlayerRepositoryI) InteractorI {
-	return &GameService{
-		game_repo:   game_repo,
-		player_repo: player_repo,
-	}
+type GameService struct {
+	g_mem_store repo.GameMemoryRepoI
+	p_mem_store repo.PlayerMemoryRepoI
+	p_db        repo.PlayerDatabaseRepoI
 }
 
-type GameService struct {
-	game_repo   repository.GameRepositoryI
-	player_repo repository.PlayerRepositoryI
+func NewGameService(g_mem_store repo.GameMemoryRepoI, p_mem_store repo.PlayerMemoryRepoI, p_db repo.PlayerDatabaseRepoI) ServiceI {
+	return &GameService{
+		g_mem_store: g_mem_store,
+		p_mem_store: p_mem_store,
+		p_db:        p_db,
+	}
 }

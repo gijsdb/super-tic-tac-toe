@@ -4,15 +4,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/gateway/repository"
+	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/repository"
 	"github.com/gijsdb/super-tic-tac-toe/internal/entity"
 	"github.com/stretchr/testify/assert"
 )
 
 var player_id string = "1234"
 
-func SetUp() InteractorI {
-	return NewService(repository.NewSessionRepository())
+func SetUp() ServiceI {
+	return NewSessionService(repository.NewSessionRepo())
 }
 
 func TestIsSessionExpired(t *testing.T) {

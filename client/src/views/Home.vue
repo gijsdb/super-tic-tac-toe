@@ -60,15 +60,13 @@ const gamesAvailable = computed({
         res = true;
       }
     });
-
     return res;
   },
 });
 
 const listGames = async () => {
   try {
-    const res = await APIClient.ListGames();
-    games.value = res;
+    games.value = await APIClient.ListGames();
   } catch (e) {
     console.log("Error listing games", e);
   }
@@ -76,19 +74,18 @@ const listGames = async () => {
 
 const JoinGame = async (gameId) => {
   try {
-    let res = await gameStore.joinGame(gameId);
-    if (res === true) {
+    let success = await gameStore.joinGame(gameId);
+    if (success === true) {
       router.push("/game/" + gameId);
     }
   } catch (e) {
     console.log("Error joining game", e);
-    return;
   }
 };
 
 const createGameHandler = async () => {
-  let res = await createGame();
-  if (res) {
+  let success = await createGame();
+  if (success) {
     router.push("/game/" + gameStoreRef.Player.value.game.ID);
   }
 };
@@ -101,19 +98,11 @@ onMounted(async () => {
   getGamesLoop = setInterval(async () => {
     await listGames();
   }, 3000);
-
-  // setTimeout(() => {
-  //   resetFlashMessage()
-  // }, 3000)
 });
 
 onUnmounted(() => {
   clearInterval(getGamesLoop);
 });
-
-window.onbeforeunload = async () => {
-  // removeClient();
-};
 </script>
 
 <style scoped>

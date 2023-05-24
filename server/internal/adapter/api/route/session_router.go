@@ -5,10 +5,11 @@ import (
 	"github.com/gijsdb/super-tic-tac-toe/internal/adapter/api/middleware"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/session"
+
 	"github.com/labstack/echo/v4"
 )
 
-func NewSessionRouter(e *echo.Echo, session_service session.InteractorI, player_service player.InteractorI) {
+func NewSessionRouter(e *echo.Echo, session_service session.ServiceI, player_service player.ServiceI) {
 	var sc = controller.NewSessionController(session_service, player_service)
 	var sm = middleware.NewSessionMiddleware(session_service, player_service)
 
