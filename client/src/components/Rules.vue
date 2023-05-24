@@ -2,17 +2,18 @@
   <div>
     <div
       v-show="gameStoreRef.ShowRules.value"
-      class="z-40 w-screen absolute bg-black bg-opacity-95 flex flex-col items-center justify-center text-gray-200 p-12 min-h-[100vh]"
+      class="w-screen h-screen fixed flex flex-col items-center justify-center text-text_color"
     >
-      <button
-        @click="handleCloseRules()"
-        class="absolute text-white top-5 left-5"
-      >X</button>
-      <div class="flex flex-col items-center text-center lg:mx-24 gap-y-4">
-        <h1 class="text-4xl font-bold underline">Super Tic Tac Toe Rules</h1>
+
+      <div class="flex flex-col items-center text-center gap-y-4 bg-sub_alt_color p-4 rounded-xl">
+        <button
+          @click="handleCloseRules()"
+          class="mb-2 rounded-full h-8 w-8 font-bold self-start text-sm bg-bg_color text-text_color"
+        >X</button>
+        <h1 class="text-4xl font-bold text-main_color">Super Tic Tac Toe Rules</h1>
         <p class="text-2xl leading-10">Super Tic Tac Toe is a variation of regular tic tac toe or 'three in a row'.</p>
 
-        <ul class="text-xl text-left space-y-4 list-disc">
+        <ul class="text-xl space-y-4 list-disc list-inside text-left">
           <li>The gameboard contains a grid of 9 squares, each square has a grid of 9 circles inside.</li>
           <li>
             Players take turns rolling dice and capturing circles to form 3 in a row horizontally, diagonally or
