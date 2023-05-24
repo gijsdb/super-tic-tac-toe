@@ -7,5 +7,4 @@ edgecases.txt
 /server/cover.out
 todo.txt
 ideas.txt
-classDiagram.png
-classDiagram.puml
+serverClassDiagram.puml

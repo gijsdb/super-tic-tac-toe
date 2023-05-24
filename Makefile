@@ -12,8 +12,8 @@ runuinetwork:
 	cd ./client && npm run devnetwork
 
 plantuml: 
-	goplantuml -aggregate-private-members -show-aggregations -show-connection-labels -recursive server/internal/ > classDiagram.puml
-	plantuml classDiagram.puml 
+	goplantuml -aggregate-private-members -show-aggregations -show-connection-labels -recursive server/internal/ > serverClassDiagram.puml
+	plantuml serverClassDiagram.puml 
 
 generatecoveragereport:
 	cd ./server && go test ./... -coverprofile cover.out
