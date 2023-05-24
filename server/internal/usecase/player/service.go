@@ -17,6 +17,7 @@ type InteractorI interface {
 	OauthLogin(temp_player_id string) string
 	GoogleCallback(state, code string) (string, error)
 	LoadDBPlayersIntoMemory()
+	GetHighscores() ([]*entity.Player, error)
 }
 
 func NewService(repo repository.PlayerRepositoryI) InteractorI {

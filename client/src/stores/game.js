@@ -186,7 +186,10 @@ export const useGameStore = defineStore('game', {
     },
     toggleHighscores() {
       this.ShowHighscores = !this.ShowHighscores
-    }
+    },
+    async getHighscores() {
+      return await APIClient.GetHighscores()
+    },
   }
 })
 

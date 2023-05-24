@@ -53,7 +53,7 @@ func (p *PlayerRepository) Update(player *entity.Player) *entity.Player {
 }
 
 func (p *PlayerRepository) DBCreatePlayer(player *entity.Player) string {
-	return p.db.Create(&sqlite.Player{ID: player.ID, GoogleID: player.GoogleID, Email: player.Email, Picture: player.Picture})
+	return p.db.Create(&sqlite.Player{ID: player.ID, GoogleID: player.GoogleID, Email: player.Email, Picture: player.Picture, Wins: 0, Losses: 0})
 }
 
 func (p *PlayerRepository) DBGetWhere(value, column string) (*entity.Player, error) {
@@ -68,6 +68,8 @@ func (p *PlayerRepository) DBGetWhere(value, column string) (*entity.Player, err
 		Email:    db_player.Email,
 		Picture:  db_player.Picture,
 		IsTemp:   false,
+		Wins:     db_player.Wins,
+		Losses:   db_player.Losses,
 	}, nil
 }
 
@@ -85,6 +87,8 @@ func (p *PlayerRepository) DBGetAll() ([]*entity.Player, error) {
 			Email:    player.Email,
 			Picture:  player.Picture,
 			IsTemp:   false,
+			Wins:     player.Wins,
+			Losses:   player.Losses,
 		})
 	}
 

@@ -16,4 +16,5 @@ func NewPlayerRouter(e *echo.Echo, player_service player.InteractorI, session_se
 	e.GET("/player/:id", pc.HandleGetPlayer, sm.CheckSession, sm.RenewSession)
 	e.GET("/login", pc.HandleOauthLogin)
 	e.GET("/callback", pc.HandleGoogleCallback)
+	e.GET("/highscores", pc.HandleGetHighscores)
 }

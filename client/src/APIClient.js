@@ -72,6 +72,10 @@ const APIClient = {
     return this.perform(GET, '/logout')
   },
 
+  GetHighscores() {
+    return this.perform(GET, '/highscores')
+  },
+
   async perform(method, resource, data) {
     return client({
       method,

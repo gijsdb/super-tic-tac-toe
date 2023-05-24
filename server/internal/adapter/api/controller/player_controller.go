@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/gijsdb/super-tic-tac-toe/internal/usecase/player"
@@ -72,4 +73,17 @@ func (pc *PlayerController) HandleGoogleCallback(c echo.Context) error {
 	c.SetCookie(CreateCookie("temp_account", player_id, session_expiry, false))
 	c.SetCookie(CreateCookie("session_token", session, session_expiry, true))
 	return c.Redirect(http.StatusTemporaryRedirect, "http://localhost:3000/")
+}
+
+func (pc *PlayerController) HandleGetHighscores(c echo.Context) error {
+	players, err := pc.player_service.GetHighscores()
+	if err != nil {
+		return err
+	}
+
+	sort.Slice(players, func(i, j int) bool {
+		return players[i].Wins > players[j].Wins
+	})
+
+	return c.JSON(200, players)
 }

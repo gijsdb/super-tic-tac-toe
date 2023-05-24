@@ -37,3 +37,7 @@ func (s *PlayerService) LoadDBPlayersIntoMemory() {
 		log15.Debug("loaded player into memory", "p", player_id)
 	}
 }
+
+func (s *PlayerService) GetHighscores() ([]*entity.Player, error) {
+	return s.repo.DBGetAll()
+}
