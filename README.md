@@ -6,7 +6,7 @@ A variation of tic-tac-toe (three in a row) played with dice. The game board con
 | ----------- | ----------- |
 | 12 | Any uncaptured circle |
 | 2 | Remove an opponents circle | 
-| 7 | The centre of any circle |
+| 7 | The centre of any square |
 | * | The corresponding circle |
 
 ## Features
